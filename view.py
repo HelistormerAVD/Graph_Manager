@@ -44,9 +44,9 @@ class BlockEditorView:
 
 
     def on_canvas_click(self, event):
-        for items in self.blocks:
-            if self.selected_block != self.canvas.find(items):
-                self.canvas.itemconfigure(items, fill="blue")
+        for block_id in self.blocks.items():
+            if self.selected_block != self.canvas.find("all"):
+                self.canvas.itemconfigure(block_id, fill="blue")
         item = self.canvas.find_closest(event.x, event.y)
         if "block" in self.canvas.gettags(item):
             self.selected_block = item[0]
