@@ -1,3 +1,4 @@
+
 import graph
 import image
 
@@ -9,13 +10,23 @@ class BDString:
     def __init__(self):
         self.data = "Hello World!"
 
+    def __getstate__(self):
+        return self.data
+
 
 class BDInteger:
 
     data = 0
 
     def __init__(self):
-        self.data = 0
+        self.data = 1
+
+    def add(self, num):
+        self.data += num
+        return self.data
+
+    def __getstate__(self):
+        return self.data
 
 
 class BDDouble:
@@ -23,8 +34,10 @@ class BDDouble:
     data = 0.0
 
     def __init__(self):
-        self.data = 0.0
+        self.data = 1.0
 
+    def __getstate__(self):
+        return self.data
 
 class BDImage:
 
@@ -33,6 +46,8 @@ class BDImage:
     def __init__(self, file_path):
         self.data = image.Image(file_path)
 
+    def __getstate__(self):
+        return self.data
 
 class BDGraph:
 
@@ -40,3 +55,6 @@ class BDGraph:
 
     def __init__(self, x , y):
         self.data = graph.Graph(x, y)
+
+    def __getstate__(self):
+        return self.data
