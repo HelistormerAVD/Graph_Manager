@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import json
 
+from PIL.ImageChops import offset
 from fontTools.unicodedata import block
 from numpy.ma.core import filled
 
@@ -30,13 +31,21 @@ class BlockEditorView:
         self.delete_button = tk.Button(self.toolbar, text="Delete Block", command=self.delete_block)
         self.delete_button.pack(side=tk.LEFT, padx=5, pady=5)
 
+        self.testBlocks = {}
+
         self.blocks = {}  # Dictionary to store blocks with their IDs
         self.selected_block = None
         self.second_selected_block = None
 
         self.canvas.bind("<Button-1>", self.on_canvas_click)
+        self.canvas.bind("<Button-2>", self.add_test_Block)
         self.canvas.bind("<B1-Motion>", self.on_canvas_drag)
 
+    def add_test_Block(self, event):
+        add_block = self.canvas.create_rectangle(100, 100, 200, 140, fill="green", tags="BlockBackground")
+        self.testBlocks[add_block] = {"x1": 100, "y1": 100, "x2": 200, "y2": 140, "color": "green", "components" : []}
+        add_field_a = self.canvas.create_text(self.testBlocks[add_block]["x1"] + 10, self.testBlocks[add_block]["y1"] + 10, width=20, text="0", fill="lightgrey")
+        self.testBlocks[add_block]["components"] = {"component_id" : add_field_a, "type" : "text", "offsetX" : 10, "offsetY" : 10, "width" : 20, "text" : "0", "fill" : "lightgrey"}
 
     def add_block(self):
         block_id = self.canvas.create_rectangle(50, 50, 150, 150, fill="blue", tags="block")
