@@ -43,14 +43,20 @@ class BlockEditorView:
 
     def add_test_Block(self, event):
         add_block = self.canvas.create_rectangle(100, 100, 200, 140, fill="green", tags="BlockBackground")
-        self.testBlocks[add_block] = {"x1": 100, "y1": 100, "x2": 200, "y2": 140, "color": "green", "components" : []}
-        add_field_a = self.canvas.create_text(self.testBlocks[add_block]["x1"] + 10, self.testBlocks[add_block]["y1"] + 10, width=20, text="0", fill="lightgrey")
-        self.testBlocks[add_block]["components"] = {"component_id" : add_field_a, "type" : "text", "offsetX" : 10, "offsetY" : 10, "width" : 20, "text" : "0", "fill" : "lightgrey"}
+        self.testBlocks[add_block] = {"x1": 100, "y1": 100, "x2": 200, "y2": 140, "color": "green", "components": []}
+        add_field_a = self.canvas.create_text(
+            self.testBlocks[add_block]["x1"] + 10,
+            self.testBlocks[add_block]["y1"] + 10,
+            width=20,
+            text="0",
+            fill="lightgrey"
+        )
+        self.testBlocks[add_block]["components"] = {"component_id": add_field_a, "type": "text", "offsetX": 10,
+                                                    "offsetY": 10, "width": 20, "text": "0", "fill": "lightgrey"}
 
     def add_block(self):
         block_id = self.canvas.create_rectangle(50, 50, 150, 150, fill="blue", tags="block")
         self.blocks[block_id] = {"x1": 50, "y1": 50, "x2": 150, "y2": 150, "color": "blue"}
-
 
     def on_canvas_click(self, event):
         for block_id in self.blocks.items():
@@ -64,7 +70,6 @@ class BlockEditorView:
         else:
             self.selected_block = None
 
-
     def on_canvas_drag(self, event):
         if self.selected_block:
             block = self.blocks[self.selected_block]
@@ -73,12 +78,10 @@ class BlockEditorView:
             self.canvas.move(self.selected_block, dx, dy)
             self.update_block_coords(self.selected_block)
 
-
     def update_block_coords(self, block_id):
         coords = self.canvas.coords(block_id)
         self.blocks[block_id]["x1"], self.blocks[block_id]["y1"], self.blocks[block_id]["x2"], self.blocks[block_id][
             "y2"] = coords
-
 
     def delete_block(self):
         if self.selected_block:
@@ -86,14 +89,12 @@ class BlockEditorView:
             del self.blocks[self.selected_block]
             self.selected_block = None
 
-
     def save_layout(self):
         file_path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
         if file_path:
             with open(file_path, "w") as file:
                 json.dump(self.blocks, file)
             messagebox.showinfo("Save Layout", "Layout saved successfully!")
-
 
     def load_layout(self):
         file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
@@ -106,6 +107,7 @@ class BlockEditorView:
                     block["x1"], block["y1"], block["x2"], block["y2"], fill=block["color"], tags="block"
                 )
                 self.blocks[block_id] = block
+
 
 if __name__ == "__main__":
     root = tk.Tk()

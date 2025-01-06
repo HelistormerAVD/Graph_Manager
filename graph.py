@@ -3,6 +3,7 @@ from typing import AnyStr
 import matplotlib.pyplot as gr
 import pylab
 
+
 class Graph:
     pointsX = []
     pointsY = []
@@ -39,7 +40,6 @@ class Graph:
         self.graph.show()
 
 
-
 if __name__ == "__main__":
     x = [0, 1, 2, 3, 4]
     y = [0, 1, 4, 9, 16]
@@ -47,5 +47,5 @@ if __name__ == "__main__":
     myGraph.setGraph()
     h = [0, 1, 2, 3, 5]
     b = [0, 3, 4, 9, 16]
-    myGraph.modifyGraph(h,b, "humans", "time", "humanTime", True, "1990")
+    myGraph.modifyGraph(h, b, "humans", "time", "humanTime", True, "1990")
     myGraph.getGraph()
