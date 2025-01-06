@@ -2,9 +2,9 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import json
 
-class Block:
 
-    #FIXED VARIABLES
+class Block:
+    # FIXED VARIABLES
     BLOCK_ID = 0
     BLOCK_POS_X = 0
     BLOCK_POS_Y = 0
@@ -12,12 +12,11 @@ class Block:
     BLOCK_HEIGHT = 20
     canvas = tk.Canvas()
 
-    #LOKAL VARIABLES
+    # LOKAL VARIABLES
     B_layout = {}
     B_color = None
     B_inputTypes = {}
     B_outputTypes = {}
-
 
     def __init__(self, tkCanvas):
         self.BLOCK_ID = 0
@@ -30,7 +29,6 @@ class Block:
         self.BLOCK_WIDTH = 20
         self.BLOCK_HEIGHT = 20
         self.canvas = tkCanvas
-
 
 
 if __name__ == "__main__":

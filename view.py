@@ -138,12 +138,15 @@ class BlockEditorView:
             other_center_x = other_x1 + (other_x2 - other_x1) // 2
             other_center_y = other_y1 + (other_y2 - other_y1) // 2
 
-            self.debug_line(abs((other_center_x + (other_width / 2)) - event.x), abs((other_center_y + (other_height / 2)) - event.y), other_center_x, other_center_y)
+            self.debug_line(abs((other_center_x + (other_width / 2)) - event.x),
+                            abs((other_center_y + (other_height / 2)) - event.y), other_center_x, other_center_y)
 
-            #self.debug_line(11, 11, 33, 33)
+            # self.debug_line(11, 11, 33, 33)
 
-            if (abs((other_center_x + (other_width / 2)) - event.x) < 20 or abs((other_center_y + (other_height / 2)) - event.y) < 20
-            or abs((other_center_x - (other_width / 2)) + event.x) < 20 or abs((other_center_y - (other_height / 2)) + event.y) < 20):
+            if (abs((other_center_x + (other_width / 2)) - event.x) < 20 or abs(
+                    (other_center_y + (other_height / 2)) - event.y) < 20
+                    or abs((other_center_x - (other_width / 2)) + event.x) < 20 or abs(
+                        (other_center_y - (other_height / 2)) + event.y) < 20):
 
                 # Check proximity (snap threshold = 20 pixels)
                 if abs(current_x2 - other_x1) < 20 or abs(current_x1 - other_x2) < 20 or \
@@ -215,7 +218,8 @@ class BlockEditorView:
 
     def update_block_coords(self, block_id):
         coords = self.canvas.coords(block_id)
-        self.blocks[block_id]["x1"], self.blocks[block_id]["y1"], self.blocks[block_id]["x2"], self.blocks[block_id]["y2"] = coords
+        self.blocks[block_id]["x1"], self.blocks[block_id]["y1"], self.blocks[block_id]["x2"], self.blocks[block_id][
+            "y2"] = coords
 
     def delete_block(self):
         if self.selected_block:
@@ -269,7 +273,9 @@ class BlockEditorView:
 
     def debug_line(self, x1, y1, x2, y2):
         self.canvas.delete("debugLines")
-        self.canvas.create_line( x1, y1, x2, y2, fill="red", tags="debugLines")
+        self.canvas.create_line(x1, y1, x2, y2, fill="red", tags="debugLines")
+
+
 if __name__ == "__main__":
     root = tk.Tk()
     editor = BlockEditorView(root)
