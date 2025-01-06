@@ -2,8 +2,8 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import json
 
-class TextView:
 
+class TextView:
     text = "textView"
 
     def __init__(self, text):

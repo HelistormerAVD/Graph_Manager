@@ -1,10 +1,8 @@
-
 import graph
 import image
 
 
 class BDString:
-
     data = ""
 
     def __init__(self):
@@ -15,7 +13,6 @@ class BDString:
 
 
 class BDInteger:
-
     data = 0
 
     def __init__(self):
@@ -30,7 +27,6 @@ class BDInteger:
 
 
 class BDDouble:
-
     data = 0.0
 
     def __init__(self):
@@ -39,8 +35,8 @@ class BDDouble:
     def __getstate__(self):
         return self.data
 
-class BDImage:
 
+class BDImage:
     data = image.Image("assets/moeve.jpg")
 
     def __init__(self, file_path):
@@ -49,11 +45,11 @@ class BDImage:
     def __getstate__(self):
         return self.data
 
-class BDGraph:
 
+class BDGraph:
     data = graph.Graph([0], [0])
 
-    def __init__(self, x , y):
+    def __init__(self, x, y):
         self.data = graph.Graph(x, y)
 
     def __getstate__(self):
