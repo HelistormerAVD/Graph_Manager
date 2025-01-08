@@ -4,7 +4,7 @@ from tkinter.colorchooser import askcolor
 from tkinter import *
 
 # Funktion und probefunktions
-color = "red";
+color = "red"
 
 
 def clear():
