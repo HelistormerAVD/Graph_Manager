@@ -14,6 +14,7 @@ class Text:
 
     def replace_in_range(self, to_be_replaced, replace_with, start=0, end=None, case_sensitive=True):
         """ Ersetze alle Vorkommen von to_be_replaced case-insensitiv """
+        # TODO: funktioniert nicht richtig
         end = end if end is not None else len(self.content)
         sub_content = self.content[start:end]
         replaced_sub = sub_content.replace(to_be_replaced, replace_with, case_sensitive)
