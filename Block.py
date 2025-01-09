@@ -12,11 +12,11 @@ class Block:
     BLOCK_HEIGHT = 20
     canvas = tk.Canvas()
 
-    # LOKAL VARIABLES
-    B_layout = {}
-    B_color = None
-    B_inputTypes = {}
-    B_outputTypes = {}
+    blocks = {"B_type" : {}, "B_components" : {}, "B_position" : {}}
+
+    #"B_type" : {"id : 0", "block_id" : 1, "block_inputTypes" : {"input_id" : 0, "input_t" : dataTypes}, "block_outputTypes" : {"output_id" : 0, "output_t" : dataTypes}, "func" : {"func_name" : "NameOfFunction"}}
+    #"B_components" : {"id" : 0, "component_id" = 1, "c_position" : {}, "data" : dataTypes}
+    #"B_position" : {"x1": 50, "y1": 50, "x2": 150, "y2": 150, "color": "blue"}
 
     def __init__(self, tkCanvas):
         self.BLOCK_ID = 0

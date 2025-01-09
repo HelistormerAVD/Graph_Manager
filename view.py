@@ -1,11 +1,7 @@
 import tkinter as tk
 from tkinter import *
 import json
-
-from PIL.ImageChops import offset
-from fontTools.unicodedata import block
-from numpy.ma.core import filled
-from python.Lib.tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox
 
 
 class BlockEditorView:
@@ -276,7 +272,47 @@ class BlockEditorView:
         self.canvas.create_line(x1, y1, x2, y2, fill="red", tags="debugLines")
 
 
+class MainMenuView:
+    MENU = 0
+    EXIT = 0
+
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Block-Based Graphical Editor")
+
+        self.canvas = tk.Canvas(root, bg="white", width=400, height=300)
+        self.canvas.pack(fill=tk.BOTH, expand=True)
+
+        self.toolbar = tk.Frame(root, bg="lightgray")
+        self.toolbar.pack(fill=tk.X)
+
+        self.add_block_button = tk.Button(self.toolbar, text="Block Editor", command=self.openBlockEditor)
+        self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+        self.delete_button = tk.Button(self.toolbar, text="Exit", command=self.programExit)
+        self.delete_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+    def programExit(self):
+        self.EXIT = 1
+
+    def openBlockEditor(self):
+        self.MENU = 1
+
+
+class Views:
+    def __init__(self, activity):
+        self.showView = 1
+
+
 if __name__ == "__main__":
     root = tk.Tk()
-    editor = BlockEditorView(root)
-    root.mainloop()
+    window = MainMenuView(root)
+    CLOSE = 1
+    while CLOSE:
+        if window.EXIT == 1:
+            root.destroy()
+
+        match window.MENU:
+            case 1:
+                window = BlockEditorView(root)
+        root.mainloop(1)
