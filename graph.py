@@ -1,13 +1,10 @@
-from typing import AnyStr
-
-import matplotlib.pyplot as gr
-import pylab
+import matplotlib.pyplot as plt
 
 
 class Graph:
     pointsX = []
     pointsY = []
-    graph = gr
+    graph = plt
 
     def __init__(self, x, y):
         self.pointsX = x

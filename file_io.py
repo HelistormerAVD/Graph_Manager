@@ -34,7 +34,8 @@ class FileIO:
             messagebox.showerror("Fehler", f"Fehler beim Laden der Datei: {e}")
             return None
 
-    def save_file(self, data):
+    @staticmethod
+    def save_file(data):
         """ Öffnet den Dateiexplorer, um eine Datei mit dem Inhalt `data` zu speichern, ohne die geladene Datei zu überschreiben """
         save_path = filedialog.asksaveasfilename(
             title="Speichern unter",
@@ -67,4 +68,4 @@ if __name__ == '__main__':
     if content:
         print(content)
 
-    file_io.save_file("Test")   # öffnet den Dateiexplorer um eine Datei mit dem Inhalt "Test" zu speichern
+    file_io.save_file("Test")  # öffnet den Dateiexplorer um eine Datei mit dem Inhalt "Test" zu speichern
