@@ -72,8 +72,11 @@ class BDFloat:  # umbenannt, da es double in (Standard-)Python nicht gibt
         return factor
 
     def divide(self, divisor):
-        self.data /= divisor
-        return self.data
+        try:
+            self.data /= divisor
+            return self.data
+        except ZeroDivisionError:
+            return self.data    # TODO: welchen Wert sinnvoll zurückgeben?
 
     def pow(self, exponent):
         self.data **= exponent
@@ -113,7 +116,7 @@ class BDInteger(BDFloat):
             self.data = quotient
             return self.data
         except ZeroDivisionError:
-            return self.data
+            return self.data    # TODO: welchen Wert sinnvoll zurückgeben?
 
     def pow(self, exponent=1):
         return int(BDFloat.pow(self, exponent))
