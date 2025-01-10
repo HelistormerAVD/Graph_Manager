@@ -5,8 +5,8 @@ import image
 class BDString:
     data = ""
 
-    def __init__(self):
-        self.data = "Hello World!"
+    def __init__(self, text):
+        self.data = text
 
     def __getstate__(self):
         return self.data
@@ -21,6 +21,10 @@ class BDInteger:
     def add(self, num):
         self.data += num
         return self.data
+
+    def toBDString(self):
+        strg = BDString(self.data.__str__())
+        return strg
 
     def __getstate__(self):
         return self.data

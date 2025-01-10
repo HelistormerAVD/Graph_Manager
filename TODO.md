@@ -1,10 +1,10 @@
 # TODO:
-### - Block Klasse erstellen/verwendbar machen.
+### - Block Klasse erstellen/verwendbar machen. (Kenneth)
     - generelle Blockfunktionen hinzufügen, wie (z.B. getPosition, getComponents, ...)
     - Einzelne Blockarten erstellen (initialisieren wie bei "__init__")
-### - BlockComponents funktionsfähig machen.
+### - BlockComponents funktionsfähig machen. (Victoria)
     - generelle Funktionen hinzufügen, wie (getPosition, changePosition, ...)
-### - Funktionen für DataTypes schreiben.
+### - Funktionen für DataTypes schreiben. (Lorenz)
     - Image.py in dataTypes.py übertragen/anpassen.
     - Text.py in dataTypes.py (class BDString) übertragen/anpassen.
     - Graph.py in dataTypes.py übertragen/anpassen.

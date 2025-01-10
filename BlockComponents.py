@@ -14,7 +14,7 @@ class TextView:
         self.text = text
 
     def getData(self):
-        return self.text, self.fontColor, self.fontSize, self.width, self.height
+        return self.text, self.fontColor, self.fontSize, self.width, self.height # Als Dictionary wiedergeben! ( {"text" : self.text, ...} )
 
     def getText(self):
         return self.text
@@ -29,6 +29,9 @@ class EditText:
     fontSize = 10
     width = 20
     height = 14
+    isOnlyNumber = False
+
+
 
     def __init__(self, text):
         self.text = text
