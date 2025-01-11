@@ -4,6 +4,7 @@ import json
 
 import block_components
 import dataTypes
+from block_components import TextView, EditText
 
 
 class Block:
@@ -17,8 +18,8 @@ class Block:
     #"B_position" : {"x1": 50, "y1": 50, "x2": 150, "y2": 150, "color": "blue"}
 
     def __init__(self):
-        self.blocks[0] = {"B_type" : {"id" : 0, "block_id" : 1, "color": "blue", "block_inputTypes" : {"input_id" : 0, "input_t" : dataTypes, "inputBlockId" : None}, "block_outputTypes" : {"output_id" : 0, "output_t" : dataTypes, "outputBlockId" : None}, "func" : {"func_name" : "NameOfFunction"}},
-                          "B_components" : {"id" : 0, "component" : BlockComponents},
+        self.blocks[0] = {"B_type" : {"id" : 0, "block_id" : 0, "color": "green", "block_inputTypes" : {"input_id" : 0, "input_t" : dataTypes, "inputBlockId" : None}, "block_outputTypes" : {"output_id" : 0, "output_t" : dataTypes, "outputBlockId" : None}, "func" : {"func_name" : "NameOfFunction"}},
+                          "B_components" : {"id" : 0, "component" : TextView|EditText},
                           "B_position" : {"x1": 50, "y1": 50, "x2": 150, "y2": 150}}
 
     def initBlock_add(self):
