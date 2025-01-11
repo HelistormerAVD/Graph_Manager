@@ -1,5 +1,3 @@
-import graph
-import image
 import re
 from PIL import Image as PILImage, ImageEnhance, ImageFilter
 import matplotlib.pyplot as plt
@@ -76,7 +74,7 @@ class BDFloat:  # umbenannt, da es double in (Standard-)Python nicht gibt
             self.data /= divisor
             return self.data
         except ZeroDivisionError:
-            return self.data    # TODO: welchen Wert sinnvoll zurückgeben?
+            return self.data  # TODO: welchen Wert sinnvoll zurückgeben?
 
     def pow(self, exponent):
         self.data **= exponent
@@ -116,7 +114,7 @@ class BDInteger(BDFloat):
             self.data = quotient
             return self.data
         except ZeroDivisionError:
-            return self.data    # TODO: welchen Wert sinnvoll zurückgeben?
+            return self.data  # TODO: welchen Wert sinnvoll zurückgeben?
 
     def pow(self, exponent=1):
         return int(BDFloat.pow(self, exponent))
@@ -137,7 +135,6 @@ class BDInteger(BDFloat):
 
 class BDImage:
     """ Klasse BDImage """
-    data = image.Image("assets/moeve.jpg")
 
     def __init__(self, file_path):
         """ Konstruktor der Image-Klasse """
@@ -212,7 +209,6 @@ class BDImage:
 
 class BDGraph:
     """ Klasse BDGraph """
-    data = graph.Graph([0], [0])
     pointsX = []
     pointsY = []
     graph = plt
