@@ -5,45 +5,85 @@ import json
 
 # Just a normal Text to be displayed
 class TextView:
-    text = "textView"
-    fontColor = "gray"
-    fontSize = 10
-    width = 20
-    height = 14
 
-    def __init__(self, text):
+    def __init__(self, component_id, posX, posY, text):
+        self.component_Id = component_id
+        self.x1 = posX
+        self.y1 = posY
         self.text = text
+        self.fontSize = 10
+        self.fontColor = "black"
+        self.width = 20
+        self.height = 14
+
 
     def getData(self):
-        return self.text, self.fontColor, self.fontSize, self.width, self.height  # Als Dictionary wiedergeben! ( {"text" : self.text, ...} )
+        return {"id" : self.component_Id,
+                "x1" : self.x1,
+                "y1" : self.y1,
+                "text" : self.text,
+                "fontSize" : self.fontSize,
+                "fontColor" : self.fontColor,
+                "width" : self.width,
+                "height" : self.height}
 
     def getText(self):
         return self.text
 
     def setText(self, txt):
         self.text = txt
+
+    def setPosition(self, posX, posY):
+        self.x1 = posX
+        self.y1 = posY
+
+    def getPosition(self):
+        return self.x1, self.y1
 
 
 # Editable Text Box
 class EditText:
-    text = "EditText"
-    fontColor = "black"
-    fontSize = 10
-    width = 20
-    height = 14
     isOnlyNumber = False
 
-    def __init__(self, text):
+    def __init__(self, component_id, posX, posY, text):
+        self.component_Id = component_id
+        self.x1 = posX
+        self.y1 = posY
         self.text = text
+        self.fontSize = 10
+        self.fontColor = "black"
+        self.width = 20
+        self.height = 14
 
     def getData(self):
-        return self.text, self.fontColor, self.fontSize, self.width, self.height
+        return {"id": self.component_Id,
+                "x1": self.x1,
+                "y1": self.y1,
+                "text": self.text,
+                "fontSize": self.fontSize,
+                "fontColor": self.fontColor,
+                "width": self.width,
+                "height": self.height}
 
     def getText(self):
         return self.text
 
     def setText(self, txt):
         self.text = txt
+
+    def setPosition(self, posX, posY):
+        self.x1 = posX
+        self.y1 = posY
+
+    def getPosition(self):
+        return self.x1, self.y1
+
+    def checkIfOnlyNumber(self):
+        checked = str.isdigit(self.text)
+        if checked:
+            return 1
+        else:
+            return 0
 
 
 if __name__ == "__main__":
