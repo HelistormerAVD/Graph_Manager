@@ -45,15 +45,25 @@ class TextView:
 class EditText:
     isOnlyNumber = False
 
-    def __init__(self, component_id, posX, posY, text):
-        self.component_Id = component_id
-        self.x1 = posX
-        self.y1 = posY
-        self.text = text
+    def __init__(self):
+        self.component_Id = 0
+        self.x1 = 0
+        self.y1 = 0
+        self.text = "EditText"
         self.fontSize = 10
         self.fontColor = "black"
         self.width = 20
         self.height = 14
+
+    def setData(self, component_id : int, x1 : int, y1 : int, text : str, fontSize : int, fontColor : str, width : int, height : int):
+        self.component_Id = component_id
+        self.x1 = x1
+        self.y1 = y1
+        self.text = text
+        self.fontSize = fontSize
+        self.fontColor = fontColor
+        self.width = width
+        self.height = height
 
     def getData(self):
         return {"id": self.component_Id,
