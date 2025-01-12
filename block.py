@@ -10,7 +10,6 @@ from util import h_getNextEmptyDictionary
 
 class Block:
     # FIXED VARIABLES
-    b_editText = block_components.EditText()
 
 
     #"B_type" : {"id : 0", "block_id" : 1, "color": "green2", "connected" : False, "block_inputTypes" : {"input_id" : 0, "input_t" : dataTypes, "inputBlockId" : None}, "block_outputTypes" : {"output_id" : 0, "output_t" : dataTypes, "outputBlockId" : None}, "func" : {"func_name" : "NameOfFunction"}}
@@ -19,13 +18,21 @@ class Block:
 
     def __init__(self):
         self.blocks = {}
-        self.blocks[0] = {"B_type" : {"id" : 0, "block_id" : 0, "color": "green2", "connected" : False, "block_inputTypes" : {"input_id" : 0, "input_t" : dataTypes, "inputBlockId" : None}, "block_outputTypes" : {"output_id" : 0, "output_t" : dataTypes, "outputBlockId" : None}, "func" : {"func_name" : "NameOfFunction"}},
-                          "B_components" : {"id" : 0, "component" : TextView|EditText},
-                          "B_position" : {"x1": 50, "y1": 50, "x2": 150, "y2": 150}}
+        #self.blocks[0] = {"B_type" : {"id" : 0, "block_id" : 0, "color": "green2", "connected" : False, "block_inputTypes" : {"input_id" : 0, "input_t" : dataTypes, "inputBlockId" : None}, "block_outputTypes" : {"output_id" : 0, "output_t" : dataTypes, "outputBlockId" : None}, "func" : {"func_name" : "NameOfFunction"}},
+        #                  "B_components" : {"id" : 0, "component" : None},
+        #                  "B_position" : {"x1": 50, "y1": 50, "x2": 150, "y2": 150}}
         print("done")
 
     def initBlock_add(self):
         index = h_getNextEmptyDictionary(self.blocks)
+        b_editText = block_components.EditText()
+        b_editText.setData(0, 10, 10, "Test", 1, "black", 10, 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 10, 30, "Test2", 1, "black", 10, 10)
+        components = []
+        components.insert(0, {"id": 1, "component": b_editText})
+        components.insert(1, {"id": 1, "component": b_editText2})
+        #components.__getitem__(1)
         self.blocks[index] = {
             "B_type" : {
                 "id" : index,
@@ -43,17 +50,13 @@ class Block:
                 "func" : {
                     "func_name" : "NameOfFunction"}
             },
-            "B_components" : {
-                "id" : 1,
-                "component" : EditText},
+            "B_components" : components,
             "B_position" : {
                 "x1": 50,
                 "y1": 50,
                 "x2": 150,
                 "y2": 150}
         }
-        self.b_editText.setData(0, 10, 10, "Test", 1, "black", 50, 10)
-        self.blocks[index]["B_components"][0] = {"id" : 0, "component" : self.b_editText}
         return index
 
     def setBlockPosition(self, block_id, x1, y1, x2, y2):

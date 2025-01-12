@@ -1,11 +1,14 @@
 # nützliche Hilfs-Funktionen.
 
 def h_getNextEmptyDictionary(dictionary):
-    a = dictionary.__len__()
+    a = dictionary.items().__len__()
     b = 0
+    if a == 0:
+        return 0
     for i in range(a):
+        #print(a)
         b = i
-        if not dictionary[i]:
+        if not dictionary.get(i):
             return b
     return b + 1
 
@@ -16,7 +19,7 @@ if __name__ == "__main__":
     werte = {}
     werte[0] = {"test" : True, "zahl" : 1, "vals" : {}}
     werte[1] = {"test": True, "zahl": 1, "vals": {}}
-    #werte[2] = {"test": True, "zahl": 1, "vals": {}}
+    werte[2] = {"test": True, "zahl": 1, "vals": {}}
     #werte[3] = {"test": True, "zahl": 1, "vals": {}}
     #werte[4] = {"test": True, "zahl": 1, "vals": {}}
     #werte[5] = {"test": True, "zahl": 1, "vals": {}}
