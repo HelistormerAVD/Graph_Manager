@@ -17,6 +17,7 @@ def h_findFromCanvasDictObj(canvasObjId, dictionary, isComponent):
 
 
 
+
 if __name__ == "__main__":
     print("Test einer Hilfs-Funktion")
     #------------------

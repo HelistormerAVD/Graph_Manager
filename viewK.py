@@ -104,6 +104,7 @@ class BlockEditorView:
         self.canvas.create_line(x1, y1, x2, y2, fill="red", tags="debugLines")
 
 
+
 if __name__ == "__main__":
     root = tk.Tk()
     window = BlockEditorView(root)
