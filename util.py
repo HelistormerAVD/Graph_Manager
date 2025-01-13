@@ -12,7 +12,9 @@ def h_getNextEmptyDictionary(dictionary):
             return b
     return b + 1
 
-#def h_findInDictionary(dictionary, val):
+def h_findFromCanvasDictObj(canvasObjId, dictionary, isComponent):
+    length = dictionary.__len__()
+
 
 
 if __name__ == "__main__":

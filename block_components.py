@@ -8,6 +8,7 @@ class TextView:
 
     def __init__(self):
         self.component_Id = 0
+        self.canvas_Id = None
         self.x1 = 0
         self.y1 = 0
         self.text = "TextView"
@@ -19,6 +20,7 @@ class TextView:
 
     def getData(self):
         return {"id" : self.component_Id,
+                "canvas_id": self.canvas_Id,
                 "x1" : self.x1,
                 "y1" : self.y1,
                 "text" : self.text,
@@ -57,6 +59,7 @@ class EditText:
 
     def __init__(self):
         self.component_Id = 0
+        self.canvas_Id = None
         self.x1 = 0
         self.y1 = 0
         self.text = "EditText"
@@ -67,6 +70,7 @@ class EditText:
 
     def setData(self, component_id : int, x1 : int, y1 : int, text : str, fontSize : int, fontColor : str, width : int, height : int):
         self.component_Id = component_id
+        self.canvas_Id = None
         self.x1 = x1
         self.y1 = y1
         self.text = text
@@ -77,6 +81,7 @@ class EditText:
 
     def getData(self):
         return {"id": self.component_Id,
+                "canvas_id": self.canvas_Id,
                 "x1": self.x1,
                 "y1": self.y1,
                 "text": self.text,

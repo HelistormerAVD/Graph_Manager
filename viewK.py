@@ -24,7 +24,7 @@ class BlockEditorView:
         self.add_block_button = tk.Button(self.toolbar, text="Math Operations", command=self.add_block)
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
-        self.editorObjects = {}
+        #self.editorObjects = {}
 
         #self.canvas.bind("<Button-1>", self.on_canvas_click)
         self.canvas.bind("<Button-2>", self.onCanvasClick)
@@ -33,23 +33,19 @@ class BlockEditorView:
 
     def add_block(self):
 
-        indexOfCanvasObject = h_getNextEmptyDictionary(self.editorObjects)
-        self.editorObjects[indexOfCanvasObject] = {"widget" : None, "Id" : None, "type" : str, "components" : []}
-
         index = self.b_obj.initBlock_add()
         newBlock = self.b_obj.blocks[index]
         b_comp_length = newBlock["B_components"].__len__()
         #print(newBlock["B_components"])
-        self.editorObjects[indexOfCanvasObject]["Id"] = self.canvas.create_rectangle(newBlock["B_position"]["x1"],
+        newBlock["B_type"]["id"] = self.canvas.create_rectangle(newBlock["B_position"]["x1"],
                                      newBlock["B_position"]["y1"],
                                      newBlock["B_position"]["x2"],
                                      newBlock["B_position"]["y2"],
                                      fill=newBlock["B_type"]["color"],
                                      tags="Integer_add")
-        self.editorObjects[indexOfCanvasObject]["type"] = "Rect"
         for i in range(b_comp_length):
             componentType = None
-            componentId = newBlock["B_components"].__getitem__(i)["id"]
+            componentId = newBlock["B_components"].__getitem__(i)["component_id"]
             match componentId:
                 case 0:
                     textViewSettings = newBlock["B_components"].__getitem__(i)["component"].getData()
@@ -60,7 +56,8 @@ class BlockEditorView:
                                                              window=componentType,
                                                              anchor="nw",
                                                              tags="TextView")
-                    self.editorObjects[indexOfCanvasObject]["components"].append({"Id" : textViewComp, "type" : "TextView"})
+                    newBlock["B_components"][componentId]["id"] = textViewComp
+                    #self.b_obj.editorObjects[indexOfCanvasObject]["components"].append({"Id" : textViewComp, "type" : "TextView"})
                 case 1:
                     editTextSettings = newBlock["B_components"].__getitem__(i)["component"].getData()
                     componentType = tk.Entry(self.root, width=editTextSettings["width"])
@@ -70,11 +67,11 @@ class BlockEditorView:
                                                              window=componentType,
                                                              anchor="nw",
                                                              tags="EditText")
-                    self.editorObjects[indexOfCanvasObject]["components"].append({"Id" : editTextComp, "type" : "EditText"})
+                    #self.b_obj.editorObjects[indexOfCanvasObject]["components"].append({"Id" : editTextComp, "type" : "EditText"})
+                    newBlock["B_components"][componentId]["id"] = editTextComp
 
     def onCanvasClick(self, event):
         item = self.canvas.find_closest(event.x, event.y)
-
 
 
     def updateBlockPosition(self, block_id):
@@ -92,7 +89,7 @@ class BlockEditorView:
 
         for i in range(b_comp_length):
             componentType = None
-            componentId = block["B_components"].__getitem__(i)["id"]
+            componentId = block["B_components"].__getitem__(i)["component_id"]
             match componentId:
                 case 0:
                     componentType = None
