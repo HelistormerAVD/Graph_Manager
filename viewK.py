@@ -24,16 +24,17 @@ class BlockEditorView:
         self.add_block_button = tk.Button(self.toolbar, text="Math Operations", command=self.add_block)
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
-        self.editorObjects = {"widget" : None, "Id" : None, "type" : str, "components" : []}
+        self.editorObjects = {}
 
         #self.canvas.bind("<Button-1>", self.on_canvas_click)
-        #self.canvas.bind("<Button-2>", self.add_test_Block)
+        self.canvas.bind("<Button-2>", self.onCanvasClick)
         #self.canvas.bind("<B1-Motion>", self.on_canvas_drag)
 
 
     def add_block(self):
 
         indexOfCanvasObject = h_getNextEmptyDictionary(self.editorObjects)
+        self.editorObjects[indexOfCanvasObject] = {"widget" : None, "Id" : None, "type" : str, "components" : []}
 
         index = self.b_obj.initBlock_add()
         newBlock = self.b_obj.blocks[index]
@@ -70,6 +71,11 @@ class BlockEditorView:
                                                              anchor="nw",
                                                              tags="EditText")
                     self.editorObjects[indexOfCanvasObject]["components"].append({"Id" : editTextComp, "type" : "EditText"})
+
+    def onCanvasClick(self, event):
+        item = self.canvas.find_closest(event.x, event.y)
+
+
 
     def updateBlockPosition(self, block_id):
         index = block_id

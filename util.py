@@ -12,6 +12,9 @@ def h_getNextEmptyDictionary(dictionary):
             return b
     return b + 1
 
+#def h_findInDictionary(dictionary, val):
+
+
 if __name__ == "__main__":
     print("Test einer Hilfs-Funktion")
     #------------------
