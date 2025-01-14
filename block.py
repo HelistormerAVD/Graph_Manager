@@ -197,6 +197,7 @@ class Block:
         dx, dy = h_getVectorBetweenPoints(x1, y1, oldPos["x1"],oldPos["y1"])
         self.blocks[block_id]["B_position"] = {"x1" : (oldPos["x1"] + dx), "y1" : (oldPos["y1"] + dy), "x2" : (oldPos["x2"] + dx), "y2" : (oldPos["y2"] + dy)}
 
+
     def setAllBlockComponents(self, block_id, comp):
         self.blocks[block_id]["B_components"] = comp
 

@@ -30,7 +30,7 @@ class BlockEditorView:
 
         #self.canvas.bind("<Button-1>", self.on_canvas_click)
         self.canvas.bind("<Button-2>", self.onCanvasClick)
-        self.canvas.bind("e", self.onCanvasClick)
+        self.canvas.bind("<Button-3>", self.debugClick)
         #self.canvas.bind("<B1-Motion>", self.on_canvas_drag)
 
 
@@ -147,7 +147,23 @@ class BlockEditorView:
         return 0
 
 
+    def updateTextFromComponent(self, block_id):
+        index = block_id
+        block = self.b_obj.blocks[index]
+        canvasBlock_id = self.canvas.find_withtag(block_id)
 
+        for i in range(block["B_components"].__len__()):
+            canvasComponent_id = block["B_components"][i]["id"]
+            block_comp_dict = block["B_components"][i]["component"].getData()
+            canvasEditTexts = self.canvas.find_withtag("EditText")
+            for j in canvasEditTexts:
+                print(self.canvas.itemcget(j, ))
+
+    def debugClick(self, event):
+        item = self.canvas.find_closest(event.x, event.y)
+        if item and "Block" in self.canvas.gettags(item)[0]:
+            block_id = self.b_obj.findBlockIdFromCanvas(item[0])
+            self.updateTextFromComponent(block_id)
 
 
     def updateBlockPosition(self, block_id):
