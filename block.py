@@ -26,15 +26,17 @@ class Block:
         #                  "B_position" : {"x1": 50, "y1": 50, "x2": 150, "y2": 150}}
         print("done")
 
-    def initBlock_add(self):
+    def initBlock_setVariable_add(self):
         index = h_getNextEmptyDictionary(self.blocks)
         for i in range(len(self.deletedPos)):
             if index == self.deletedPos[i]:
                 self.deletedPos.pop(i)
         b_editText = block_components.EditText()
-        b_editText.setData(0, 10, 10, "Test", 1, "black", 10, 10)
+        b_editText.setData(1, 10, 10, "Test", 10)
+        b_text = block_components.TextView()
+        b_text.setData(0, 10, 90, "+","black", 10)
         b_editText2 = block_components.EditText()
-        b_editText2.setData(1, 100, 10, "Test2", 1, "black", 10, 10)
+        b_editText2.setData(1, 100, 10, "Test2", 10)
         components = []
         components.insert(0, {"id": None, "component_id" : 1, "component": b_editText})
         components.insert(1, {"id": None, "component_id" : 1, "component": b_editText2})
@@ -65,15 +67,57 @@ class Block:
         }
         return index
 
-    def initBlock_sub(self):
+    def initBlock_Integer_add(self):
         index = h_getNextEmptyDictionary(self.blocks)
         for i in range(len(self.deletedPos)):
             if index == self.deletedPos[i]:
                 self.deletedPos.pop(i)
         b_editText = block_components.EditText()
-        b_editText.setData(0, 10, 10, "Test", 1, "black", 10, 10)
+        b_editText.setData(1, 10, 10, "Test", 10)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 85, 20, "+", "black", 10)
         b_editText2 = block_components.EditText()
-        b_editText2.setData(1, 10, 30, "Test2", 1, "black", 10, 10)
+        b_editText2.setData(1, 100, 10, "Test2", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id" : 1, "component": b_editText})
+        components.insert(1, {"id": None, "component_id": 0, "component": b_textView})
+        components.insert(2, {"id": None, "component_id" : 1, "component": b_editText2})
+        self.blocks[index] = {
+            "B_type" : {
+                "id" : None,
+                "block_id" : 1,
+                "color": "green2",
+                "connected" : False,
+                "block_inputTypes" : {
+                    "input_id" : 0,
+                    "input_t" : dataTypes,
+                    "inputBlockId" : None},
+                "block_outputTypes" : {
+                    "output_id" : 0,
+                    "output_t" : dataTypes,
+                    "outputBlockId" : None},
+                "func" : {
+                    "func_name" : "NameOfFunction",
+                    "func_args" : None}
+            },
+            "B_components" : components,
+            "B_position" : {
+                "x1": 50,
+                "y1": 50,
+                "x2": 250,
+                "y2": 90}
+        }
+        return index
+
+    def initBlock_Integer_sub(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 10, 10, "Test", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 100, 10, "Test2", 10)
         components = []
         components.insert(0, {"id": None, "component_id" : 1, "component": b_editText})
         components.insert(1, {"id": None, "component_id" : 1, "component": b_editText2})
@@ -146,6 +190,10 @@ class Block:
 
     def moveBlock(self, block_id, x1, y1):
         oldPos = self.getBlockPosition(block_id)
+        self.blocks[block_id]["B_position"] = {"x1" : x1, "y1" : y1, "x2" : x1 + (oldPos["x2"] - oldPos["x1"]), "y2" : y1 + (oldPos["y2"] - oldPos["y1"])}
+
+    def moveBlockRelativ(self, block_id, x1, y1):
+        oldPos = self.getBlockPosition(block_id)
         dx, dy = h_getVectorBetweenPoints(x1, y1, oldPos["x1"],oldPos["y1"])
         self.blocks[block_id]["B_position"] = {"x1" : (oldPos["x1"] + dx), "y1" : (oldPos["y1"] + dy), "x2" : (oldPos["x2"] + dx), "y2" : (oldPos["y2"] + dy)}
 
@@ -159,4 +207,4 @@ class Block:
 if __name__ == "__main__":
     b_obj = Block()
     print(b_obj.blocks.__len__())
-    b_obj.initBlock_add()
+    b_obj.initBlock_Integer_add()

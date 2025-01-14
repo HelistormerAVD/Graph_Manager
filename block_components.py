@@ -12,10 +12,8 @@ class TextView:
         self.x1 = 0
         self.y1 = 0
         self.text = "TextView"
-        self.fontSize = 10
         self.fontColor = "black"
         self.width = 20
-        self.height = 14
 
 
     def getData(self):
@@ -24,20 +22,16 @@ class TextView:
                 "x1" : self.x1,
                 "y1" : self.y1,
                 "text" : self.text,
-                "fontSize" : self.fontSize,
                 "fontColor" : self.fontColor,
-                "width" : self.width,
-                "height" : self.height}
+                "width" : self.width}
 
-    def setData(self, component_id : int, x1 : int, y1 : int, text : str, fontSize : int, fontColor : str, width : int, height : int):
+    def setData(self, component_id : int, x1 : int, y1 : int, text : str, fontColor : str, width : int):
         self.component_Id = component_id
         self.x1 = x1
         self.y1 = y1
         self.text = text
-        self.fontSize = fontSize
         self.fontColor = fontColor
         self.width = width
-        self.height = height
 
     def getText(self):
         return self.text
@@ -63,21 +57,15 @@ class EditText:
         self.x1 = 0
         self.y1 = 0
         self.text = "EditText"
-        self.fontSize = 10
-        self.fontColor = "black"
         self.width = 20
-        self.height = 14
 
-    def setData(self, component_id : int, x1 : int, y1 : int, text : str, fontSize : int, fontColor : str, width : int, height : int):
+    def setData(self, component_id : int, x1 : int, y1 : int, text : str, width : int):
         self.component_Id = component_id
         self.canvas_Id = None
         self.x1 = x1
         self.y1 = y1
         self.text = text
-        self.fontSize = fontSize
-        self.fontColor = fontColor
         self.width = width
-        self.height = height
 
     def getData(self):
         return {"id": self.component_Id,
@@ -85,10 +73,7 @@ class EditText:
                 "x1": self.x1,
                 "y1": self.y1,
                 "text": self.text,
-                "fontSize": self.fontSize,
-                "fontColor": self.fontColor,
-                "width": self.width,
-                "height": self.height}
+                "width": self.width}
 
     def getText(self):
         return self.text

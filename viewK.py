@@ -36,7 +36,7 @@ class BlockEditorView:
 
     def add_block(self):
 
-        index = self.b_obj.initBlock_add()
+        index = self.b_obj.initBlock_Integer_add()
         newBlock = self.b_obj.blocks[index]
         b_comp_length = newBlock["B_components"].__len__()
         #print(newBlock["B_components"])
@@ -52,13 +52,8 @@ class BlockEditorView:
             match componentId:
                 case 0:
                     textViewSettings = newBlock["B_components"].__getitem__(i)["component"].getData()
-                    componentType = tk.Entry(self.root, width=textViewSettings["width"])
-                    componentType.insert(i, textViewSettings["text"])
-                    textViewComp = self.canvas.create_window(textViewSettings["x1"] + newBlock["B_position"]["x1"],
-                                                             textViewSettings["y1"] + newBlock["B_position"]["y1"],
-                                                             window=componentType,
-                                                             anchor="nw",
-                                                             tags="TextView")
+                    textViewComp = self.canvas.create_text(textViewSettings["x1"] + newBlock["B_position"]["x1"],
+                                                             textViewSettings["y1"] + newBlock["B_position"]["y1"], text=textViewSettings["text"], fill=textViewSettings["fontColor"], tags="TextView", font=('Helvetica', '12'))
                     newBlock["B_components"].__getitem__(i)["id"] = textViewComp
                     #self.b_obj.editorObjects[indexOfCanvasObject]["components"].append({"Id" : textViewComp, "type" : "TextView"})
                 case 1:
@@ -160,8 +155,9 @@ class BlockEditorView:
         block = self.b_obj.blocks[index]
         b_pos = self.b_obj.getBlockPosition(index)
         b_comp_length = block["B_components"].__len__()
-        canvasBlock_id = self.canvas.find_withtag(block_id)
-        self.canvas.move(canvasBlock_id, block["B_position"]["x1"], block["B_position"]["y1"])
+        canvasBlock_id = self.canvas.find_withtag(self.b_obj.blocks[index]["B_type"]["id"])
+        #self.canvas.itemconfigure(canvasBlock_id, x1=block["B_position"]["x1"], y1=block["B_position"]["y1"], x2=block["B_position"]["x2"], y2=block["B_position"]["y2"])
+        self.canvas.moveto(canvasBlock_id, block["B_position"]["x1"], block["B_position"]["y1"])
 
 
         for i in range(b_comp_length):
@@ -170,9 +166,9 @@ class BlockEditorView:
             canvas_id = self.canvas.find_withtag(componentId)
             compPosX1, compPosY1 = block["B_components"].__getitem__(i)["component"].getPosition()
             actualCompPosX, actualCompPosY = self.canvas.coords(canvas_id)
-            dx, dy = h_getVectorBetweenPoints(b_pos["x1"], b_pos["y1"], compPosX1, compPosY1)
-            if (compPosX1 + actualCompPosX) != (b_pos["x1"] + dx) or (compPosY1 + actualCompPosY) != (b_pos["y1"] + dy):
-                self.canvas.move(componentId, compPosX1, compPosY1)
+            #dx, dy = h_getVectorBetweenPoints(b_pos["x1"], b_pos["y1"], compPosX1, compPosY1)
+            #if (compPosX1 + actualCompPosX) != (b_pos["x1"] + dx) or (compPosY1 + actualCompPosY) != (b_pos["y1"] + dy):
+            self.canvas.moveto(componentId, (compPosX1 + b_pos["x1"]), (compPosY1 + b_pos["y1"]))
 
 
     def debug_line(self, x1, y1, x2, y2):
