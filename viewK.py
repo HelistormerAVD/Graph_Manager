@@ -5,7 +5,7 @@ import block
 from tkinter import filedialog, messagebox
 
 import block_components
-from util import h_getNextEmptyDictionary
+from util import h_getNextEmptyDictionary, h_getVectorBetweenPoints
 
 
 class BlockEditorView:
@@ -25,9 +25,11 @@ class BlockEditorView:
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
         #self.editorObjects = {}
+        self.selectedTool = 1
 
         #self.canvas.bind("<Button-1>", self.on_canvas_click)
         self.canvas.bind("<Button-2>", self.onCanvasClick)
+        self.canvas.bind("e", self.onCanvasClick)
         #self.canvas.bind("<B1-Motion>", self.on_canvas_drag)
 
 
@@ -42,7 +44,7 @@ class BlockEditorView:
                                      newBlock["B_position"]["x2"],
                                      newBlock["B_position"]["y2"],
                                      fill=newBlock["B_type"]["color"],
-                                     tags="Integer_add")
+                                     tags=["Block", "Integer_add"])
         for i in range(b_comp_length):
             componentType = None
             componentId = newBlock["B_components"].__getitem__(i)["component_id"]
@@ -56,7 +58,7 @@ class BlockEditorView:
                                                              window=componentType,
                                                              anchor="nw",
                                                              tags="TextView")
-                    newBlock["B_components"][componentId]["id"] = textViewComp
+                    newBlock["B_components"].__getitem__(i)["id"] = textViewComp
                     #self.b_obj.editorObjects[indexOfCanvasObject]["components"].append({"Id" : textViewComp, "type" : "TextView"})
                 case 1:
                     editTextSettings = newBlock["B_components"].__getitem__(i)["component"].getData()
@@ -68,35 +70,59 @@ class BlockEditorView:
                                                              anchor="nw",
                                                              tags="EditText")
                     #self.b_obj.editorObjects[indexOfCanvasObject]["components"].append({"Id" : editTextComp, "type" : "EditText"})
-                    newBlock["B_components"][componentId]["id"] = editTextComp
+                    newBlock["B_components"].__getitem__(i)["id"] = editTextComp
+                    #newBlock["B_components"][componentId]["id"] = editTextComp
+                    print(newBlock)
 
     def onCanvasClick(self, event):
         item = self.canvas.find_closest(event.x, event.y)
+        if item and "Block" in self.canvas.gettags(item)[0]:
+            if self.checkSelectedTool() == 1:
+                block_id = self.b_obj.findBlockIdFromCanvas(item[0])
+            if self.checkSelectedTool() == 2:
+                block_id = self.b_obj.findBlockIdFromCanvas(item[0])
+                self.b_obj.moveBlock(block_id, event.x, event.y)
+                self.updateBlockPosition(block_id)
+            else:
+                print("nothing to Do")
+
+    def checkSelectedTool(self):
+        match self.selectedTool:
+            case 0:
+                print("no Tool Selected")
+                return 1
+            case 1:
+                print("Move Tool (move a Block by selecting it and clicking on the Canvas)")
+                return 2
+            case 2:
+                print("Link Tool (Links a Block to an other Block by selecting the first one and clicking on the second block)")
+                return 3
+            case 3:
+                print("Delete Tool (deletes a Block by clicking on the Block)")
+                return 4
+        return 0
+
+
 
 
     def updateBlockPosition(self, block_id):
         index = block_id
         block = self.b_obj.blocks[index]
-        b_pos = block.getBlockPosition(index)
+        b_pos = self.b_obj.getBlockPosition(index)
         b_comp_length = block["B_components"].__len__()
+        canvasBlock_id = self.canvas.find_withtag(block_id)
+        self.canvas.move(canvasBlock_id, block["B_position"]["x1"], block["B_position"]["y1"])
 
-        newPosX = block["B_position"]["x1"]
-        newPosY = block["B_position"]["y1"]
-        
-
-        self.canvas.__getitem__()
-        self.canvas.move()
 
         for i in range(b_comp_length):
             componentType = None
-            componentId = block["B_components"].__getitem__(i)["component_id"]
-            match componentId:
-                case 0:
-                    componentType = None
-                    print("err")
-                case 1:
-                    self.canvas.move()
-                    editTextSettings = block["B_components"].__getitem__(i)["component"].getData()
+            componentId = block["B_components"].__getitem__(i)["id"]
+            canvas_id = self.canvas.find_withtag(componentId)
+            compPosX1, compPosY1 = block["B_components"].__getitem__(i)["component"].getPosition()
+            actualCompPosX, actualCompPosY = self.canvas.coords(canvas_id)
+            dx, dy = h_getVectorBetweenPoints(b_pos["x1"], b_pos["y1"], compPosX1, compPosY1)
+            if (compPosX1 + actualCompPosX) != (b_pos["x1"] + dx) or (compPosY1 + actualCompPosY) != (b_pos["y1"] + dy):
+                self.canvas.move(componentId, compPosX1, compPosY1)
 
 
     def debug_line(self, x1, y1, x2, y2):

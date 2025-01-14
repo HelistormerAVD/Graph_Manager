@@ -12,6 +12,9 @@ def h_getNextEmptyDictionary(dictionary):
             return b
     return b + 1
 
+def h_getVectorBetweenPoints(x1, y1, x2, y2):
+    return (x2 - x1), (y2 - y1)
+
 def h_findFromCanvasDictObj(canvasObjId, dictionary, isComponent):
     length = dictionary.__len__()
 

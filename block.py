@@ -2,12 +2,10 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import json
 
-from python.Lib.dataclasses import asdict
-
 import block_components
 import dataTypes
 from block_components import TextView, EditText
-from util import h_getNextEmptyDictionary
+from util import h_getNextEmptyDictionary, h_getVectorBetweenPoints
 
 
 class Block:
@@ -39,7 +37,6 @@ class Block:
         components = []
         components.insert(0, {"id": None, "component_id" : 1, "component": b_editText})
         components.insert(1, {"id": None, "component_id" : 1, "component": b_editText2})
-        #components.__getitem__(1)
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
@@ -72,33 +69,21 @@ class Block:
 
     def findBlockIdFromCanvas(self, canvasId):
         stopAlg = 0
-        for i in range(len(self.blocks)):
-            for j in range(len(self.deletedPos)):
-                if self.deletedPos.__getitem__(j) == canvasId:
-                    print("was Deletes")
-                    stopAlg = 1
-                    break
-                else:
-                    stopAlg = 0
-                    if self.blocks[i]["B_type"]["id"] == canvasId:
-                        return i
-                if stopAlg == 1:
-                    return -1
-        return -1
-
-    def findBlockComponentIdFromCanvas(self, canvasId):
-        stopAlg = 0
-        for i in range(len(self.blocks)):
-            for j in range(len(self.deletedPos)):
-                if self.deletedPos.__getitem__(j) == canvasId:
-                    print("was Deletes")
-                    stopAlg = 1
-                else:
-                    stopAlg = 0
-                    if self.blocks[i]["B_type"]["id"] == canvasId:
-                        return i
-                if stopAlg == 1:
-                    return -1
+        for i in range(self.blocks.__len__()):
+            if self.deletedPos:
+                for j in range(self.deletedPos.__len__()):
+                    if self.deletedPos.__getitem__(j) == canvasId:
+                        print("was Deletes")
+                        stopAlg = 1
+                    else:
+                        stopAlg = 0
+                        if self.blocks[i]["B_type"]["id"] == canvasId:
+                            return i
+                    if stopAlg == 1:
+                        return -1
+            else:
+                if self.blocks[i]["B_type"]["id"] == canvasId:
+                    return i
         return -1
 
 
@@ -117,6 +102,11 @@ class Block:
             return 1
         else:
             return 0
+
+    def moveBlock(self, block_id, x1, y1):
+        oldPos = self.getBlockPosition(block_id)
+        dx, dy = h_getVectorBetweenPoints(x1, y1, oldPos["x1"],oldPos["y1"])
+        self.blocks[block_id]["B_position"] = {"x1" : (oldPos["x1"] + dx), "y1" : (oldPos["y1"] + dy), "x2" : (oldPos["x2"] + dx), "y2" : (oldPos["y2"] + dy)}
 
     def setAllBlockComponents(self, block_id, comp):
         self.blocks[block_id]["B_components"] = comp
