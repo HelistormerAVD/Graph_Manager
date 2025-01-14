@@ -37,12 +37,15 @@ class BlockEditorView:
         newBlock = self.b_obj.blocks[index]
         b_comp_length = newBlock["B_components"].__len__()
         #print(newBlock["B_components"])
-        newBlock["B_type"]["id"] = self.canvas.create_rectangle(newBlock["B_position"]["x1"],
-                                     newBlock["B_position"]["y1"],
-                                     newBlock["B_position"]["x2"],
-                                     newBlock["B_position"]["y2"],
-                                     fill=newBlock["B_type"]["color"],
-                                     tags="Integer_add")
+        newBlock["B_type"]["id"] = self.canvas.create_rectangle(
+            newBlock["B_position"]["x1"],
+            newBlock["B_position"]["y1"],
+            newBlock["B_position"]["x2"],
+            newBlock["B_position"]["y2"],
+            fill=newBlock["B_type"]["color"],
+            tags="Integer_add"
+        )
+
         for i in range(b_comp_length):
             componentType = None
             componentId = newBlock["B_components"].__getitem__(i)["component_id"]
@@ -69,6 +72,8 @@ class BlockEditorView:
                                                              tags="EditText")
                     #self.b_obj.editorObjects[indexOfCanvasObject]["components"].append({"Id" : editTextComp, "type" : "EditText"})
                     newBlock["B_components"][componentId]["id"] = editTextComp
+                case _:
+                    print(f"component_id '{componentId}' is not valid")
 
     def onCanvasClick(self, event):
         item = self.canvas.find_closest(event.x, event.y)
