@@ -5,7 +5,7 @@ import block
 from tkinter import filedialog, messagebox
 
 import block_components
-from scriptVariables import Var
+from script_variables import Var
 from util import h_getNextEmptyDictionary, h_getVectorBetweenPoints
 
 
@@ -88,16 +88,24 @@ class BlockEditorView:
                 print("nothing to Do")
 
     def onCreateLink(self, block_id, selected_block_id):
+        """ erstellt einen Link zwischen den beiden Blöcken mit den block_ids block_id und selected_block_id """
         print("create a link between two blocks")
         if block_id == selected_block_id:
-            self.b_obj.blocks[selected_block_id]["inputBlockId"] = block_id
-            self.b_obj.blocks[selected_block_id]["input_t"] = block_id
-            self.b_obj.blocks[selected_block_id]["connected"] = True
-            self.b_obj.blocks[block_id]["outputBlockId"] = selected_block_id
-            self.b_obj.blocks[block_id]["connected"] = True
+            block_dict = self.b_obj.get_block_type(block_id)
+            selected_block_dict = self.b_obj.get_block_type(selected_block_id)
+
+            selected_block_dict["block_inputTypes"]["input_t"] = block_id
+            selected_block_dict["block_inputTypes"]["inputBlockId"] = block_id
+            selected_block_dict["connected"] = True
+
+            block_dict["block_outputTypes"]["outputBlockId"] = selected_block_id
+            block_dict["connected"] = True
+
             block_height = Var(40)  # `block_height` ist eine neue globale Variable mit dem Wert 40
+
             x1 = self.b_obj.blocks[block_id].getBlockPosition("x1")
-            y1 = self.b_obj.blocks[block_id].getBlockPosition("y2") + block_height  # TODO: Sicher, dass es y2 von block_id ist?
+            y1 = self.b_obj.blocks[block_id].getBlockPosition("y2") + block_height.get_value()  # TODO: Sicher, dass es y2 von block_id ist?
+
             self.b_obj.moveBlock(selected_block_id, x1, y1)
             print("link created")
         else:
