@@ -11,6 +11,7 @@ from util import h_getNextEmptyDictionary, h_getVectorBetweenPoints
 class Block:
     # FIXED VARIABLES
 
+    # Block Höhe = 40 px
 
     #"B_type" : {"id : 0", "block_id" : 1, "color": "green2", "connected" : False, "block_inputTypes" : {"input_id" : 0, "input_t" : dataTypes, "inputBlockId" : None}, "block_outputTypes" : {"output_id" : 0, "output_t" : dataTypes, "outputBlockId" : None}, "func" : {"func_name" : "NameOfFunction"}}
     #"B_components" : {"id" : 0, "component_id" = 1, "c_position" : {}, "data" : dataTypes}
@@ -26,6 +27,45 @@ class Block:
         print("done")
 
     def initBlock_add(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_editText = block_components.EditText()
+        b_editText.setData(0, 10, 10, "Test", 1, "black", 10, 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 100, 10, "Test2", 1, "black", 10, 10)
+        components = []
+        components.insert(0, {"id": None, "component_id" : 1, "component": b_editText})
+        components.insert(1, {"id": None, "component_id" : 1, "component": b_editText2})
+        self.blocks[index] = {
+            "B_type" : {
+                "id" : None,
+                "block_id" : 1,
+                "color": "green2",
+                "connected" : False,
+                "block_inputTypes" : {
+                    "input_id" : 0,
+                    "input_t" : dataTypes,
+                    "inputBlockId" : None},
+                "block_outputTypes" : {
+                    "output_id" : 0,
+                    "output_t" : dataTypes,
+                    "outputBlockId" : None},
+                "func" : {
+                    "func_name" : "NameOfFunction",
+                    "func_args" : None}
+            },
+            "B_components" : components,
+            "B_position" : {
+                "x1": 50,
+                "y1": 50,
+                "x2": 250,
+                "y2": 90}
+        }
+        return index
+
+    def initBlock_sub(self):
         index = h_getNextEmptyDictionary(self.blocks)
         for i in range(len(self.deletedPos)):
             if index == self.deletedPos[i]:
@@ -52,14 +92,15 @@ class Block:
                     "output_t" : dataTypes,
                     "outputBlockId" : None},
                 "func" : {
-                    "func_name" : "NameOfFunction"}
+                    "func_name" : "NameOfFunction",
+                    "func_args" : None}
             },
             "B_components" : components,
             "B_position" : {
                 "x1": 50,
                 "y1": 50,
-                "x2": 150,
-                "y2": 150}
+                "x2": 100,
+                "y2": 100}
         }
         return index
 

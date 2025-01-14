@@ -26,6 +26,7 @@ class BlockEditorView:
 
         #self.editorObjects = {}
         self.selectedTool = 1
+        self.selectedBlock = None
 
         #self.canvas.bind("<Button-1>", self.on_canvas_click)
         self.canvas.bind("<Button-2>", self.onCanvasClick)
@@ -75,16 +76,64 @@ class BlockEditorView:
                     print(newBlock)
 
     def onCanvasClick(self, event):
-        item = self.canvas.find_closest(event.x, event.y)
-        if item and "Block" in self.canvas.gettags(item)[0]:
-            if self.checkSelectedTool() == 1:
-                block_id = self.b_obj.findBlockIdFromCanvas(item[0])
-            if self.checkSelectedTool() == 2:
-                block_id = self.b_obj.findBlockIdFromCanvas(item[0])
-                self.b_obj.moveBlock(block_id, event.x, event.y)
-                self.updateBlockPosition(block_id)
-            else:
-                print("nothing to Do")
+        if self.selectedBlock:
+            item = self.canvas.find_closest(event.x, event.y)
+            if item and "Block" in self.canvas.gettags(item)[0]:
+                if self.checkSelectedTool() == 1:
+                    block_id = self.b_obj.findBlockIdFromCanvas(item[0])
+                if self.checkSelectedTool() == 2:
+                    block_id = self.b_obj.findBlockIdFromCanvas(item[0])
+                    self.b_obj.moveBlock(block_id, event.x, event.y)
+                    self.updateBlockPosition(block_id)
+                if self.checkSelectedTool() == 3:
+                    block_id = self.b_obj.findBlockIdFromCanvas(item[0])
+                    self.onCreateLink(block_id, self.selectedBlock)
+                if self.checkSelectedTool() == 4:
+                    block_id = self.b_obj.findBlockIdFromCanvas(item[0])
+                    self.onDeleteBlock(block_id, self.selectedBlock)
+                else:
+                    print("nothing to Do")
+        else:
+            item = self.canvas.find_closest(event.x, event.y)
+            if item and "Block" in self.canvas.gettags(item)[0]:
+                self.selectedBlock = item
+
+    def onCreateLink(self, block_id, selected_block_id):
+        print("create a link between two blocks")
+        # überprüfe, ob block_id == selected_block_id (darf nicht die selbe sein)
+        #   in block-dict vom selected_block_id füge "inputBlockId" = block_id
+        #   in block-dict vom selected_block_id füge "input_t" = dataTypes vom block_id "output_t"
+        #   in block-dict vom block_id füge "outputBlockId" = selected_block_id
+        #   in block-dict vom block_id setze "connected" = True
+        #   in block-dict vom selected_block_id setze "connected" = True
+        #   funktion moveBlock(aus b_obj) mit selected_block_id an x1 von block_id und (y2 von block_id) + Blockhöhe (40)
+        print("eingefügt")
+
+    def onDeleteBlock(self, block_id, selected_block_id):
+        print("deletes a block from the Canvas and from block-dict. (self.b_obj.blocks[index])")
+        # überprüfe, od es der Startblock ist (der darf nicht gelöscht werden)
+        # überprüfe, ob block_id == selected_block_id
+        #   lösche block_id vom Canvas
+        #   lösche block_id vom block-dict.
+        #   setze self.selectedBlock auf None
+        # ansonsten print("fehler")
+        print("deleted")
+
+    def onExecuteScript(self):
+        print("Executes the final script build by the Block Editor")
+        """ Variablen für die Funktion: """
+        # startBlock_id: finde die ID des Startblocks in b_obj.blocks
+        # nextBlock_id: finde die nächste block_id vom Block, welcher als "outputBlockId" im StartBlock-dict. gespeichert ist.
+        # functionName: <speichert die Funktion als name, die von einem Block ausgeführt werden soll.> Anfangs str
+        # functionArgs: <speichert die Args für die function, welche von einem Block ausgeführt werden soll. Wird als dataTypes gespeichert.> Anfangs None
+        # f_executeEnd: Flag, wenn das ende der verlinkten Blöcke erreicht wurde.
+        # f_executeBreak: Flag, wenn die exeution abgebrochen werden muss, falls es z.B. einen Fehler gibt.
+        # f_executesuccess: Flag, wenn execution geklappt hat.
+        """-----------------------------"""
+
+
+        # finde die
+        print("Executed")
 
     def checkSelectedTool(self):
         match self.selectedTool:
