@@ -171,14 +171,14 @@ class Block:
                     return i
         return -1
 
-
-
-
     def setBlockPosition(self, block_id, x1, y1, x2, y2):
         self.blocks[block_id]["B_position"] = {"x1": x1, "y1": y1, "x2": x2, "y2": y2}
 
     def getBlockPosition(self, block_id):
         return self.blocks[block_id]["B_position"]
+
+    def get_block_type(self, block_id):
+        return self.blocks[block_id]["B_type"]
 
     def setBlockComponents(self, block_id, comp_id, comp):
         count = len(self.blocks[block_id]["B_components"])
