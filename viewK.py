@@ -105,6 +105,7 @@ class BlockEditorView:
 
 
 
+
     def updateBlockPosition(self, block_id):
         index = block_id
         block = self.b_obj.blocks[index]
