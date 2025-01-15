@@ -36,9 +36,15 @@ class BlockEditorView:
         self.add_block_button = tk.Button(self.toolbar, text="Delete", command=lambda: self.switchEditorTool(3))
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
-        #self.editorObjects = {}
         self.selectedTool = 1
-        self.selectedBlock = None
+
+        self.selectedBlockItem = None
+        self.selectedBlockId = None
+        self.selectedBlockCanvasId = None
+
+        self.lastSelectedBlockItem = None
+        self.lastSelectedBlockId = None
+        self.lastSelectedBlockCanvasId = None
 
         #self.canvas.bind("<Button-1>", self.on_canvas_click)
         self.canvas.bind("<Button-2>", self.onCanvasClick)
@@ -90,35 +96,112 @@ class BlockEditorView:
         else:
             self.selectedTool = toolNumber
 
+    def setSelectedBlock(self, event):
+        item = self.canvas.find_closest(event.x, event.y, start="Block")
+        if self.selectedBlockItem:
+            if self.lastSelectedBlockItem:
+                if item:
+                    self.selectedBlockItem = item
+                    self.selectedBlockCanvasId = item[0]
+                    self.selectedBlockId = self.b_obj.findBlockIdFromCanvas(item[0])
+                    return 1
+                else:
+                    self.selectedBlockItem = None
+                    self.selectedBlockCanvasId = None
+                    self.selectedBlockId = None
+                    return 0
+            else:
+                if item:
+                    self.lastSelectedBlockItem = self.selectedBlockItem
+                    self.lastSelectedBlockCanvasId = self.selectedBlockCanvasId
+                    self.lastSelectedBlockId = self.selectedBlockId
+                    self.selectedBlockItem = item
+                    self.selectedBlockCanvasId = item[0]
+                    self.selectedBlockId = self.b_obj.findBlockIdFromCanvas(item[0])
+                    return 1
+                else:
+                    self.selectedBlockItem = None
+                    self.selectedBlockCanvasId = None
+                    self.selectedBlockId = None
+                    return 0
+        else:
+            if self.lastSelectedBlockItem:
+                if item:
+                    self.selectedBlockItem = self.lastSelectedBlockItem
+                    self.selectedBlockCanvasId = self.lastSelectedBlockCanvasId
+                    self.selectedBlockId = self.lastSelectedBlockId
+                    self.lastSelectedBlockItem = None
+                    self.lastSelectedBlockId = None
+                    self.lastSelectedBlockCanvasId = None
+                    return 1
+                else:
+                    self.selectedBlockItem = self.lastSelectedBlockItem
+                    self.selectedBlockCanvasId = self.lastSelectedBlockCanvasId
+                    self.selectedBlockId = self.lastSelectedBlockId
+                    self.lastSelectedBlockItem = None
+                    self.lastSelectedBlockId = None
+                    self.lastSelectedBlockCanvasId = None
+                    return 0
+            else:
+                if item:
+                    self.selectedBlockItem = item
+                    self.selectedBlockCanvasId = item[0]
+                    self.selectedBlockId = self.b_obj.findBlockIdFromCanvas(item[0])
+                    return 1
+                else:
+                    self.selectedBlockItem = None
+                    self.selectedBlockCanvasId = None
+                    self.selectedBlockId = None
+                    return 0
+
+    # cur last item : Block Ausgewählt | Letzter Ausgewählter Block | nächster Ausgewählter Block
+    #   0   0   0   : nein, nein, nein -> alles auf None setzen.
+    #   0   0   1   : es gibt einen Block aber es wurde noch nichts ausgewählt -> nur current = item
+    #   0   1   0   : keinen aktuellen Block, es gab einen Block, aber keinen neuer -> alles auf None (da wir nicht wissen, ob der Block noch existiert)
+    #   0   1   1   : keinen selected Block, es gab einen Block, und es gibt einen neuen -> current = item, last = None (da wir nicht wissen, ob der Block noch existiert)
+    #   1   0   0   : ausgewählter block, kein letzten, kein neuer -> last = current, current = None
+    #   1   0   1   : ausgewählter block, kein letzten, aber neuer -> last = current, current = item
+    #   1   1   0   : ausgewählter block, es gibt einen letzten, kein neuer -> nichts
+    #   1   1   1   : ausgewählter block, es gibt einen letzten, und einen neuen -> last = current, current = item
+
+
+
+
     def onCanvasClick(self, event):
-        if self.selectedBlock:
-            item = self.canvas.find_closest(event.x, event.y)
-            if item and "Block" in self.canvas.gettags(item)[0]:
-                self.selectedBlock = item[0]
-                if self.checkSelectedTool() == 1:
-                    block_id = self.b_obj.findBlockIdFromCanvas(item[0])
-                if self.checkSelectedTool() == 2:
-                    block_id = self.b_obj.findBlockIdFromCanvas(item[0])
+        match self.checkSelectedTool():
+            case 1:
+                block_id = self.selectedBlockId
+                self.setSelectedBlock(event)
+            case 2:
+                if self.selectedBlockItem:
+                    block_id = self.selectedBlockId
                     self.b_obj.moveBlock(block_id, event.x, event.y)
                     self.updateBlockPosition(block_id)
-                if self.checkSelectedTool() == 3:
-                    block_id = self.b_obj.findBlockIdFromCanvas(item[0])
-                    self.onCreateLink(block_id, self.selectedBlock)
-                if self.checkSelectedTool() == 4:
-                    block_id = self.b_obj.findBlockIdFromCanvas(item[0])
-                    self.onDeleteBlock(block_id, self.selectedBlock)
+                    #self.updateBlockAppearance(block_id)
+                    self.updateAllBlocksAppearance()
                 else:
-                    print("nothing to Do")
-        else:
-            item = self.canvas.find_closest(event.x, event.y)
-            if item and "Block" in self.canvas.gettags(item)[0]:
-                self.selectedBlock = item[0]
+                    print("no Block Selected")
+            case 3:
+                if self.selectedBlockItem:
+                    block_id = self.selectedBlockId
+                    self.onCreateLink(block_id, self.selectedBlockItem)
+                else:
+                    print("no Block Selected")
+            case 4:
+                if self.selectedBlockItem:
+                    block_id = self.selectedBlockId
+                    self.onDeleteBlock(block_id, self.selectedBlockItem)
+                else:
+                    print("no Block Selected")
 
     def onCreateLink(self, block_id, selected_block_id):
         """ erstellt einen Link zwischen den beiden Blöcken mit den block_ids block_id und selected_block_id """
         print("create a link between two blocks")
         if block_id != selected_block_id:
-            blockItems = self.canvas.gettags("Block")
+            #blockItems = self.canvas.gettags(selected_block_id)
+            blockItems = self.selectedBlockItem
+            blockItems2 = self.lastSelectedBlockItem
+            print(blockItems, blockItems2)
             if block_id in blockItems and selected_block_id in blockItems:
                 block_dict = self.b_obj.blocks[block_id]["B_type"]
                 selected_block_dict = self.b_obj.blocks[selected_block_id]["B_type"]
@@ -213,6 +296,43 @@ class BlockEditorView:
             block_id = self.b_obj.findBlockIdFromCanvas(item[0])
             self.updateTextFromComponent(block_id)
 
+    def updateAllBlocksAppearance(self):
+        for i in self.canvas.find_withtag("Block"):
+            block_id = self.b_obj.findBlockIdFromCanvas(i)
+            self.updateBlockAppearance(block_id)
+
+
+
+    def updateBlockAppearance(self, block_id):
+        index = block_id
+        block = self.b_obj.blocks[index]
+        canvasBlock_id = self.canvas.find_withtag(self.b_obj.blocks[index]["B_type"]["id"])
+        if canvasBlock_id:
+            if self.selectedBlockCanvasId:
+                print("Appearens: " + self.selectedBlockCanvasId.__str__() + canvasBlock_id.__str__())
+                if self.selectedBlockCanvasId == canvasBlock_id[0]:
+                    self.canvas.itemconfigure(self.selectedBlockCanvasId, outline="yellow", width=10)
+                else:
+                    outl = "black"
+                    wdth = 1
+                    dashed = ""
+                    if block["B_type"]["connected"]:
+                        if block["B_type"]["inLoop"]:
+                            outl = "black"
+                            wdth = 5
+                            dashed = "."
+                        else:
+                            outl = "black"
+                            wdth = 5
+                            dashed = ""
+                    else:
+                        outl = "black"
+                        wdth = 1
+                        dashed = ""
+                    self.canvas.itemconfigure(canvasBlock_id[0], outline=outl, width=wdth, dash=dashed)
+
+
+
 
     def updateBlockPosition(self, block_id):
         index = block_id
@@ -221,7 +341,8 @@ class BlockEditorView:
         b_comp_length = block["B_components"].__len__()
         canvasBlock_id = self.canvas.find_withtag(self.b_obj.blocks[index]["B_type"]["id"])
         #self.canvas.itemconfigure(canvasBlock_id, x1=block["B_position"]["x1"], y1=block["B_position"]["y1"], x2=block["B_position"]["x2"], y2=block["B_position"]["y2"])
-        self.canvas.moveto(canvasBlock_id, block["B_position"]["x1"], block["B_position"]["y1"])
+        print("solte nur eine Zahl sein: " + canvasBlock_id[0].__str__())
+        self.canvas.moveto(canvasBlock_id[0], block["B_position"]["x1"], block["B_position"]["y1"])
 
 
         for i in range(b_comp_length):
@@ -232,7 +353,14 @@ class BlockEditorView:
             actualCompPosX, actualCompPosY = self.canvas.coords(canvas_id)
             #dx, dy = h_getVectorBetweenPoints(b_pos["x1"], b_pos["y1"], compPosX1, compPosY1)
             #if (compPosX1 + actualCompPosX) != (b_pos["x1"] + dx) or (compPosY1 + actualCompPosY) != (b_pos["y1"] + dy):
-            self.canvas.moveto(componentId, (compPosX1 + b_pos["x1"]), (compPosY1 + b_pos["y1"]))
+            if block["B_components"].__getitem__(i)["component_id"] == 1:
+                self.canvas.moveto(componentId, (compPosX1 + b_pos["x1"] + 5), (compPosY1 + b_pos["y1"] + 5))
+            else:
+                self.canvas.moveto(componentId, (compPosX1 + b_pos["x1"]), (compPosY1 + b_pos["y1"] - 5))
+            print("Components: " + compPosX1.__str__() + " " + compPosY1.__str__())
+            print(componentId)
+            actualCompPosX, actualCompPosY = self.canvas.coords(canvas_id)
+            print("Components auf dem Canvas: " + actualCompPosX.__str__() + " " + actualCompPosY.__str__())
 
 
     def debug_line(self, x1, y1, x2, y2):

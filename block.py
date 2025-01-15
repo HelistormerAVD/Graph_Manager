@@ -47,6 +47,7 @@ class Block:
                 "block_id" : 1,
                 "color": "green2",
                 "connected" : False,
+                "inLoop": False,
                 "block_inputTypes" : {
                     "input_id" : 0,
                     "input_t" : dataTypes,
@@ -89,6 +90,7 @@ class Block:
                 "block_id" : 1,
                 "color": "green2",
                 "connected" : False,
+                "inLoop": False,
                 "block_inputTypes" : {
                     "input_id" : 0,
                     "input_t" : dataTypes,
@@ -128,6 +130,7 @@ class Block:
                 "block_id" : 1,
                 "color": "green2",
                 "connected" : False,
+                "inLoop": False,
                 "block_inputTypes" : {
                     "input_id" : 0,
                     "input_t" : dataTypes,
