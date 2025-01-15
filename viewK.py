@@ -10,12 +10,12 @@ from util import h_getNextEmptyDictionary, h_getVectorBetweenPoints
 
 
 class BlockEditorView:
-    b_obj = block.Block()
+
     def __init__(self, root):
         self.root = root
         self.root.title("Block-Based Graphical Editor")
 
-        self.canvas = tk.Canvas(root, bg="white", width=800, height=600)
+        self.canvas = tk.Canvas(root, bg="white", width=1080, height=720)
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
         self.toolbar = tk.Frame(root, bg="lightgray")
@@ -24,7 +24,7 @@ class BlockEditorView:
         self.add_block_button = tk.Button(self.toolbar, text="Select", command=lambda: self.switchEditorTool(0))
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
-        self.add_block_button = tk.Button(self.toolbar, text="Add Block", command=self.add_block)
+        self.add_block_button = tk.Button(self.toolbar, text="Add Block", command=lambda: self.add_block("initBlock_Integer_add"))
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
         self.add_block_button = tk.Button(self.toolbar, text="Move", command=lambda: self.switchEditorTool(1))
@@ -36,6 +36,8 @@ class BlockEditorView:
         self.add_block_button = tk.Button(self.toolbar, text="Delete", command=lambda: self.switchEditorTool(3))
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
+        self.b_obj = block.Block()
+
         self.selectedTool = 1
 
         self.selectedBlockItem = None
@@ -46,15 +48,24 @@ class BlockEditorView:
         self.lastSelectedBlockId = None
         self.lastSelectedBlockCanvasId = None
 
+        self.onStartUp()
+
         #self.canvas.bind("<Button-1>", self.on_canvas_click)
         self.canvas.bind("<Button-2>", self.onCanvasClick)
         self.canvas.bind("<Button-3>", self.debugClick)
         #self.canvas.bind("<B1-Motion>", self.on_canvas_drag)
 
+    def onStartUp(self):
+        startBlock = self.add_block("initBlock_start")
+        self.b_obj.moveBlock(startBlock, 400, 100)
+        endBlock = self.add_block("initBlock_end")
+        self.b_obj.moveBlock(endBlock, 400, 600)
+        self.updateBlockPosition(startBlock)
+        self.updateBlockPosition(endBlock)
 
-    def add_block(self):
-
-        index = self.b_obj.initBlock_Integer_add()
+    def add_block(self, funcName : str):
+        index = eval("self.b_obj." + funcName + "()")
+        #index = self.b_obj.initBlock_Integer_add()
         newBlock = self.b_obj.blocks[index]
         b_comp_length = newBlock["B_components"].__len__()
         #print(newBlock["B_components"])
@@ -71,7 +82,7 @@ class BlockEditorView:
                 case 0:
                     textViewSettings = newBlock["B_components"].__getitem__(i)["component"].getData()
                     textViewComp = self.canvas.create_text(textViewSettings["x1"] + newBlock["B_position"]["x1"],
-                                                             textViewSettings["y1"] + newBlock["B_position"]["y1"], text=textViewSettings["text"], fill=textViewSettings["fontColor"], tags="TextView", font=('Helvetica', '12'))
+                                                             textViewSettings["y1"] + newBlock["B_position"]["y1"], text=textViewSettings["text"], fill=textViewSettings["fontColor"], tags="TextView", font=('Helvetica', '12'), anchor="w")
                     newBlock["B_components"].__getitem__(i)["id"] = textViewComp
                     #self.b_obj.editorObjects[indexOfCanvasObject]["components"].append({"Id" : textViewComp, "type" : "TextView"})
                 case 1:
@@ -89,6 +100,7 @@ class BlockEditorView:
 
                     #newBlock["B_components"][componentId]["id"] = editTextComp
                     print(newBlock)
+        return index
 
     def switchEditorTool(self, toolNumber):
         if toolNumber < 0 or toolNumber > 3:
