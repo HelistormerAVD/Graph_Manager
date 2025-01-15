@@ -98,6 +98,49 @@ class BlockEditorView:
 
     def setSelectedBlock(self, event):
         item = self.canvas.find_closest(event.x, event.y, start="Block")
+        if item:
+            if self.selectedBlockItem:
+                self.lastSelectedBlockItem = self.selectedBlockItem
+                self.lastSelectedBlockCanvasId = self.selectedBlockCanvasId
+                self.lastSelectedBlockId = self.selectedBlockId
+                self.selectedBlockItem = item
+                self.selectedBlockCanvasId = item[0]
+                self.selectedBlockId = self.b_obj.findBlockIdFromCanvas(item[0])
+                return 1
+            else:
+                if self.selectedBlockItem != self.lastSelectedBlockItem:
+                    self.lastSelectedBlockItem = self.selectedBlockItem
+                    self.lastSelectedBlockCanvasId = self.selectedBlockCanvasId
+                    self.lastSelectedBlockId = self.selectedBlockId
+                    self.selectedBlockItem = item
+                    self.selectedBlockCanvasId = item[0]
+                    self.selectedBlockId = self.b_obj.findBlockIdFromCanvas(item[0])
+                    return 1
+                else:
+                    self.lastSelectedBlockItem = self.selectedBlockItem
+                    self.lastSelectedBlockCanvasId = self.selectedBlockCanvasId
+                    self.lastSelectedBlockId = self.selectedBlockId
+                    self.selectedBlockItem = item
+                    self.selectedBlockCanvasId = item[0]
+                    self.selectedBlockId = self.b_obj.findBlockIdFromCanvas(item[0])
+                    return 1
+        else:
+            print("err")
+            return 0
+
+    def checkDualSelection(self):
+        if self.selectedBlockItem and self.lastSelectedBlockItem:
+            return 1
+        else:
+            return 0
+
+    def checkDualSelectionIsSame(self):
+        if self.selectedBlockId == self.lastSelectedBlockId:
+            return 1
+        else:
+            return 0
+
+    """
         if self.selectedBlockItem:
             if self.lastSelectedBlockItem:
                 if item:
@@ -153,6 +196,7 @@ class BlockEditorView:
                     self.selectedBlockCanvasId = None
                     self.selectedBlockId = None
                     return 0
+    """
 
     # cur last item : Block Ausgewählt | Letzter Ausgewählter Block | nächster Ausgewählter Block
     #   0   0   0   : nein, nein, nein -> alles auf None setzen.
@@ -172,6 +216,7 @@ class BlockEditorView:
             case 1:
                 block_id = self.selectedBlockId
                 self.setSelectedBlock(event)
+                self.updateAllBlocksAppearance()
             case 2:
                 if self.selectedBlockItem:
                     block_id = self.selectedBlockId
@@ -183,8 +228,7 @@ class BlockEditorView:
                     print("no Block Selected")
             case 3:
                 if self.selectedBlockItem:
-                    block_id = self.selectedBlockId
-                    self.onCreateLink(block_id, self.selectedBlockItem)
+                    self.onCreateLink(self.selectedBlockId, self.lastSelectedBlockId)
                 else:
                     print("no Block Selected")
             case 4:
@@ -197,29 +241,36 @@ class BlockEditorView:
     def onCreateLink(self, block_id, selected_block_id):
         """ erstellt einen Link zwischen den beiden Blöcken mit den block_ids block_id und selected_block_id """
         print("create a link between two blocks")
-        if block_id != selected_block_id:
-            #blockItems = self.canvas.gettags(selected_block_id)
-            blockItems = self.selectedBlockItem
-            blockItems2 = self.lastSelectedBlockItem
-            print(blockItems, blockItems2)
-            if block_id in blockItems and selected_block_id in blockItems:
+        if not self.checkDualSelectionIsSame():
+            print(block_id)
+            print(selected_block_id)
+            if block_id != None and selected_block_id != None:
+
+                #blockItems = self.canvas.gettags(selected_block_id)
+                blockItems = self.selectedBlockItem
+                blockItems2 = self.lastSelectedBlockItem
+                print(blockItems, blockItems2)
+
+
                 block_dict = self.b_obj.blocks[block_id]["B_type"]
                 selected_block_dict = self.b_obj.blocks[selected_block_id]["B_type"]
 
-                selected_block_dict["block_inputTypes"]["input_t"] = block_id["output_t"]
-                selected_block_dict["block_inputTypes"]["inputBlockId"] = block_id["outputBlockId"]
+                selected_block_dict["block_inputTypes"]["input_t"] = block_dict["block_outputTypes"]["output_t"]
+                selected_block_dict["block_inputTypes"]["inputBlockId"] = block_dict["block_outputTypes"]["outputBlockId"]
                 selected_block_dict["connected"] = True
 
                 block_dict["block_outputTypes"]["outputBlockId"] = selected_block_id
                 block_dict["connected"] = True
 
                 block_height = self.b_obj.blockHeight
-                pos = self.b_obj.blocks[block_id].getBlockPosition()
+                pos = self.b_obj.getBlockPosition(block_id)
 
-                x1 = pos["x1"]
+                x1 = pos["x1"] # 10 da jede umrandung die hälfte nach innen und außen ist
                 y1 = pos["y1"] + block_height
 
                 self.b_obj.moveBlock(selected_block_id, x1, y1)
+                self.updateBlockPosition(selected_block_id)
+                self.updateAllBlocksAppearance()
                 print("link created")
         else:
             print(f"block_id {block_id} and selected_block_id {selected_block_id} must not be equal")
@@ -309,7 +360,7 @@ class BlockEditorView:
         canvasBlock_id = self.canvas.find_withtag(self.b_obj.blocks[index]["B_type"]["id"])
         if canvasBlock_id:
             if self.selectedBlockCanvasId:
-                print("Appearens: " + self.selectedBlockCanvasId.__str__() + canvasBlock_id.__str__())
+                #print("Appearens: " + self.selectedBlockCanvasId.__str__() + canvasBlock_id.__str__())
                 if self.selectedBlockCanvasId == canvasBlock_id[0]:
                     self.canvas.itemconfigure(self.selectedBlockCanvasId, outline="yellow", width=10)
                 else:
@@ -341,7 +392,7 @@ class BlockEditorView:
         b_comp_length = block["B_components"].__len__()
         canvasBlock_id = self.canvas.find_withtag(self.b_obj.blocks[index]["B_type"]["id"])
         #self.canvas.itemconfigure(canvasBlock_id, x1=block["B_position"]["x1"], y1=block["B_position"]["y1"], x2=block["B_position"]["x2"], y2=block["B_position"]["y2"])
-        print("solte nur eine Zahl sein: " + canvasBlock_id[0].__str__())
+        #print("solte nur eine Zahl sein: " + canvasBlock_id[0].__str__())
         self.canvas.moveto(canvasBlock_id[0], block["B_position"]["x1"], block["B_position"]["y1"])
 
 
@@ -357,10 +408,10 @@ class BlockEditorView:
                 self.canvas.moveto(componentId, (compPosX1 + b_pos["x1"] + 5), (compPosY1 + b_pos["y1"] + 5))
             else:
                 self.canvas.moveto(componentId, (compPosX1 + b_pos["x1"]), (compPosY1 + b_pos["y1"] - 5))
-            print("Components: " + compPosX1.__str__() + " " + compPosY1.__str__())
-            print(componentId)
+            #print("Components: " + compPosX1.__str__() + " " + compPosY1.__str__())
+            #print(componentId)
             actualCompPosX, actualCompPosY = self.canvas.coords(canvas_id)
-            print("Components auf dem Canvas: " + actualCompPosX.__str__() + " " + actualCompPosY.__str__())
+            #print("Components auf dem Canvas: " + actualCompPosX.__str__() + " " + actualCompPosY.__str__())
 
 
     def debug_line(self, x1, y1, x2, y2):
