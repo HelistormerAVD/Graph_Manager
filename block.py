@@ -18,6 +18,7 @@ class Block:
     #"B_position" : {"x1": 50, "y1": 50, "x2": 150, "y2": 150, "color": "blue"}
 
     def __init__(self):
+        self.blockHeight = 40
         self.blocks = {}
         self.deletedPos = []
         self.editorObjects = {}
@@ -38,8 +39,8 @@ class Block:
         b_editText2 = block_components.EditText()
         b_editText2.setData(1, 100, 10, "Test2", 10)
         components = []
-        components.insert(0, {"id": None, "component_id" : 1, "component": b_editText})
-        components.insert(1, {"id": None, "component_id" : 1, "component": b_editText2})
+        components.insert(0, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
@@ -79,9 +80,9 @@ class Block:
         b_editText2 = block_components.EditText()
         b_editText2.setData(1, 100, 10, "Test2", 10)
         components = []
-        components.insert(0, {"id": None, "component_id" : 1, "component": b_editText})
-        components.insert(1, {"id": None, "component_id": 0, "component": b_textView})
-        components.insert(2, {"id": None, "component_id" : 1, "component": b_editText2})
+        components.insert(0, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+        components.insert(1, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
+        components.insert(2, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
@@ -119,8 +120,8 @@ class Block:
         b_editText2 = block_components.EditText()
         b_editText2.setData(1, 100, 10, "Test2", 10)
         components = []
-        components.insert(0, {"id": None, "component_id" : 1, "component": b_editText})
-        components.insert(1, {"id": None, "component_id" : 1, "component": b_editText2})
+        components.insert(0, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,

@@ -5,12 +5,12 @@ import block
 from tkinter import filedialog, messagebox
 
 import block_components
+from script_variables import Var
 from util import h_getNextEmptyDictionary, h_getVectorBetweenPoints
 
 
 class BlockEditorView:
     b_obj = block.Block()
-
     def __init__(self, root):
         self.root = root
         self.root.title("Block-Based Graphical Editor")
@@ -21,7 +21,19 @@ class BlockEditorView:
         self.toolbar = tk.Frame(root, bg="lightgray")
         self.toolbar.pack(fill=tk.X)
 
-        self.add_block_button = tk.Button(self.toolbar, text="Math Operations", command=self.add_block)
+        self.add_block_button = tk.Button(self.toolbar, text="Select", command=lambda: self.switchEditorTool(0))
+        self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+        self.add_block_button = tk.Button(self.toolbar, text="Add Block", command=self.add_block)
+        self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+        self.add_block_button = tk.Button(self.toolbar, text="Move", command=lambda: self.switchEditorTool(1))
+        self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+        self.add_block_button = tk.Button(self.toolbar, text="Link", command=lambda: self.switchEditorTool(2))
+        self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+        self.add_block_button = tk.Button(self.toolbar, text="Delete", command=lambda: self.switchEditorTool(3))
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
         #self.editorObjects = {}
@@ -59,7 +71,7 @@ class BlockEditorView:
                 case 1:
                     editTextSettings = newBlock["B_components"].__getitem__(i)["component"].getData()
                     componentType = tk.Entry(self.root, width=editTextSettings["width"])
-                    componentType.insert(i, editTextSettings["text"])
+                    componentType.insert(0, editTextSettings["text"])
                     editTextComp = self.canvas.create_window(editTextSettings["x1"] + newBlock["B_position"]["x1"],
                                                              editTextSettings["y1"] + newBlock["B_position"]["y1"],
                                                              window=componentType,
@@ -67,13 +79,22 @@ class BlockEditorView:
                                                              tags="EditText")
                     #self.b_obj.editorObjects[indexOfCanvasObject]["components"].append({"Id" : editTextComp, "type" : "EditText"})
                     newBlock["B_components"].__getitem__(i)["id"] = editTextComp
+                    newBlock["B_components"].__getitem__(i)["entry"] = componentType
+
                     #newBlock["B_components"][componentId]["id"] = editTextComp
                     print(newBlock)
+
+    def switchEditorTool(self, toolNumber):
+        if toolNumber < 0 or toolNumber > 3:
+            print("wrong tool to be selected")
+        else:
+            self.selectedTool = toolNumber
 
     def onCanvasClick(self, event):
         if self.selectedBlock:
             item = self.canvas.find_closest(event.x, event.y)
             if item and "Block" in self.canvas.gettags(item)[0]:
+                self.selectedBlock = item[0]
                 if self.checkSelectedTool() == 1:
                     block_id = self.b_obj.findBlockIdFromCanvas(item[0])
                 if self.checkSelectedTool() == 2:
@@ -91,10 +112,34 @@ class BlockEditorView:
         else:
             item = self.canvas.find_closest(event.x, event.y)
             if item and "Block" in self.canvas.gettags(item)[0]:
-                self.selectedBlock = item
+                self.selectedBlock = item[0]
 
     def onCreateLink(self, block_id, selected_block_id):
+        """ erstellt einen Link zwischen den beiden Blöcken mit den block_ids block_id und selected_block_id """
         print("create a link between two blocks")
+        if block_id != selected_block_id:
+            blockItems = self.canvas.gettags("Block")
+            if block_id in blockItems and selected_block_id in blockItems:
+                block_dict = self.b_obj.blocks[block_id]["B_type"]
+                selected_block_dict = self.b_obj.blocks[selected_block_id]["B_type"]
+
+                selected_block_dict["block_inputTypes"]["input_t"] = block_id["output_t"]
+                selected_block_dict["block_inputTypes"]["inputBlockId"] = block_id["outputBlockId"]
+                selected_block_dict["connected"] = True
+
+                block_dict["block_outputTypes"]["outputBlockId"] = selected_block_id
+                block_dict["connected"] = True
+
+                block_height = self.b_obj.blockHeight
+                pos = self.b_obj.blocks[block_id].getBlockPosition()
+
+                x1 = pos["x1"]
+                y1 = pos["y1"] + block_height
+
+                self.b_obj.moveBlock(selected_block_id, x1, y1)
+                print("link created")
+        else:
+            print(f"block_id {block_id} and selected_block_id {selected_block_id} must not be equal")
         # überprüfe, ob block_id == selected_block_id (darf nicht die selbe sein)
         #   in block-dict vom selected_block_id füge "inputBlockId" = block_id
         #   in block-dict vom selected_block_id füge "input_t" = dataTypes vom block_id "output_t"
@@ -102,7 +147,6 @@ class BlockEditorView:
         #   in block-dict vom block_id setze "connected" = True
         #   in block-dict vom selected_block_id setze "connected" = True
         #   funktion moveBlock(aus b_obj) mit selected_block_id an x1 von block_id und (y2 von block_id) + Blockhöhe (40)
-        print("eingefügt")
 
     def onDeleteBlock(self, block_id, selected_block_id):
         print("deletes a block from the Canvas and from block-dict. (self.b_obj.blocks[index])")
@@ -157,7 +201,11 @@ class BlockEditorView:
             block_comp_dict = block["B_components"][i]["component"].getData()
             canvasEditTexts = self.canvas.find_withtag("EditText")
             for j in canvasEditTexts:
-                print(self.canvas.itemcget(j, ))
+                if j == canvasComponent_id:
+                    entryItem = block["B_components"].__getitem__(i)["entry"]
+                    out = entryItem.get()
+                    block["B_components"].__getitem__(i)["component"].setText(out)
+                    #print(block["B_components"].__getitem__(i)["component"].getData())
 
     def debugClick(self, event):
         item = self.canvas.find_closest(event.x, event.y)
