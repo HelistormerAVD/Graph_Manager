@@ -36,6 +36,27 @@ class BlockEditorView:
         self.add_block_button = tk.Button(self.toolbar, text="Delete", command=lambda: self.switchEditorTool(3))
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
+        self.menu = Menu(self.root)
+        self.root.config(menu=self.menu, background="#729ecf")
+
+        self.blockMenuInteger = Menu(self.menu)
+        self.blockMenuInteger.configure(background="#6164e0")
+        self.blockMenuInteger.add_command(label="New", command=lambda: self.add_block("initBlock_Integer_add"))
+        self.blockMenuInteger.add_command(label="Open...", command=lambda: self.add_block("initBlock_Integer_add"))
+        self.menu.add_cascade(label="Integer", menu=self.blockMenuInteger)
+        self.blockMenuDouble = Menu(self.menu)
+        self.blockMenuDouble.configure(background="#6164e0")
+        self.menu.add_cascade(label="Integer", menu=self.blockMenuDouble)
+        self.blockMenuString = Menu(self.menu)
+        self.blockMenuString.configure(background="#6164e0")
+        self.menu.add_cascade(label="Integer", menu=self.blockMenuString)
+        self.blockMenuList = Menu(self.menu)
+        self.blockMenuList.configure(background="#6164e0")
+        self.menu.add_cascade(label="Integer", menu=self.blockMenuList)
+        self.blockMenuGraph = Menu(self.menu)
+        self.blockMenuGraph.configure(background="#6164e0")
+        self.menu.add_cascade(label="Integer", menu=self.blockMenuGraph)
+
         self.b_obj = block.Block()
 
         self.selectedTool = 1

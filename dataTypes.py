@@ -214,31 +214,31 @@ class BDGraph:
     graph = plt
 
     def __init__(self, x, y):
-        self.data = (x, y)
-        self.x = x
-        self.y = y
+        self.pointsX = x
+        self.pointsY = y
 
-    def set_graph(self):
-        self.graph.xlabel("x")
-        self.graph.ylabel("y")
-        self.graph.title("Your Graph")
+    def setGraph(self):
+        self.graph.xlabel('x')
+        self.graph.ylabel('y')
+        self.graph.title('Your Graph')
         self.graph.grid(True)
-        self.graph.plot(self.x, self.y, label="first")
+        self.graph.plot(self.pointsX, self.pointsY, label="first")
         self.graph.legend()
         self.graph.show()
 
-    def get_graph(self):
-        result_graph = self.graph.gca()
-        return result_graph
+    def getGraph(self):
+        get_graph = self.graph.gca()
+        return get_graph
 
-    def modify_graph(self, x, y, label, x_label="x", y_label="y", title="Your Graph", grid=None):
-        self.x = x
-        self.y = y
-        self.graph.xlabel(x_label)
-        self.graph.ylabel(y_label)
-        self.graph.title(title)
-        self.graph.grid(grid)
-        self.graph.plot(self.x, self.y, label=label)
+    def modifyGraph(self, x, y, xlabel, ylabel, title, grid, label):
+        self.pointsX = x
+        self.pointsY = y
+        self.graph.xlabel(xlabel if xlabel else "x")
+        self.graph.ylabel(ylabel if ylabel else "y")
+        self.graph.title(title if title else "Your Graph")
+        if grid is not None:
+            self.graph.grid(grid)
+        self.graph.plot(self.pointsX, self.pointsY, label=label)
         self.graph.legend()
         self.graph.show()
 
