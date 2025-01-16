@@ -36,6 +36,9 @@ class BlockEditorView:
         self.add_block_button = tk.Button(self.toolbar, text="Delete", command=lambda: self.switchEditorTool(3))
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
+        self.execute_button = tk.Button(self.toolbar, text="Execute", command=self.onExecuteScript)
+        self.execute_button.pack(side=tk.RIGHT, padx=5, pady=5)
+
         self.menu = Menu(self.root)
         self.root.config(menu=self.menu, background="#729ecf")
 
@@ -61,6 +64,7 @@ class BlockEditorView:
         self.b_obj = block.Block()
 
         self.selectedTool = 1
+        self.END_OF_SCRIPT = 0
 
         self.selectedBlockItem = None
         self.selectedBlockId = None
@@ -280,17 +284,11 @@ class BlockEditorView:
             print(selected_block_id)
             if block_id != None and selected_block_id != None:
 
-                #blockItems = self.canvas.gettags(selected_block_id)
-                blockItems = self.selectedBlockItem
-                blockItems2 = self.lastSelectedBlockItem
-                print(blockItems, blockItems2)
-
-
                 block_dict = self.b_obj.blocks[block_id]["B_type"]
                 selected_block_dict = self.b_obj.blocks[selected_block_id]["B_type"]
 
-                selected_block_dict["block_inputTypes"]["input_t"] = block_dict["block_outputTypes"]["output_t"]
-                selected_block_dict["block_inputTypes"]["inputBlockId"] = block_dict["block_outputTypes"]["outputBlockId"]
+                #selected_block_dict["block_inputTypes"]["input_t"] = block_dict["block_outputTypes"]["output_t"]
+                selected_block_dict["block_inputTypes"]["inputBlockId"] = block_id
                 selected_block_dict["connected"] = True
 
                 block_dict["block_outputTypes"]["outputBlockId"] = selected_block_id
@@ -306,6 +304,8 @@ class BlockEditorView:
                 self.updateBlockPosition(selected_block_id)
                 self.updateAllBlocksAppearance()
                 print("link created")
+                print(block_dict)
+                print(selected_block_dict)
         else:
             print(f"block_id {block_id} and selected_block_id {selected_block_id} must not be equal")
         # überprüfe, ob block_id == selected_block_id (darf nicht die selbe sein)
@@ -327,17 +327,34 @@ class BlockEditorView:
         print("deleted")
 
     def onExecuteScript(self):
-        startBlock_id = self.canvas.find_withtag("start")
-        currentBlock = self.b_obj.blocks[startBlock_id]
+        startBlockCanvasId = self.canvas.find_withtag("start")[0]
+        currentBlock = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)]
+        block_id = self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)
+        nextBlock_id = currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]
         if not currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
             print("[Compiler]: nothing connected to Start block!")
-            return 1
-
+            return 0
         nextBlock = self.b_obj.blocks[currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]]
         if not nextBlock:
             print("[Compiler]: error with gathering the next block!")
+            return 0
+        self.exec_evaluateFunction(block_id, nextBlock_id)
 
-        print("Executes the final script build by the Block Editor")
+        for i in range(1, self.b_obj.blocks.__len__()):
+            if self.exec_hasReachedEndOfScript(i):
+                print("[Execute]: end of Script reached!")
+                break
+            else:
+                currentBlock = nextBlock["B_type"]["block_outputTypes"]["outputBlockId"]
+                if not currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
+                    print("[Compiler]: nothing connected to next block!")
+                    return 1
+
+                nextBlock = self.b_obj.blocks[currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]]
+                if not nextBlock:
+                    print("[Compiler]: error with gathering the next block!")
+                self.exec_evaluateFunction(block_id, nextBlock_id)
+
         """ Variablen für die Funktion: """
         # startBlock_id: finde die ID des Startblocks in b_obj.blocks
         # nextBlock_id: finde die nächste block_id vom Block, welcher als "outputBlockId" im StartBlock-dict. gespeichert ist.
@@ -348,9 +365,55 @@ class BlockEditorView:
         # f_executesuccess: Flag, wenn execution geklappt hat.
         """-----------------------------"""
 
+    def exec_evaluateFunction(self, block_id, nextBlock_id):
+        print(block_id)
+        block = self.b_obj.blocks[block_id]["B_type"]
+        blockComponentList = self.b_obj.blocks[block_id]["B_components"]
+        funcName = block["func"]["func_name"]
+        funcArgs = block["func"]["func_args"]
+        funcArgIdList = block["func"]["func_args_list"]
+        isPassThorugh = block["func"]["isPassThrough"]
+        nextBlock = self.b_obj.blocks[nextBlock_id]["B_type"]
+        compInputText = ""
+        alignedArgList = []
+        if isPassThorugh:
+            for i in range(blockComponentList.__len__()):
+                comp = blockComponentList[i]
+                if comp["entry"]:
+                    compInputText = comp["entry"].get()
+                    if compInputText == "p":
+                        compInputText = self.b_obj.blocks[block["block_inputTypes"]["inputBlockId"]]["B_type"]["block_inputTypes"]["input_t"].__getstate__()
+                    index = funcArgIdList.index(i)
+                    alignedArgList.insert(index, compInputText)
+                    dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName, alignedArgList))
+                    return dataTypeObj
+        else:
+            for i in range(blockComponentList.__len__()):
+                comp = blockComponentList[i]
+                if comp["entry"]:
+                    compInputText = comp["entry"].get()
+                    index = funcArgIdList.index(i)
+                    alignedArgList.insert(index, compInputText)
+                    dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName, alignedArgList))
+                    return dataTypeObj
 
-        # finde die
-        print("Executed")
+
+
+    def exec_createFunctionStringWithArgs(self, funcName, argStringList):
+        out = "("
+        for i in argStringList.__len__():
+            out += argStringList[i]
+            if argStringList.__len__() - i > 0:
+                out += ","
+        out += ")"
+        return funcName + out
+
+    def exec_hasReachedEndOfScript(self, block_id):
+        if self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["outputBlockId"]:
+            return False
+        else:
+            return True
+
 
     def checkSelectedTool(self):
         match self.selectedTool:

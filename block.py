@@ -36,6 +36,7 @@ class Block:
         b_text.setData(0, 10, 20, "Start", "black", 10)
         components = []
         components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_text})
+        args = []
         self.blocks[index] = {
             "B_type": {
                 "id": None,
@@ -54,6 +55,8 @@ class Block:
                     "outputBlockId": None},
                 "func": {
                     "func_name": "NameOfFunction",
+                    "func_args_list": args,
+                    "isPassThrough": True,
                     "func_args": None}
             },
             "B_components": components,
@@ -74,6 +77,7 @@ class Block:
         b_text.setData(0, 10, 20, "End", "black", 10)
         components = []
         components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_text})
+        args = []
         self.blocks[index] = {
             "B_type": {
                 "id": None,
@@ -92,6 +96,8 @@ class Block:
                     "outputBlockId": None},
                 "func": {
                     "func_name": "NameOfFunction",
+                    "func_args_list": args,
+                    "isPassThrough": False,
                     "func_args": None}
             },
             "B_components": components,
@@ -122,6 +128,7 @@ class Block:
         components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
         components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
+        args = []
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
@@ -140,6 +147,8 @@ class Block:
                     "outputBlockId" : None},
                 "func" : {
                     "func_name" : "NameOfFunction",
+                    "func_args_list": args,
+                    "isPassThrough": False,
                     "func_args" : None}
             },
             "B_components" : components,
@@ -185,6 +194,11 @@ class Block:
     #   -----
     #
     #   Der Rest ist entweder None oder False
+    #
+    #   Neu: args = []
+    #   ist eine Liste, die die component_ids von "components = []" besitzt.
+    #   Neu: "func_args_list": args -> beinhaltet args Liste
+    #   Neu: "isPassThrough": True -> Flag, welches standardgemäß True ist, sofern eine Funktion den wert Weitergeben soll.
 
 
     def initBlock_Integer_add(self):
@@ -205,6 +219,7 @@ class Block:
         components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
         components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
+        args = [1, 3]
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
@@ -223,6 +238,8 @@ class Block:
                     "outputBlockId" : None},
                 "func" : {
                     "func_name" : "f_int_add",
+                    "func_args_list": args,
+                    "isPassThrough": True,
                     "func_args" : None}
             },
             "B_components" : components,
