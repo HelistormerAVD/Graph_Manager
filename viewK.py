@@ -280,8 +280,6 @@ class BlockEditorView:
         """ erstellt einen Link zwischen den beiden Blöcken mit den block_ids block_id und selected_block_id """
         print("create a link between two blocks")
         if not self.checkDualSelectionIsSame():
-            print(block_id)
-            print(selected_block_id)
             if block_id != None and selected_block_id != None:
 
                 block_dict = self.b_obj.blocks[block_id]["B_type"]
@@ -304,8 +302,6 @@ class BlockEditorView:
                 self.updateBlockPosition(selected_block_id)
                 self.updateAllBlocksAppearance()
                 print("link created")
-                print(block_dict)
-                print(selected_block_dict)
         else:
             print(f"block_id {block_id} and selected_block_id {selected_block_id} must not be equal")
         # überprüfe, ob block_id == selected_block_id (darf nicht die selbe sein)
@@ -340,17 +336,26 @@ class BlockEditorView:
             return 0
         self.exec_evaluateFunction(block_id, nextBlock_id)
 
-        for i in range(1, self.b_obj.blocks.__len__()):
-            if self.exec_hasReachedEndOfScript(i):
+        while self.END_OF_SCRIPT == 0:
+            if self.exec_hasReachedEndOfScript(block_id):
                 print("[Execute]: end of Script reached!")
                 break
             else:
-                currentBlock = nextBlock["B_type"]["block_outputTypes"]["outputBlockId"]
+                if nextBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
+                    currentBlock = self.b_obj.blocks[nextBlock["B_type"]["block_outputTypes"]["outputBlockId"]]
+                    block_id = nextBlock["B_type"]["block_outputTypes"]["outputBlockId"]
+                else:
+                    if currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
+                        currentBlock = self.b_obj.blocks[currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]]
+                        block_id = currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]
+
+
                 if not currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
                     print("[Compiler]: nothing connected to next block!")
                     return 1
 
                 nextBlock = self.b_obj.blocks[currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]]
+                nextBlock_id = currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]
                 if not nextBlock:
                     print("[Compiler]: error with gathering the next block!")
                 self.exec_evaluateFunction(block_id, nextBlock_id)
@@ -394,19 +399,20 @@ class BlockEditorView:
                     compInputText = comp["entry"].get()
                     index = funcArgIdList.index(i)
                     alignedArgList.insert(index, compInputText)
-                    dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName, alignedArgList))
-                    return dataTypeObj
+            dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName, alignedArgList))
+            return dataTypeObj
 
 
 
     def exec_createFunctionStringWithArgs(self, funcName, argStringList):
         out = "("
-        for i in argStringList.__len__():
+        for i in range(argStringList.__len__()):
             out += argStringList[i]
-            if argStringList.__len__() - i > 0:
+            if argStringList.__len__() - (i + 1) > 0:
                 out += ","
         out += ")"
-        return funcName + out
+        print("self.b_obj." + funcName + out)
+        return "self.b_obj." + funcName + out
 
     def exec_hasReachedEndOfScript(self, block_id):
         if self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["outputBlockId"]:
