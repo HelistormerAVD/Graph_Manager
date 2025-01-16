@@ -24,7 +24,7 @@ class BlockEditorView:
         self.add_block_button = tk.Button(self.toolbar, text="Select", command=lambda: self.switchEditorTool(0))
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
-        self.add_block_button = tk.Button(self.toolbar, text="Add Block", command=lambda: self.add_block("initBlock_Integer_add"))
+        self.add_block_button = tk.Button(self.toolbar, text="Add Block", command=lambda: self.add_block("initBlock_Str_concat"))
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
         self.add_block_button = tk.Button(self.toolbar, text="Move", command=lambda: self.switchEditorTool(1))
