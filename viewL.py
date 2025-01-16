@@ -164,15 +164,12 @@ class BlockEditorView:
 
     def checkDualSelection(self):
         if self.selectedBlockItem and self.lastSelectedBlockItem:
-            return 1
+            return True
         else:
-            return 0
+            return False
 
     def checkDualSelectionIsSame(self):
-        if self.selectedBlockId == self.lastSelectedBlockId:
-            return 1
-        else:
-            return 0
+        return self.selectedBlockId == self.lastSelectedBlockId
 
     """
         if self.selectedBlockItem:
@@ -241,9 +238,40 @@ class BlockEditorView:
     #   1   0   1   : ausgewählter block, kein letzten, aber neuer -> last = current, current = item
     #   1   1   0   : ausgewählter block, es gibt einen letzten, kein neuer -> nichts
     #   1   1   1   : ausgewählter block, es gibt einen letzten, und einen neuen -> last = current, current = item
+    def set_selected_block(self, event):
+        """ Setzt den ausgewählten Block und aktualisiert letzten ausgewählten Block """
+        item = self.canvas.find_closest(event.x, event.y, start="Block")
+        if not item:    # kein nächster Block
+            if self.selectedBlockItem:  # es gibt ausgewählten Block
+                # last -> current, current -> None
+                self.lastSelectedBlockItem = self.selectedBlockItem
+                self.lastSelectedBlockCanvasId = self.selectedBlockCanvasId
+                self.lastSelectedBlockId = self.selectedBlockId
+                self.selectedBlockItem = None
+                self.selectedBlockCanvasId = None
+                self.selectedBlockId = None
+            return 1
 
+        # nächster Block gefunden
+        if not self.selectedBlockItem:    # wenn kein ausgewählter Block
+            # current -> item, last nicht verändern
+            self.selectedBlockItem = item
+            self.selectedBlockCanvasId = item[0]
+            self.selectedBlockId = self.b_obj.findBlockIdFromCanvas(item[0])
+            return 1
 
-
+        # neuer ausgewählter Block + Block war ausgewählt
+        if self.selectedBlockId != self.b_obj.findBlockIdFromCanvas(item[0]):
+            # last -> current, current -> item
+            self.lastSelectedBlockItem = self.selectedBlockItem
+            self.lastSelectedBlockCanvasId = self.selectedBlockCanvasId
+            self.lastSelectedBlockId = self.selectedBlockId
+            self.selectedBlockItem = item
+            self.selectedBlockCanvasId = item[0]
+            self.selectedBlockId = self.b_obj.findBlockIdFromCanvas(item[0])
+        else:
+            pass    # derselbe Block wurde erneut ausgewählt: Nichts tun
+        return 1
 
     def onCanvasClick(self, event):
         match self.checkSelectedTool():
@@ -338,7 +366,6 @@ class BlockEditorView:
         # f_executesuccess: Flag, wenn execution geklappt hat.
         """-----------------------------"""
 
-
         # finde die
         print("Executed")
 
@@ -357,7 +384,6 @@ class BlockEditorView:
                 print("Delete Tool (deletes a Block by clicking on the Block)")
                 return 4
         return 0
-
 
     def updateTextFromComponent(self, block_id):
         index = block_id
@@ -385,8 +411,6 @@ class BlockEditorView:
         for i in self.canvas.find_withtag("Block"):
             block_id = self.b_obj.findBlockIdFromCanvas(i)
             self.updateBlockAppearance(block_id)
-
-
 
     def updateBlockAppearance(self, block_id):
         index = block_id
@@ -416,42 +440,37 @@ class BlockEditorView:
                         dashed = ""
                     self.canvas.itemconfigure(canvasBlock_id[0], outline=outl, width=wdth, dash=dashed)
 
-
-
-
     def updateBlockPosition(self, block_id):
         index = block_id
         block = self.b_obj.blocks[index]
         b_pos = self.b_obj.getBlockPosition(index)
-        b_comp_length = block["B_components"].__len__()
+        b_comp_length = len(block["B_components"])
         canvasBlock_id = self.canvas.find_withtag(self.b_obj.blocks[index]["B_type"]["id"])
-        #self.canvas.itemconfigure(canvasBlock_id, x1=block["B_position"]["x1"], y1=block["B_position"]["y1"], x2=block["B_position"]["x2"], y2=block["B_position"]["y2"])
-        #print("solte nur eine Zahl sein: " + canvasBlock_id[0].__str__())
-        self.canvas.moveto(canvasBlock_id[0], block["B_position"]["x1"], block["B_position"]["y1"])
 
+        if canvasBlock_id:
+            self.canvas.moveto(canvasBlock_id[0], b_pos["x1"], b_pos["y1"])
 
         for i in range(b_comp_length):
-            componentType = None
-            componentId = block["B_components"].__getitem__(i)["id"]
+            component = block["B_components"][i]
+            componentId = component["id"] # block["B_components"].__getitem__(i)["id"]
             canvas_id = self.canvas.find_withtag(componentId)
-            compPosX1, compPosY1 = block["B_components"].__getitem__(i)["component"].getPosition()
-            actualCompPosX, actualCompPosY = self.canvas.coords(canvas_id)
-            #dx, dy = h_getVectorBetweenPoints(b_pos["x1"], b_pos["y1"], compPosX1, compPosY1)
-            #if (compPosX1 + actualCompPosX) != (b_pos["x1"] + dx) or (compPosY1 + actualCompPosY) != (b_pos["y1"] + dy):
-            if block["B_components"].__getitem__(i)["component_id"] == 1:
-                self.canvas.moveto(componentId, (compPosX1 + b_pos["x1"] + 5), (compPosY1 + b_pos["y1"] + 5))
-            else:
-                self.canvas.moveto(componentId, (compPosX1 + b_pos["x1"]), (compPosY1 + b_pos["y1"] - 5))
-            #print("Components: " + compPosX1.__str__() + " " + compPosY1.__str__())
-            #print(componentId)
-            actualCompPosX, actualCompPosY = self.canvas.coords(canvas_id)
-            #print("Components auf dem Canvas: " + actualCompPosX.__str__() + " " + actualCompPosY.__str__())
 
+            if canvas_id:
+                compPosX1, compPosY1 = component["component"].getPosition()
+                new_x = b_pos["x1"] + compPosX1
+                new_y = b_pos["y1"] + compPosY1
+
+                if component.get("component_id") == 1:
+                    new_x += 5
+                    new_y += 5
+                else:
+                    new_y -= 5
+
+                self.canvas.moveto(canvas_id[0], new_x, new_y)
 
     def debug_line(self, x1, y1, x2, y2):
         self.canvas.delete("debugLines")
         self.canvas.create_line(x1, y1, x2, y2, fill="red", tags="debugLines")
-
 
 
 if __name__ == "__main__":
