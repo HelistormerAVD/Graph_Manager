@@ -151,41 +151,6 @@ class Block:
         }
         return index
 
-    #--------------------------Wichtig für Blockerstellung!-------------------------
-    #   Beispiel:
-    #   b_textView = block_components.TextView()
-    #   b_textView.setData(0, 10, 20, "Add Integer", "black", 23)
-    #   -------------------
-    #   setData(<component_id> 0, 10, ...) Die component_id muss dem Klassentyp der Komponente Entsprechen:
-    #   Hierbei ist 0 = TextView und 1 = EditText
-    #   Zudem ist bei component_id = 0 der Wert y1 = 20 und bei component_id = 1 der Wert y1 = 10
-    #
-    #   setData(..., "black", <width> 23) Die 23 sind die Anzahl der Character die im <text> angegeben sind.
-    #   sollte am besten gleich lang sein, damit es keine überlappungen gibt.
-    #   -----
-    #
-    #   components = []
-    #   components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
-    #   components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
-    #   ------------------
-    #   Der Index bei "components.insert(<index> 0,...)" darf nicht zweimal vorkommen.
-    #   Am besten in der richtigen Reihenfolge einfügen, wie die Komponenten von link nach rechts angeornet sind.
-    #   -----
-    #
-    #   in self.blocks[index] = {...} müssen folgende Einträge beachtet werden:
-    #
-    #   "block_id" : "<eindeutige Id des Blocks>"
-    #   "color" : "<farbe des Blocks passend aus usedColors.py zu entnehmen>"
-    #   "block_tag": "<datentyp kleingeschrieben>_<funktion des Blocks>" (Beispiel: "integer_add", "integer_sub", "float_add")
-    #   "func_name" : "f_<datentyp kleingeschrieben kurzform>_<funktion des Blocks>" (Beispiel: "f_int_add", "f_int_sub", "f_float_add")
-    #   "input_t" : dataTypes.<datenTyp> (Beispiel: "input_t" : dataTypes.BDInteger)
-    #   "input_id": <id passend zum <datenTyp> in "input_t"> (Beispiel: "input_id" : 0) -> Tabelle mit Ids in dataTypes.py
-    #   "output_t" : dataTypes.<datenTyp> (Beispiel: "output_t" : dataTypes.BDInteger)
-    #   "output_id": <id passend zum <datenTyp> in "output_t"> (Beispiel: "output_id" : 0) -> Tabelle mit Ids in dataTypes.py
-    #   -----
-    #
-    #   Der Rest ist entweder None oder False
-
 
     def initBlock_Integer_add(self):
         index = h_getNextEmptyDictionary(self.blocks)
@@ -433,6 +398,437 @@ class Block:
     #--------------------------------------------------------------------------------------------------------------------------------
     #
     #                       Funktionen für Blöcke
+
+ #flaot / double
+    def initBlock_Float_add(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "Add Float", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        b_textView2 = block_components.TextView()
+        b_textView2.setData(0, 175, 20, "+", "black", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 200, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
+        self.blocks[index] = {
+            "B_type" : {
+                "id" : None,
+                "block_id" : 7,
+                "block_tag": "float_add",
+                "color": "blue",
+                "connected" : False,
+                "inLoop": False,
+                "block_inputTypes" : {
+                    "input_id" : 1,
+                    "input_t" : dataTypes.BDFloat,
+                    "inputBlockId" : None},
+                "block_outputTypes" : {
+                    "output_id" : 1,
+                    "output_t" : dataTypes.BDFloat,
+                    "outputBlockId" : None},
+                "func" : {
+                    "func_name" : "f_float_add",
+                    "func_args" : None}
+            },
+            "B_components" : components,
+            "B_position" : {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+    def initBlock_Float_sub(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "Sub Float", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        b_textView2 = block_components.TextView()
+        b_textView2.setData(0, 175, 20, "-", "black", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 200, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        self.blocks[index] = {
+            "B_type": {
+                "id": None,
+                "block_id": 8,
+                "block_tag": "float_sub",
+                "color": "blue",
+                "connected": False,
+                "inLoop": False,
+                "block_inputTypes": {
+                    "input_id": 1,
+                    "input_t": dataTypes.BDFloat,
+                    "inputBlockId": None},
+                "block_outputTypes": {
+                    "output_id": 1,
+                    "output_t": dataTypes.BDFloat,
+                    "outputBlockId": None},
+                "func": {
+                    "func_name": "f_float_sub",
+                    "func_args": None}
+            },
+            "B_components": components,
+            "B_position": {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+    def initBlock_Float_div(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "Div Float", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        b_textView2 = block_components.TextView()
+        b_textView2.setData(0, 175, 20, "/", "black", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 200, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        self.blocks[index] = {
+            "B_type": {
+                "id": None,
+                "block_id": 9,
+                "block_tag": "float_div",
+                "color": "blue",
+                "connected": False,
+                "inLoop": False,
+                "block_inputTypes": {
+                    "input_id": 1,
+                    "input_t": dataTypes.BDFloat,
+                    "inputBlockId": None},
+                "block_outputTypes": {
+                    "output_id": 1,
+                    "output_t": dataTypes.BDFloat,
+                    "outputBlockId": None},
+                "func": {
+                    "func_name": "f_float_div",
+                    "func_args": None}
+            },
+            "B_components": components,
+            "B_position": {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+    def initBlock_Float_mult(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "Mult Float", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        b_textView2 = block_components.TextView()
+        b_textView2.setData(0, 175, 20, "+", "black", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 200, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        self.blocks[index] = {
+            "B_type": {
+                "id": None,
+                "block_id": 10,
+                "block_tag": "integer_mult",
+                "color": "blue",
+                "connected": False,
+                "inLoop": False,
+                "block_inputTypes": {
+                    "input_id": 1,
+                    "input_t": dataTypes.BDFloat,
+                    "inputBlockId": None},
+                "block_outputTypes": {
+                    "output_id": 1,
+                    "output_t": dataTypes.BDFloat,
+                    "outputBlockId": None},
+                "func": {
+                    "func_name": "f_float_mult",
+                    "func_args": None}
+            },
+            "B_components": components,
+            "B_position": {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+
+# string
+    def initBlock_Str_concat(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "Str_Concat", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        b_textView2 = block_components.TextView()
+        b_textView2.setData(0, 175, 20, " ", "black", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 200, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        self.blocks[index] = {
+            "B_type": {
+                "id": None,
+                "block_id": 11,
+                "block_tag": "str_concat",
+                "color": "saddle brown",
+                "outline": "black",
+                "connected": False,
+                "inLoop": False,
+                "block_inputTypes": {
+                    "input_id": 2,
+                    "input_t": dataTypes.BDString,
+                    "inputBlockId": None},
+                "block_outputTypes": {
+                    "output_id": 2,
+                    "output_t": dataTypes.BDString,
+                    "outputBlockId": None},
+                "func": {
+                    "func_name": "f_str_concat",
+                    "func_args": None}
+            },
+            "B_components": components,
+            "B_position": {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+    def initBlock_Str_subDiv(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "String subDiv", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        b_textView2 = block_components.TextView()
+        b_textView2.setData(0, 175, 20, " ", "black", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 200, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        self.blocks[index] = {
+            "B_type": {
+                "id": None,
+                "block_id": 12,
+                "block_tag": "str_subDiv",
+                "color": "saddle brown",
+                "outline": "black",
+                "connected": False,
+                "inLoop": False,
+                "block_inputTypes": {
+                    "input_id": 2,
+                    "input_t": dataTypes.BDString,
+                    "inputBlockId": None},
+                "block_outputTypes": {
+                    "output_id": 2,
+                    "output_t": dataTypes.BDString,
+                    "outputBlockId": None},
+                "func": {
+                    "func_name": "f_str_subDiv",
+                    "func_args": None}
+            },
+            "B_components": components,
+            "B_position": {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+    def initBlock_Str_trim(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "Str_trim", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        b_textView2 = block_components.TextView()
+        b_textView2.setData(0, 175, 20, " ", "black", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 200, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        self.blocks[index] = {
+            "B_type": {
+                "id": None,
+                "block_id": 13,
+                "block_tag": "str_trim",
+                "color": "saddle brown",
+                "outline": "black",
+                "connected": False,
+                "inLoop": False,
+                "block_inputTypes": {
+                    "input_id": 2,
+                    "input_t": dataTypes.BDString,
+                    "inputBlockId": None},
+                "block_outputTypes": {
+                    "output_id": 2,
+                    "output_t": dataTypes.BDString,
+                    "outputBlockId": None},
+                "func": {
+                    "func_name": "f_str_trim",
+                    "func_args": None}
+            },
+            "B_components": components,
+            "B_position": {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+    def initBlock_Str_split(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "Str_split", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        b_textView2 = block_components.TextView()
+        b_textView2.setData(0, 175, 20, " ", "black", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 200, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        self.blocks[index] = {
+            "B_type": {
+                "id": None,
+                "block_id": 14,
+                "block_tag": "str_split",
+                "color": "saddle brown",
+                "outline": "black",
+                "connected": False,
+                "inLoop": False,
+                "block_inputTypes": {
+                    "input_id": 2,
+                    "input_t": dataTypes.BDString,
+                    "inputBlockId": None},
+                "block_outputTypes": {
+                    "output_id": 2,
+                    "output_t": dataTypes.BDString,
+                    "outputBlockId": None},
+                "func": {
+                    "func_name": "f_str_split",
+                    "func_args": None}
+            },
+            "B_components": components,
+            "B_position": {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+    def initBlock_Str_find(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "Str_find", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        b_textView2 = block_components.TextView()
+        b_textView2.setData(0, 175, 20, " ", "black", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 200, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        self.blocks[index] = {
+            "B_type": {
+                "id": None,
+                "block_id": 15,
+                "block_tag": "str_find",
+                "color": "saddle brown",
+                "outline": "light gray",
+                "connected": False,
+                "inLoop": False,
+                "block_inputTypes": {
+                    "input_id": 2,
+                    "input_t": dataTypes.BDString,
+                    "inputBlockId": None},
+                "block_outputTypes": {
+                    "output_id": 2,
+                    "output_t": dataTypes.BDString,
+                    "outputBlockId": None},
+                "func": {
+                    "func_name": "f_str_find",
+                    "func_args": None}
+            },
+            "B_components": components,
+            "B_position": {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
     #
     #--------------------------------------------------------------------------------------------------------------------------------
 
@@ -450,6 +846,8 @@ class Block:
 
     def f_int_mult(self):
         print("Function")
+
+
 
 
 
