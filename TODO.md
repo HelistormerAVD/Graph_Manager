@@ -1,7 +1,13 @@
 # Aktuelle Priorisierte Aufgaben:
 ### - Blöcke hinzufügen (die initBlock_...) nach Muster (Victoria)
 ### - Block_selection fixen (was wenn Block gelöscht oder gleich bei dual Selection) (Kenneth)
-### 
+### - Versuchen Fehler zu finden bei updateBlockPosition bzw. (Wenn Blöcke verlinkt werden sind sie nicht aligned) (Lorenz)
+### - Selection fixen (ähnlich wie in der Kommentierten Tabelle). (Lorenz)
+### - viewK: onDeleteBlock() darf keinen Start- und Endblock Löschen. (Kenneth)
+### - viewK: onExecuteScript() simple Hilfsmethoden schreiben, um DataTypes der Blöcke zu bekommen. (Kenneth)
+### - viewK: block Menu anpassen (vervollständigen). (Kenneth)
+### - dataTypes: Datentypen Klassen umschreiben, sodass alle von "onExecuteScript()" aufgerufen werden können. (Kenneth)
+### - viewK: ersten Compiler Schreiben für "onExecuteScript()". (Kenneth)
 
 ### --------------------------------------------------------------------------------------------------------
 
