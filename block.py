@@ -175,14 +175,14 @@ class Block:
                 "inLoop": False,
                 "block_inputTypes" : {
                     "input_id" : 0,
-                    "input_t" : dataTypes,
+                    "input_t" : dataTypes.BDInteger,
                     "inputBlockId" : None},
                 "block_outputTypes" : {
                     "output_id" : 0,
-                    "output_t" : dataTypes,
+                    "output_t" : dataTypes.BDInteger,
                     "outputBlockId" : None},
                 "func" : {
-                    "func_name" : "NameOfFunction",
+                    "func_name" : "f_int_add",
                     "func_args" : None}
             },
             "B_components" : components,
@@ -386,6 +386,16 @@ class Block:
 
     def setAllBlockComponents(self, block_id, comp):
         self.blocks[block_id]["B_components"] = comp
+
+    #--------------------------------------------------------------------------------------------------------------------------------
+    #
+    #                       Funktionen für Blöcke
+    #
+    #--------------------------------------------------------------------------------------------------------------------------------
+
+    def f_int_add(self):
+        print("Function")
+
 
 
 

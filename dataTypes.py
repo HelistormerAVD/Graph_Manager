@@ -3,6 +3,16 @@ from PIL import Image as PILImage, ImageEnhance, ImageFilter
 import matplotlib.pyplot as plt
 
 
+
+#---------IDs for DataTypes------------
+#   0 = BDInteger
+#   1 = BDFloat
+#   2 = BDString
+#   3 = BDList (falls wir list machen wollen)
+#   4 = BDGraph
+#   5 = BDImage
+#--------------------------------------
+
 class BDString:
     """ Klasse BDString """
     data = ""  # Sinnhaftigkeit?
@@ -91,7 +101,7 @@ class BDFloat:  # umbenannt, da es double in (Standard-)Python nicht gibt
 
 
 # TODO: Ergibt es Sinn, dass BDInteger von BDFloat erbt?
-class BDInteger(BDFloat):
+class BDInteger:
     """ Klasse BDInteger erbt von BDFloat """
 
     def __init__(self, data=0):
