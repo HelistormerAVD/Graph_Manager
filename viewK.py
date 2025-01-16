@@ -96,7 +96,7 @@ class BlockEditorView:
                                      newBlock["B_position"]["x2"],
                                      newBlock["B_position"]["y2"],
                                      fill=newBlock["B_type"]["color"],
-                                     tags=["Block", "Integer_add"])
+                                     tags=["Block", newBlock["B_type"]["block_tag"]])
         for i in range(b_comp_length):
             componentType = None
             componentId = newBlock["B_components"].__getitem__(i)["component_id"]
@@ -327,6 +327,16 @@ class BlockEditorView:
         print("deleted")
 
     def onExecuteScript(self):
+        startBlock_id = self.canvas.find_withtag("start")
+        currentBlock = self.b_obj.blocks[startBlock_id]
+        if not currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
+            print("[Compiler]: nothing connected to Start block!")
+            return 1
+
+        nextBlock = self.b_obj.blocks[currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]]
+        if not nextBlock:
+            print("[Compiler]: error with gathering the next block!")
+
         print("Executes the final script build by the Block Editor")
         """ Variablen für die Funktion: """
         # startBlock_id: finde die ID des Startblocks in b_obj.blocks
