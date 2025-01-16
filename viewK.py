@@ -527,6 +527,7 @@ class BlockEditorView:
 
 
 
+
 if __name__ == "__main__":
     root = tk.Tk()
     window = BlockEditorView(root)

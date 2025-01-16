@@ -638,6 +638,7 @@ class Block:
         return index
 
 
+
 # string
     def initBlock_Str_concat(self):
         index = h_getNextEmptyDictionary(self.blocks)
