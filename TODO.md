@@ -1,4 +1,11 @@
 # Aktuelle Priorisierte Aufgaben:
+### - Blöcke hinzufügen (die initBlock_...) nach Muster (Victoria)
+### - Block_selection fixen (was wenn Block gelöscht oder gleich bei dual Selection) (Kenneth)
+### 
+
+### --------------------------------------------------------------------------------------------------------
+
+##    Priorisierte Aufgaben:
 ### - view: onCreateLink() schreiben (Lorenz)
 ### - view: onDeleteBlock() schreiben (Victoria)
 ### - view: onExecuteScript() schreiben (Kenneth)

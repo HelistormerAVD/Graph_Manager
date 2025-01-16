@@ -204,7 +204,7 @@ class Block:
         b_editText = block_components.EditText()
         b_editText.setData(1, 100, 10, "0", 10)
         b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, "+", "black", 10)
+        b_textView2.setData(0, 175, 20, "-", "black", 10)
         b_editText2 = block_components.EditText()
         b_editText2.setData(1, 200, 10, "0", 10)
         components = []
