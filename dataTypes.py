@@ -19,10 +19,12 @@ class BDString:
 
     def __init__(self, text=""):  # default-Wert = leerer String
         """ Konstruktor der BDString-Klasse """
-        self.data = text
+        self.data = str(text)
 
     def replace(self, to_be_replaced, replace_with, case_sensitive=True):
         """ Ersetze alle Vorkommen von `to_be_replaced` mit `replace_with`, optional case-insensitiv """
+        to_be_replaced = str(to_be_replaced)
+        replace_with = str(replace_with)
         if case_sensitive:
             return self.data.replace(to_be_replaced, replace_with)
         else:
@@ -30,6 +32,8 @@ class BDString:
 
     def replace_in_range(self, to_be_replaced, replace_with, start=0, end=None, case_sensitive=True):
         """ Ersetze alle Vorkommen von `to_be_replaced` mit `replace_with` zwischen `start` und `end`, optional case-insensitiv """
+        to_be_replaced = str(to_be_replaced)
+        replace_with = str(replace_with)
         end = end if end is not None else len(self.data)
         sub_content = BDString(self.data[start:end])
         replaced_sub = sub_content.replace(to_be_replaced, replace_with, case_sensitive)
@@ -37,6 +41,8 @@ class BDString:
 
     def replace_word(self, to_be_replaced, replace_with, case_sensitive=True):
         """ Ersetze alle alleinstehenden Vorkommen von to_be_replaced (die nicht an alphanumerische Zeichen grenzen, sondern an Leerzeichen oder Sonderzeichen), optional case-insensitiv """
+        to_be_replaced = str(to_be_replaced)
+        replace_with = str(replace_with)
         pattern = r'\b' + re.escape(to_be_replaced) + r'\b'
         if case_sensitive:
             return re.sub(pattern, replace_with, self.data)
@@ -113,10 +119,12 @@ class BDInteger:
         return self.data
 
     def subtract(self, subtrahend=0):
-        return int(BDFloat.subtract(self, subtrahend))
+        self.data -= int(subtrahend)
+        return self.data    # int(BDFloat.subtract(self, subtrahend))
 
     def multiply(self, factor=1):
-        return int(BDFloat.multiply(self, factor))
+        self.data *= int(factor)
+        return self.data    # int(BDFloat.multiply(self, factor))
 
     def divide(self, divisor=1):
         try:
@@ -127,7 +135,8 @@ class BDInteger:
             return 0
 
     def pow(self, exponent=1):
-        return int(BDFloat.pow(self, exponent))
+        self.data **= exponent
+        return self.data    # int(BDFloat.pow(self, exponent))
 
     def modulo(self, num=0):
         self.data %= int(num)

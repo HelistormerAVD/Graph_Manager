@@ -939,23 +939,45 @@ class Block:
             print("Falscher Datentyp!")
 
     def f_int_sub(self, a, b):
+        if self.is_type_bd_int(a, b):
+            a.BDInteger.subtract(b.__getstate__())
+            print(a.__getstate__())
+            return a
+        else:
+            print("Falscher Datentyp!")
         # a und b sind vom Typ der eingabe Parameter (dataType.BDInteger)
         # es muss eine funktion von BDInteger wie z.B. a.sub(<summand>) durchgeführt werden.
         # das neue a muss dann returned werden. (als dataType entsprechend der Ausgabe des Blocks.)
         print("Function")
 
-    def f_int_div(self):
-        print("Function")
+    def f_int_div(self, a, b):
+        if self.is_type_bd_int(a, b):
+            a.BDFloat.divide(b.__getstate__())
+            print(a.__getstate__())
+            return a
+        else:
+            print("Falscher Datentyp!")
 
-    def f_int_div_to_int(self):
-        print("Function")
+    # Unterschied zu f_int_div? Ganzzahldivision???
+    def f_int_div_to_int(self, a, b):
+        if self.is_type_bd_int(a, b):
+            a.BDInteger.divide(b.__getstate__())
+            print(a.__getstate__())
+            return a
+        else:
+            print("Falscher Datentyp!")
 
-    def f_int_mult(self):
-        print("Function")
+    def f_int_mult(self, a, b):
+        if self.is_type_bd_int(a, b):
+            a.BDInteger.multiply(b.__getstate__())
+            print(a.__getstate__())
+            return a
+        else:
+            print("Falscher Datentyp!")
 
-
-
-
+    @staticmethod
+    def is_type_bd_int(a, b):
+        return isinstance(a, dataTypes.BDInteger) and isinstance(b, dataTypes.BDInteger)
 
 
 if __name__ == "__main__":
