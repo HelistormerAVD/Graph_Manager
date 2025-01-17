@@ -18,6 +18,14 @@ def h_getVectorBetweenPoints(x1, y1, x2, y2):
 def h_findFromCanvasDictObj(canvasObjId, dictionary, isComponent):
     length = dictionary.__len__()
 
+def h_convertToDataTypesFromString(inputString : str):
+    if str.isdigit(inputString):
+        if inputString.find(".") > -1:
+            return float(inputString)
+        else:
+            return int(inputString)
+    else:
+        return inputString
 
 
 

@@ -104,13 +104,13 @@ class BDFloat:  # umbenannt, da es double in (Standard-)Python nicht gibt
 class BDInteger:
     """ Klasse BDInteger erbt von BDFloat """
 
-    def __init__(self, data=0):
+    def __init__(self, data : int):
         """ Konstruktor der Klasse BDInteger """
-        super().__init__(data)
         self.data = int(data)
 
-    def add(self, summand=0):
-        return int(BDFloat.add(self, summand))
+    def add(self, summand : int):
+        self.data += summand
+        return self.data
 
     def subtract(self, subtrahend=0):
         return int(BDFloat.subtract(self, subtrahend))
@@ -124,7 +124,7 @@ class BDInteger:
             self.data = quotient
             return self.data
         except ZeroDivisionError:
-            return self.data  # TODO: welchen Wert sinnvoll zurückgeben?
+            return 0
 
     def pow(self, exponent=1):
         return int(BDFloat.pow(self, exponent))

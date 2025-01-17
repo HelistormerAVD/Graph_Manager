@@ -5,6 +5,7 @@ import json
 import block_components
 import dataTypes
 from block_components import TextView, EditText
+from dataTypes import BDInteger
 from util import h_getNextEmptyDictionary, h_getVectorBetweenPoints
 
 
@@ -47,11 +48,11 @@ class Block:
                 "inLoop": False,
                 "block_inputTypes": {
                     "input_id": 0,
-                    "input_t": dataTypes.BDInteger,
+                    "input_t": dataTypes.BDInteger(0),
                     "inputBlockId": None},
                 "block_outputTypes": {
                     "output_id": 0,
-                    "output_t": dataTypes.BDInteger,
+                    "output_t": dataTypes.BDInteger(0),
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_start",
@@ -88,11 +89,11 @@ class Block:
                 "inLoop": False,
                 "block_inputTypes": {
                     "input_id": 0,
-                    "input_t": dataTypes.BDInteger,
+                    "input_t": dataTypes.BDInteger(0),
                     "inputBlockId": None},
                 "block_outputTypes": {
                     "output_id": 0,
-                    "output_t": dataTypes.BDInteger,
+                    "output_t": dataTypes.BDInteger(0),
                     "outputBlockId": None},
                 "func": {
                     "func_name": "NameOfFunction",
@@ -230,16 +231,16 @@ class Block:
                 "inLoop": False,
                 "block_inputTypes" : {
                     "input_id" : 0,
-                    "input_t" : dataTypes.BDInteger,
+                    "input_t" : dataTypes.BDInteger(0),
                     "inputBlockId" : None},
                 "block_outputTypes" : {
                     "output_id" : 0,
-                    "output_t" : dataTypes.BDInteger,
+                    "output_t" : dataTypes.BDInteger(0),
                     "outputBlockId" : None},
                 "func" : {
                     "func_name" : "f_int_add",
                     "func_args_list": args,
-                    "isPassThrough": False,
+                    "isPassThrough": True,
                     "func_args" : None}
             },
             "B_components" : components,
@@ -269,6 +270,7 @@ class Block:
         components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
         components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        args = []
         self.blocks[index] = {
             "B_type": {
                 "id": None,
@@ -287,6 +289,8 @@ class Block:
                     "outputBlockId": None},
                 "func": {
                     "func_name": "NameOfFunction",
+                    "func_args_list": args,
+                    "isPassThrough": False,
                     "func_args": None}
             },
             "B_components": components,
@@ -316,6 +320,7 @@ class Block:
         components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
         components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
+        args = []
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
@@ -334,6 +339,8 @@ class Block:
                     "outputBlockId" : None},
                 "func" : {
                     "func_name" : "NameOfFunction",
+                    "func_args_list": args,
+                    "isPassThrough": False,
                     "func_args" : None}
             },
             "B_components" : components,
@@ -363,6 +370,7 @@ class Block:
         components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
         components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
+        args = []
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
@@ -381,6 +389,8 @@ class Block:
                     "outputBlockId" : None},
                 "func" : {
                     "func_name" : "NameOfFunction",
+                    "func_args_list": args,
+                    "isPassThrough": False,
                     "func_args" : None}
             },
             "B_components" : components,
@@ -470,6 +480,7 @@ class Block:
         components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
         components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
+        args = []
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
@@ -488,6 +499,8 @@ class Block:
                     "outputBlockId" : None},
                 "func" : {
                     "func_name" : "f_float_add",
+                    "func_args_list": args,
+                    "isPassThrough": False,
                     "func_args" : None}
             },
             "B_components" : components,
@@ -517,6 +530,7 @@ class Block:
         components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
         components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        args = []
         self.blocks[index] = {
             "B_type": {
                 "id": None,
@@ -535,6 +549,8 @@ class Block:
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_float_sub",
+                    "func_args_list": args,
+                    "isPassThrough": False,
                     "func_args": None}
             },
             "B_components": components,
@@ -564,6 +580,7 @@ class Block:
         components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
         components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        args = []
         self.blocks[index] = {
             "B_type": {
                 "id": None,
@@ -582,6 +599,8 @@ class Block:
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_float_div",
+                    "func_args_list": args,
+                    "isPassThrough": False,
                     "func_args": None}
             },
             "B_components": components,
@@ -611,6 +630,7 @@ class Block:
         components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
         components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        args = []
         self.blocks[index] = {
             "B_type": {
                 "id": None,
@@ -629,6 +649,8 @@ class Block:
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_float_mult",
+                    "func_args_list": args,
+                    "isPassThrough": False,
                     "func_args": None}
             },
             "B_components": components,
@@ -661,6 +683,7 @@ class Block:
         components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
         components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        args = []
         self.blocks[index] = {
             "B_type": {
                 "id": None,
@@ -680,6 +703,8 @@ class Block:
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_str_concat",
+                    "func_args_list": args,
+                    "isPassThrough": False,
                     "func_args": None}
             },
             "B_components": components,
@@ -709,6 +734,7 @@ class Block:
         components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
         components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        args = []
         self.blocks[index] = {
             "B_type": {
                 "id": None,
@@ -728,6 +754,8 @@ class Block:
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_str_subDiv",
+                    "func_args_list": args,
+                    "isPassThrough": False,
                     "func_args": None}
             },
             "B_components": components,
@@ -757,6 +785,7 @@ class Block:
         components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
         components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        args = []
         self.blocks[index] = {
             "B_type": {
                 "id": None,
@@ -776,6 +805,8 @@ class Block:
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_str_trim",
+                    "func_args_list": args,
+                    "isPassThrough": False,
                     "func_args": None}
             },
             "B_components": components,
@@ -805,6 +836,7 @@ class Block:
         components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
         components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        args = []
         self.blocks[index] = {
             "B_type": {
                 "id": None,
@@ -824,6 +856,8 @@ class Block:
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_str_split",
+                    "func_args_list": args,
+                    "isPassThrough": False,
                     "func_args": None}
             },
             "B_components": components,
@@ -852,6 +886,7 @@ class Block:
         components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
         components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        args = []
         self.blocks[index] = {
             "B_type": {
                 "id": None,
@@ -871,6 +906,8 @@ class Block:
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_str_find",
+                    "func_args_list": args,
+                    "isPassThrough": False,
                     "func_args": None}
             },
             "B_components": components,
@@ -889,6 +926,7 @@ class Block:
         print("no Operation")
 
     def f_int_add(self, a, b):
+
         print("!!Function!!")
 
     def f_int_sub(self):

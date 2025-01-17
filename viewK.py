@@ -5,8 +5,9 @@ import block
 from tkinter import filedialog, messagebox
 
 import block_components
+import dataTypes
 from script_variables import Var
-from util import h_getNextEmptyDictionary, h_getVectorBetweenPoints
+from util import h_getNextEmptyDictionary, h_getVectorBetweenPoints, h_convertToDataTypesFromString
 
 
 class BlockEditorView:
@@ -62,6 +63,9 @@ class BlockEditorView:
         self.menu.add_cascade(label="Integer", menu=self.blockMenuGraph)
 
         self.b_obj = block.Block()
+        self.g_var = Var()
+
+        self.exec_obj = []
 
         self.selectedTool = 1
         self.END_OF_SCRIPT = 0
@@ -326,51 +330,37 @@ class BlockEditorView:
         startBlockCanvasId = self.canvas.find_withtag("start")[0]
         currentBlock = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)]
         block_id = self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)
-        nextBlock_id = currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]
         if not currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
             print("[Compiler]: nothing connected to Start block!")
             return 0
-        nextBlock = self.b_obj.blocks[currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]]
-        if not nextBlock:
-            print("[Compiler]: error with gathering the next block!")
-            return 0
-        self.exec_evaluateFunction(block_id, nextBlock_id)
+        self.exec_evaluateFunction(block_id)
 
         while self.END_OF_SCRIPT == 0:
             if self.exec_hasReachedEndOfScript(block_id):
                 print("[Execute]: end of Script reached!")
                 break
             else:
-                if nextBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
-                    currentBlock = self.b_obj.blocks[nextBlock["B_type"]["block_outputTypes"]["outputBlockId"]]
-                    block_id = nextBlock["B_type"]["block_outputTypes"]["outputBlockId"]
+                if currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
+                    block_id = currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]
+                    currentBlock = self.b_obj.blocks[currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]]
+                    dataTypeObj = self.exec_evaluateFunction(block_id)
+                    if type(self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"]) == type(dataTypeObj):
+                        self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"] = dataTypeObj
                 else:
-                    if currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
-                        currentBlock = self.b_obj.blocks[currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]]
-                        block_id = currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]
-
-
-                if not currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
                     print("[Compiler]: nothing connected to next block!")
                     return 1
 
-                nextBlock = self.b_obj.blocks[currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]]
-                nextBlock_id = currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]
-                if not nextBlock:
-                    print("[Compiler]: error with gathering the next block!")
-                self.exec_evaluateFunction(block_id, nextBlock_id)
+    """ Variablen für die Funktion: """
+    # startBlock_id: finde die ID des Startblocks in b_obj.blocks
+    # nextBlock_id: finde die nächste block_id vom Block, welcher als "outputBlockId" im StartBlock-dict. gespeichert ist.
+    # functionName: <speichert die Funktion als name, die von einem Block ausgeführt werden soll.> Anfangs str
+    # functionArgs: <speichert die Args für die function, welche von einem Block ausgeführt werden soll. Wird als dataTypes gespeichert.> Anfangs None
+    # f_executeEnd: Flag, wenn das ende der verlinkten Blöcke erreicht wurde.
+    # f_executeBreak: Flag, wenn die exeution abgebrochen werden muss, falls es z.B. einen Fehler gibt.
+    # f_executesuccess: Flag, wenn execution geklappt hat.
+    """-----------------------------"""
 
-        """ Variablen für die Funktion: """
-        # startBlock_id: finde die ID des Startblocks in b_obj.blocks
-        # nextBlock_id: finde die nächste block_id vom Block, welcher als "outputBlockId" im StartBlock-dict. gespeichert ist.
-        # functionName: <speichert die Funktion als name, die von einem Block ausgeführt werden soll.> Anfangs str
-        # functionArgs: <speichert die Args für die function, welche von einem Block ausgeführt werden soll. Wird als dataTypes gespeichert.> Anfangs None
-        # f_executeEnd: Flag, wenn das ende der verlinkten Blöcke erreicht wurde.
-        # f_executeBreak: Flag, wenn die exeution abgebrochen werden muss, falls es z.B. einen Fehler gibt.
-        # f_executesuccess: Flag, wenn execution geklappt hat.
-        """-----------------------------"""
-
-    def exec_evaluateFunction(self, block_id, nextBlock_id):
+    def exec_evaluateFunction(self, block_id):
         print(block_id)
         block = self.b_obj.blocks[block_id]["B_type"]
         blockComponentList = self.b_obj.blocks[block_id]["B_components"]
@@ -378,7 +368,7 @@ class BlockEditorView:
         funcArgs = block["func"]["func_args"]
         funcArgIdList = block["func"]["func_args_list"]
         isPassThorugh = block["func"]["isPassThrough"]
-        nextBlock = self.b_obj.blocks[nextBlock_id]["B_type"]
+        #nextBlock = self.b_obj.blocks[nextBlock_id]["B_type"]
         compInputText = ""
         alignedArgList = []
         if isPassThorugh:
@@ -387,11 +377,19 @@ class BlockEditorView:
                 if comp["entry"]:
                     compInputText = comp["entry"].get()
                     if compInputText == "p":
-                        compInputText = self.b_obj.blocks[block["block_inputTypes"]["inputBlockId"]]["B_type"]["block_inputTypes"]["input_t"].__getstate__()
+                        compInputText = self.b_obj.blocks[block["block_inputTypes"]["inputBlockId"]]["B_type"]["block_outputTypes"]["output_t"].__getstate__()
+                    else:
+                        converted = h_convertToDataTypesFromString(compInputText)
+                        if type(converted) == int:
+                            self.exec_obj.append(dataTypes.BDInteger(converted))
+                        elif type(converted) == float:
+                            self.exec_obj.append(dataTypes.BDFloat(converted))
+                        else:
+                            self.exec_obj.append(dataTypes.BDString(converted))
                     index = funcArgIdList.index(i)
                     alignedArgList.insert(index, compInputText)
-                    dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName, alignedArgList))
-                    return dataTypeObj
+            dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName, alignedArgList))
+            return dataTypeObj
         else:
             for i in range(blockComponentList.__len__()):
                 comp = blockComponentList[i]
@@ -401,6 +399,38 @@ class BlockEditorView:
                     alignedArgList.insert(index, compInputText)
             dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName, alignedArgList))
             return dataTypeObj
+
+    """    def exec_evaluateFunction(self, block_id):
+        print(block_id)
+        block = self.b_obj.blocks[block_id]["B_type"]
+        blockComponentList = self.b_obj.blocks[block_id]["B_components"]
+        funcName = block["func"]["func_name"]
+        funcArgs = block["func"]["func_args"]
+        funcArgIdList = block["func"]["func_args_list"]
+        isPassThorugh = block["func"]["isPassThrough"]
+        #nextBlock = self.b_obj.blocks[nextBlock_id]["B_type"]
+        compInputText = ""
+        alignedArgList = []
+        if isPassThorugh:
+            for i in range(blockComponentList.__len__()):
+                comp = blockComponentList[i]
+                if comp["entry"]:
+                    compInputText = comp["entry"].get()
+                    if compInputText == "p":
+                        compInputText = self.b_obj.blocks[block["block_inputTypes"]["inputBlockId"]]["B_type"]["block_outputTypes"]["output_t"].__getstate__()
+                    index = funcArgIdList.index(i)
+                    alignedArgList.insert(index, compInputText)
+            dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName, alignedArgList))
+            return dataTypeObj
+        else:
+            for i in range(blockComponentList.__len__()):
+                comp = blockComponentList[i]
+                if comp["entry"]:
+                    compInputText = comp["entry"].get()
+                    index = funcArgIdList.index(i)
+                    alignedArgList.insert(index, compInputText)
+            dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName, alignedArgList))
+            return dataTypeObj"""
 
 
 
