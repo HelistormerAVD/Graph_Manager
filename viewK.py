@@ -400,6 +400,10 @@ class BlockEditorView:
             dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName, alignedArgList))
             return dataTypeObj
 
+    # IDEE: das Objekt, welches als Text übergeben wird könnte auch gecastet werden.
+    # IDEE: einfach direkten objektaufruf.
+    #
+
     """    def exec_evaluateFunction(self, block_id):
         print(block_id)
         block = self.b_obj.blocks[block_id]["B_type"]
