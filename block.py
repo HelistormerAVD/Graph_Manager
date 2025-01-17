@@ -927,9 +927,21 @@ class Block:
 
     def f_int_add(self, a, b):
 
-        print("!!Function!!")
+        if type(a) == type(dataTypes.BDInteger):
 
-    def f_int_sub(self):
+            if type(b) == type(dataTypes.BDInteger):
+                a.add(b.__getstate__())
+                print(a.__getstate__())
+                return a
+            else:
+                print("Falscher Datentyp!")
+        else:
+            print("Falscher Datentyp!")
+
+    def f_int_sub(self, a, b):
+        # a und b sind vom Typ der eingabe Parameter (dataType.BDInteger)
+        # es muss eine funktion von BDInteger wie z.B. a.sub(<summand>) durchgeführt werden.
+        # das neue a muss dann returned werden. (als dataType entsprechend der Ausgabe des Blocks.)
         print("Function")
 
     def f_int_div(self):

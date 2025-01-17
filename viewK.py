@@ -375,9 +375,11 @@ class BlockEditorView:
             for i in range(blockComponentList.__len__()):
                 comp = blockComponentList[i]
                 if comp["entry"]:
-                    compInputText = comp["entry"].get()
+                    compInputText = comp["entry"].get() #Überprüfung ob es eine Variable ist.
                     if compInputText == "p":
                         compInputText = self.b_obj.blocks[block["block_inputTypes"]["inputBlockId"]]["B_type"]["block_outputTypes"]["output_t"].__getstate__()
+                        converted = compInputText
+                        self.exec_obj.append(converted)
                     else:
                         converted = h_convertToDataTypesFromString(compInputText)
                         if type(converted) == int:
@@ -387,16 +389,23 @@ class BlockEditorView:
                         else:
                             self.exec_obj.append(dataTypes.BDString(converted))
                     index = funcArgIdList.index(i)
-                    alignedArgList.insert(index, compInputText)
+                    alignedArgList.insert(index,  self.exec_obj[i])
             dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName, alignedArgList))
             return dataTypeObj
         else:
             for i in range(blockComponentList.__len__()):
                 comp = blockComponentList[i]
                 if comp["entry"]:
-                    compInputText = comp["entry"].get()
+                    compInputText = comp["entry"].get() #Überprüfung ob es eine Variable ist.
+                    converted = h_convertToDataTypesFromString(compInputText)
+                    if type(converted) == int:
+                        self.exec_obj.append(dataTypes.BDInteger(converted))
+                    elif type(converted) == float:
+                        self.exec_obj.append(dataTypes.BDFloat(converted))
+                    else:
+                        self.exec_obj.append(dataTypes.BDString(converted))
                     index = funcArgIdList.index(i)
-                    alignedArgList.insert(index, compInputText)
+                    alignedArgList.insert(index, converted)
             dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName, alignedArgList))
             return dataTypeObj
 
