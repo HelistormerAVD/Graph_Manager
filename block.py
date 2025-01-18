@@ -23,6 +23,7 @@ class Block:
         self.blocks = {}
         self.deletedPos = []
         self.editorObjects = {}
+        self.exec_obj = []
         #self.blocks[0] = {"B_type" : {"id" : 0, "block_id" : 0, "color": "green2", "connected" : False, "block_inputTypes" : {"input_id" : 0, "input_t" : dataTypes, "inputBlockId" : None}, "block_outputTypes" : {"output_id" : 0, "output_t" : dataTypes, "outputBlockId" : None}, "func" : {"func_name" : "NameOfFunction"}},
         #                  "B_components" : {"id" : 0, "component" : None},
         #                  "B_position" : {"x1": 50, "y1": 50, "x2": 150, "y2": 150}}
@@ -111,7 +112,7 @@ class Block:
         return index
 
 
-    def initBlock_setVariable_add(self):
+    def initBlock_setVariable(self):
         index = h_getNextEmptyDictionary(self.blocks)
         for i in range(len(self.deletedPos)):
             if index == self.deletedPos[i]:
@@ -119,7 +120,7 @@ class Block:
         b_textView = block_components.TextView()
         b_textView.setData(0, 10, 20, "Set Variable", "black", 23)
         b_editText = block_components.EditText()
-        b_editText.setData(1, 100, 10, "0", 10)
+        b_editText.setData(1, 100, 10, "$VariableName", 10)
         b_textView2 = block_components.TextView()
         b_textView2.setData(0, 175, 20, "to", "black", 10)
         b_editText2 = block_components.EditText()
@@ -919,6 +920,245 @@ class Block:
         }
         return index
 
+
+    def initBlock_Function(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "Function", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "f_nameOfFunction", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
+        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+        args = [1]
+        self.blocks[index] = {
+            "B_type" : {
+                "id" : None,
+                "block_id" : 16,
+                "block_tag": "integer_add",
+                "color": "dodger blue",
+                "connected" : False,
+                "inLoop": False,
+                "block_inputTypes" : {
+                    "input_id" : 0,
+                    "input_t" : dataTypes.BDInteger(0),
+                    "inputBlockId" : None},
+                "block_outputTypes" : {
+                    "output_id" : 0,
+                    "output_t" : dataTypes.BDInteger(0),
+                    "outputBlockId" : None},
+                "func" : {
+                    "func_name" : "f_int_add",
+                    "func_args_list": args,
+                    "isPassThrough": False,
+                    "func_args" : None}
+            },
+            "B_components" : components,
+            "B_position" : {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+    def initBlock_Goto(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "Goto", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
+        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+        args = [1,3]
+        self.blocks[index] = {
+            "B_type" : {
+                "id" : None,
+                "block_id" : 17,
+                "block_tag": "integer_add",
+                "color": "dodger blue",
+                "connected" : False,
+                "inLoop": False,
+                "block_inputTypes" : {
+                    "input_id" : 0,
+                    "input_t" : dataTypes.BDInteger(0),
+                    "inputBlockId" : None},
+                "block_outputTypes" : {
+                    "output_id" : 0,
+                    "output_t" : dataTypes.BDInteger(0),
+                    "outputBlockId" : None},
+                "func" : {
+                    "func_name" : "f_int_add",
+                    "func_args_list": args,
+                    "isPassThrough": True,
+                    "func_args" : None}
+            },
+            "B_components" : components,
+            "B_position" : {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+    def initBlock_If(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "Add Integer", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        b_textView2 = block_components.TextView()
+        b_textView2.setData(0, 175, 20, "+", "black", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 200, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
+        args = [1,3]
+        self.blocks[index] = {
+            "B_type" : {
+                "id" : None,
+                "block_id" : 18,
+                "block_tag": "integer_add",
+                "color": "dodger blue",
+                "connected" : False,
+                "inLoop": False,
+                "block_inputTypes" : {
+                    "input_id" : 0,
+                    "input_t" : dataTypes.BDInteger(0),
+                    "inputBlockId" : None},
+                "block_outputTypes" : {
+                    "output_id" : 0,
+                    "output_t" : dataTypes.BDInteger(0),
+                    "outputBlockId" : None},
+                "func" : {
+                    "func_name" : "f_int_add",
+                    "func_args_list": args,
+                    "isPassThrough": True,
+                    "func_args" : None}
+            },
+            "B_components" : components,
+            "B_position" : {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+    def initBlock_If_Else(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "Add Integer", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        b_textView2 = block_components.TextView()
+        b_textView2.setData(0, 175, 20, "+", "black", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 200, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
+        args = [1,3]
+        self.blocks[index] = {
+            "B_type" : {
+                "id" : None,
+                "block_id" : 19,
+                "block_tag": "integer_add",
+                "color": "dodger blue",
+                "connected" : False,
+                "inLoop": False,
+                "block_inputTypes" : {
+                    "input_id" : 0,
+                    "input_t" : dataTypes.BDInteger(0),
+                    "inputBlockId" : None},
+                "block_outputTypes" : {
+                    "output_id" : 0,
+                    "output_t" : dataTypes.BDInteger(0),
+                    "outputBlockId" : None},
+                "func" : {
+                    "func_name" : "f_int_add",
+                    "func_args_list": args,
+                    "isPassThrough": True,
+                    "func_args" : None}
+            },
+            "B_components" : components,
+            "B_position" : {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+    def initBlock_ForLoop(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "Add Integer", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        b_textView2 = block_components.TextView()
+        b_textView2.setData(0, 175, 20, "+", "black", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 200, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
+        args = [1,3]
+        self.blocks[index] = {
+            "B_type" : {
+                "id" : None,
+                "block_id" : 3,
+                "block_tag": "integer_add",
+                "color": "dodger blue",
+                "connected" : False,
+                "inLoop": False,
+                "block_inputTypes" : {
+                    "input_id" : 0,
+                    "input_t" : dataTypes.BDInteger(0),
+                    "inputBlockId" : None},
+                "block_outputTypes" : {
+                    "output_id" : 0,
+                    "output_t" : dataTypes.BDInteger(0),
+                    "outputBlockId" : None},
+                "func" : {
+                    "func_name" : "f_int_add",
+                    "func_args_list": args,
+                    "isPassThrough": True,
+                    "func_args" : None}
+            },
+            "B_components" : components,
+            "B_position" : {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
     #
     #--------------------------------------------------------------------------------------------------------------------------------
 
@@ -926,17 +1166,12 @@ class Block:
         print("no Operation")
 
     def f_int_add(self, a, b):
-
-        if type(a) == type(dataTypes.BDInteger):
-
-            if type(b) == type(dataTypes.BDInteger):
-                a.add(b.__getstate__())
-                print(a.__getstate__())
-                return a
-            else:
-                print("Falscher Datentyp!")
+        if self.is_type_bd_int(a, b):
+            a.add(b.__getstate__())
+            print(a.__getstate__())
+            return a
         else:
-            print("Falscher Datentyp!")
+                print("Falscher Datentyp!")
 
     def f_int_sub(self, a, b):
         if self.is_type_bd_int(a, b):

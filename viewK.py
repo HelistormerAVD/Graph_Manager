@@ -8,6 +8,7 @@ import block_components
 import dataTypes
 from script_variables import Var
 from util import h_getNextEmptyDictionary, h_getVectorBetweenPoints, h_convertToDataTypesFromString
+from functools import partial
 
 
 class BlockEditorView:
@@ -45,27 +46,35 @@ class BlockEditorView:
 
         self.blockMenuInteger = Menu(self.menu)
         self.blockMenuInteger.configure(background="#6164e0")
-        self.blockMenuInteger.add_command(label="New", command=lambda: self.add_block("initBlock_Integer_add"))
-        self.blockMenuInteger.add_command(label="Open...", command=lambda: self.add_block("initBlock_Integer_sub"))
+        self.blockMenuInteger.add_command(label="Integer Addition", command=lambda: self.add_block("initBlock_Integer_add"))
+        self.blockMenuInteger.add_command(label="Integer Subtraction", command=lambda: self.add_block("initBlock_Integer_sub"))
+        self.blockMenuInteger.add_command(label="Integer Multiplication", command=lambda: self.add_block("initBlock_Integer_mult"))
+        self.blockMenuInteger.add_command(label="Integer Division", command=lambda: self.add_block("initBlock_Integer_div"))
         self.menu.add_cascade(label="Integer", menu=self.blockMenuInteger)
-        self.blockMenuDouble = Menu(self.menu)
-        self.blockMenuDouble.configure(background="#6164e0")
-        self.blockMenuDouble.add_command(label="Variable", command=lambda: self.add_block("initBlock_setVariable_add"))
-        self.menu.add_cascade(label="Integer", menu=self.blockMenuDouble)
+        self.blockMenuFloat = Menu(self.menu)
+        self.blockMenuFloat.configure(background="#6164e0")
+        self.blockMenuFloat.add_command(label="Float Addition", command=lambda: self.add_block("initBlock_Float_add"))
+        self.blockMenuFloat.add_command(label="Float Subtraction", command=lambda: self.add_block("initBlock_Float_sub"))
+        self.blockMenuFloat.add_command(label="Float Multiplication", command=lambda: self.add_block("initBlock_Float_mult"))
+        self.blockMenuFloat.add_command(label="Float Division", command=lambda: self.add_block("initBlock_Float_div"))
+        self.menu.add_cascade(label="Float", menu=self.blockMenuFloat)
         self.blockMenuString = Menu(self.menu)
         self.blockMenuString.configure(background="#6164e0")
-        self.menu.add_cascade(label="Integer", menu=self.blockMenuString)
+        self.blockMenuString.add_command(label="String Concat", command=lambda: self.add_block("initBlock_Str_concat"))
+        self.blockMenuString.add_command(label="String Subdivide", command=lambda: self.add_block("initBlock_Str_subDiv"))
+        self.blockMenuString.add_command(label="String Trim", command=lambda: self.add_block("initBlock_Str_trim"))
+        self.blockMenuString.add_command(label="String Split", command=lambda: self.add_block("initBlock_Str_split"))
+        self.blockMenuString.add_command(label="String Find", command=lambda: self.add_block("initBlock_Str_find"))
+        self.menu.add_cascade(label="String", menu=self.blockMenuString)
         self.blockMenuList = Menu(self.menu)
         self.blockMenuList.configure(background="#6164e0")
-        self.menu.add_cascade(label="Integer", menu=self.blockMenuList)
+        self.menu.add_cascade(label="List", menu=self.blockMenuList)
         self.blockMenuGraph = Menu(self.menu)
         self.blockMenuGraph.configure(background="#6164e0")
-        self.menu.add_cascade(label="Integer", menu=self.blockMenuGraph)
+        self.menu.add_cascade(label="Graph", menu=self.blockMenuGraph)
 
         self.b_obj = block.Block()
         self.g_var = Var()
-
-        self.exec_obj = []
 
         self.selectedTool = 1
         self.END_OF_SCRIPT = 0
@@ -82,8 +91,23 @@ class BlockEditorView:
 
         #self.canvas.bind("<Button-1>", self.on_canvas_click)
         self.canvas.bind("<Button-2>", self.onCanvasClick)
+        self.canvas.focus_set()  # Set focus to the canvas
         self.canvas.bind("<Button-3>", self.debugClick)
+        self.canvas.focus_set()  # Set focus to the canvas
+        self.canvas.bind("<Key-q>", self.debugHotkey1)
+        self.canvas.bind("<Key-w>", self.debugHotkey2)
+        self.canvas.bind("<Key-e>", self.debugHotkey3)
         #self.canvas.bind("<B1-Motion>", self.on_canvas_drag)
+
+    def debugHotkey1(self, event):
+        self.switchEditorTool(0)
+
+    def debugHotkey2(self, event):
+        self.switchEditorTool(1)
+
+    def debugHotkey3(self, event):
+        self.switchEditorTool(2)
+
 
     def onStartUp(self):
         startBlock = self.add_block("initBlock_start")
@@ -343,6 +367,7 @@ class BlockEditorView:
                 if currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
                     block_id = currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]
                     currentBlock = self.b_obj.blocks[currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]]
+                    block_id, currentBlock = self.exec_checkStructureBlocks(block_id, currentBlock)
                     dataTypeObj = self.exec_evaluateFunction(block_id)
                     if type(self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"]) == type(dataTypeObj):
                         self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"] = dataTypeObj
@@ -360,7 +385,76 @@ class BlockEditorView:
     # f_executesuccess: Flag, wenn execution geklappt hat.
     """-----------------------------"""
 
+    # testet, ob der aktuelle Block ein Struktur Block ist.
+    def exec_checkStructureBlocks(self, block_id, currentBlock):
+        block = self.b_obj.blocks[block_id]["B_type"]
+        blockComponentList = self.b_obj.blocks[block_id]["B_components"]
+        for i in range(blockComponentList.__len__()):
+            comp = blockComponentList[i]
+            if comp["entry"]:
+                compInputText = comp["entry"].get()
+                if block["block_id"] == 17:  # wenn goto block, dann finde den Passenden Funktionsblock
+                    if compInputText.startswith("f_", 0, 2):
+                        print("test")
+        return block_id, currentBlock
+
+
     def exec_evaluateFunction(self, block_id):
+        #print(block_id)
+        block = self.b_obj.blocks[block_id]["B_type"]
+        blockComponentList = self.b_obj.blocks[block_id]["B_components"]
+        funcName = block["func"]["func_name"]
+        funcArgs = block["func"]["func_args"]
+        funcArgIdList = block["func"]["func_args_list"]
+        isPassThorugh = block["func"]["isPassThrough"]
+        #nextBlock = self.b_obj.blocks[nextBlock_id]["B_type"]
+        self.b_obj.exec_obj = []
+        if isPassThorugh:
+            for i in range(blockComponentList.__len__()):
+                comp = blockComponentList[i]
+                if comp["entry"]:
+                    compInputText = comp["entry"].get() #Überprüfung ob es eine Variable ist.
+                    if compInputText == "p": # muss exception gefangen werden
+                        compInputText = self.b_obj.blocks[block["block_inputTypes"]["inputBlockId"]]["B_type"]["block_outputTypes"]["output_t"]
+                        #print(compInputText)
+                        converted = compInputText
+                        self.b_obj.exec_obj.append(converted)
+                    elif compInputText.__getitem__(0) == "$": #compInputText.__getitem__(0) == "$"
+                        converted = self.g_var.get_value(compInputText)
+                        self.b_obj.exec_obj.append(converted)
+                    else:
+                        converted = h_convertToDataTypesFromString(compInputText)
+                        if type(converted) == int:
+                            self.b_obj.exec_obj.append(dataTypes.BDInteger(converted))
+                        elif type(converted) == float:
+                            self.b_obj.exec_obj.append(dataTypes.BDFloat(converted))
+                        else:
+                            self.b_obj.exec_obj.append(dataTypes.BDString(converted))
+            dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName))
+            return dataTypeObj
+        else:
+            for i in range(blockComponentList.__len__()):
+                comp = blockComponentList[i]
+                if comp["entry"]:
+                    compInputText = comp["entry"].get() #Überprüfung ob es eine Variable ist.
+                    converted = h_convertToDataTypesFromString(compInputText)
+                    if type(converted) == int:
+                        self.b_obj.exec_obj.append(dataTypes.BDInteger(converted))
+                    elif type(converted) == float:
+                        self.b_obj.exec_obj.append(dataTypes.BDFloat(converted))
+                    else:
+                        self.b_obj.exec_obj.append(dataTypes.BDString(converted))
+                elif compInputText.__getitem__(0) == "$":  # compInputText.__getitem__(0) == "$"
+                    converted = self.g_var.get_value(compInputText)
+                    self.b_obj.exec_obj.append(converted)
+            dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName))
+            return dataTypeObj
+
+    # IDEE: das Objekt, welches als Text übergeben wird könnte auch gecastet werden.
+    # IDEE: einfach direkten objektaufruf.
+    #
+
+    """        def exec_evaluateFunction(self, block_id):
         print(block_id)
         block = self.b_obj.blocks[block_id]["B_type"]
         blockComponentList = self.b_obj.blocks[block_id]["B_components"]
@@ -407,51 +501,16 @@ class BlockEditorView:
                     index = funcArgIdList.index(i)
                     alignedArgList.insert(index, converted)
             dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName, alignedArgList))
-            return dataTypeObj
-
-    # IDEE: das Objekt, welches als Text übergeben wird könnte auch gecastet werden.
-    # IDEE: einfach direkten objektaufruf.
-    #
-
-    """    def exec_evaluateFunction(self, block_id):
-        print(block_id)
-        block = self.b_obj.blocks[block_id]["B_type"]
-        blockComponentList = self.b_obj.blocks[block_id]["B_components"]
-        funcName = block["func"]["func_name"]
-        funcArgs = block["func"]["func_args"]
-        funcArgIdList = block["func"]["func_args_list"]
-        isPassThorugh = block["func"]["isPassThrough"]
-        #nextBlock = self.b_obj.blocks[nextBlock_id]["B_type"]
-        compInputText = ""
-        alignedArgList = []
-        if isPassThorugh:
-            for i in range(blockComponentList.__len__()):
-                comp = blockComponentList[i]
-                if comp["entry"]:
-                    compInputText = comp["entry"].get()
-                    if compInputText == "p":
-                        compInputText = self.b_obj.blocks[block["block_inputTypes"]["inputBlockId"]]["B_type"]["block_outputTypes"]["output_t"].__getstate__()
-                    index = funcArgIdList.index(i)
-                    alignedArgList.insert(index, compInputText)
-            dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName, alignedArgList))
-            return dataTypeObj
-        else:
-            for i in range(blockComponentList.__len__()):
-                comp = blockComponentList[i]
-                if comp["entry"]:
-                    compInputText = comp["entry"].get()
-                    index = funcArgIdList.index(i)
-                    alignedArgList.insert(index, compInputText)
-            dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName, alignedArgList))
             return dataTypeObj"""
 
 
 
-    def exec_createFunctionStringWithArgs(self, funcName, argStringList):
+    def exec_createFunctionStringWithArgs(self, funcName):
         out = "("
-        for i in range(argStringList.__len__()):
-            out += argStringList[i]
-            if argStringList.__len__() - (i + 1) > 0:
+        for i in range(self.b_obj.exec_obj.__len__()):
+            helper_string = "self.b_obj.exec_obj.__getitem__(" + i.__str__() + ")"
+            out += helper_string
+            if self.b_obj.exec_obj.__len__() - (i + 1) > 0:
                 out += ","
         out += ")"
         print("self.b_obj." + funcName + out)
