@@ -20,11 +20,11 @@ class Block:
 
     def __init__(self):
         self.blockHeight = 40
-        self.blocks = {}
-        self.deletedPos = []
-        self.editorObjects = {}
-        self.exec_obj = []
-        self.funcList = []
+        self.blocks = {} # muss in Json gespeichert und geladen werden (in einer Datei)
+        self.deletedPos = [] # muss in Json gespeichert und geladen werden (in einer Datei)
+        self.editorObjects = {} # nicht benötigt.
+        self.exec_obj = [] # TEMP muss noch auf 0 gesetzt werden beim Laden
+        self.funcList = [] # TEMP muss noch auf 0 gesetzt werden beim Laden
         #self.blocks[0] = {"B_type" : {"id" : 0, "block_id" : 0, "color": "green2", "connected" : False, "block_inputTypes" : {"input_id" : 0, "input_t" : dataTypes, "inputBlockId" : None}, "block_outputTypes" : {"output_id" : 0, "output_t" : dataTypes, "outputBlockId" : None}, "func" : {"func_name" : "NameOfFunction"}},
         #                  "B_components" : {"id" : 0, "component" : None},
         #                  "B_position" : {"x1": 50, "y1": 50, "x2": 150, "y2": 150}}
@@ -1132,7 +1132,7 @@ class Block:
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
-                "block_id" : 3,
+                "block_id" : 20,
                 "block_tag": "for-loop",
                 "color": "aquamarine",
                 "connected" : False,
@@ -1183,7 +1183,7 @@ class Block:
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
-                "block_id" : 3,
+                "block_id" : 21,
                 "block_tag": "list_insert",
                 "color": "mediumpurple",
                 "connected" : False,
@@ -1234,7 +1234,7 @@ class Block:
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
-                "block_id" : 3,
+                "block_id" : 22,
                 "block_tag": "list_get",
                 "color": "mediumpurple",
                 "connected" : False,
@@ -1284,7 +1284,7 @@ class Block:
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
-                "block_id" : 3,
+                "block_id" : 23,
                 "block_tag": "list_delete",
                 "color": "mediumpurple",
                 "connected" : False,
@@ -1334,7 +1334,7 @@ class Block:
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
-                "block_id" : 3,
+                "block_id" : 24,
                 "block_tag": "list_sort",
                 "color": "mediumpurple",
                 "connected" : False,

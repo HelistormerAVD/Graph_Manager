@@ -151,6 +151,58 @@ class BDInteger:
     def __str__(self):
         return str(self.data)
 
+class BDList:
+
+    """ Klasse BDString """
+    data = ""  # Sinnhaftigkeit?
+
+    def __init__(self, text=""):  # default-Wert = leerer String
+        """ Konstruktor der BDString-Klasse """
+        self.data = str(text)
+
+    def replace(self, to_be_replaced, replace_with, case_sensitive=True):
+        """ Ersetze alle Vorkommen von `to_be_replaced` mit `replace_with`, optional case-insensitiv """
+        to_be_replaced = str(to_be_replaced)
+        replace_with = str(replace_with)
+        if case_sensitive:
+            return self.data.replace(to_be_replaced, replace_with)
+        else:
+            return re.sub(re.escape(to_be_replaced), replace_with, self.data, flags=re.IGNORECASE)
+
+    def replace_in_range(self, to_be_replaced, replace_with, start=0, end=None, case_sensitive=True):
+        """ Ersetze alle Vorkommen von `to_be_replaced` mit `replace_with` zwischen `start` und `end`, optional case-insensitiv """
+        to_be_replaced = str(to_be_replaced)
+        replace_with = str(replace_with)
+        end = end if end is not None else len(self.data)
+        sub_content = BDString(self.data[start:end])
+        replaced_sub = sub_content.replace(to_be_replaced, replace_with, case_sensitive)
+        return self.data[:start] + replaced_sub + self.data[end:]
+
+    def replace_word(self, to_be_replaced, replace_with, case_sensitive=True):
+        """ Ersetze alle alleinstehenden Vorkommen von to_be_replaced (die nicht an alphanumerische Zeichen grenzen, sondern an Leerzeichen oder Sonderzeichen), optional case-insensitiv """
+        to_be_replaced = str(to_be_replaced)
+        replace_with = str(replace_with)
+        pattern = r'\b' + re.escape(to_be_replaced) + r'\b'
+        if case_sensitive:
+            return re.sub(pattern, replace_with, self.data)
+        else:
+            return re.sub(pattern, replace_with, self.data, flags=re.IGNORECASE)
+
+    def set_text(self, text):
+        """ Text setzen/überschreiben """
+        self.data = text
+
+    def get_text(self):
+        """ BDString zurückgeben """
+        return self.__str__()
+
+    def __str__(self):
+        """ print-Methode/Text (auf der Konsole mit print()) ausgeben """
+        return self.data
+
+    def __getstate__(self):
+        return self.data
+
 
 class BDImage:
     """ Klasse BDImage """
@@ -232,7 +284,11 @@ class BDGraph:
     pointsY = []
     graph = plt
 
-    def __init__(self, x, y):
+    def __init__(self):
+        self.pointsX = []
+        self.pointsY = []
+
+    def insertLists(self, x, y):
         self.pointsX = x
         self.pointsY = y
 
@@ -262,7 +318,7 @@ class BDGraph:
         self.graph.show()
 
     def __getstate__(self):
-        return self.data
+        return self.graph
 
 
 if __name__ == '__main__':

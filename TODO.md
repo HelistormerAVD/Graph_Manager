@@ -1,4 +1,19 @@
+
 # Aktuelle Priorisierte Aufgaben:
+### - dataTypes: BDList muss erstellt werden (aktuell nur das gleiche wie BDString) (Lorenz)
+### - block: graph (+ image) Blöcke erstellen. (Victoria)
+    -   Funktionen dazu (Lorenz)
+### - view: Das Laden von skripten erstellen. (Lorenz + Kenneth)
+### - view: Das Speichern von skripten erstellen. (Lorenz + Kenneth)
+### - view: Das Löschen von Blöcken + alle Dictionary-Einträge. (Kenneth)
+### - view: Execution verbessert werden. (Kenneth)
+### - view/block: Die Variablen müssen funktionieren. (Kenneth)
+### - view/block: Der "Function"-, "Goto"-, "If_Else"-, Block muss noch funktionierend gemacht werden. (Kenneth)
+### - view/block: Der Schleifen Block muss noch funktionierend gemacht werden. (Kenneth)
+
+
+
+### --------------------------------------------------------------------------------------------------------
 ### - Blöcke hinzufügen (die initBlock_...) nach Muster (Victoria)
 ### - Block_selection fixen (was wenn Block gelöscht oder gleich bei dual Selection) (Kenneth)
 ### - Versuchen Fehler zu finden bei updateBlockPosition bzw. (Wenn Blöcke verlinkt werden sind sie nicht aligned) (Lorenz)
