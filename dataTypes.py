@@ -49,13 +49,29 @@ class BDString:
         else:
             return re.sub(pattern, replace_with, self.data, flags=re.IGNORECASE)
 
+    def concat(self, s):
+        """ konkateniert den BDString mit s """
+        return self.data + str(s)
+
+    def find(self, s):
+        """ gibt den Start-Index des ersten Vorkommens von s im BDString zurück """
+        return BDInteger(self.data.find(str(s)))
+
+    def split(self, s):
+        """ splittet den BDString an allen Vorkommen von s und gibt eine BDList zurück """
+        return BDList(self.data.split(str(s)))
+
+    def trim(self):
+        """ trimmt den BDString """
+        return self.data.strip()
+
     def set_text(self, text):
         """ Text setzen/überschreiben """
-        self.data = text
+        self.data = BDString(text)
 
     def get_text(self):
         """ BDString zurückgeben """
-        return self.__str__()
+        return self.__getstate__()
 
     def __str__(self):
         """ print-Methode/Text (auf der Konsole mit print()) ausgeben """
@@ -106,9 +122,8 @@ class BDFloat:  # umbenannt, da es double in (Standard-)Python nicht gibt
         return str(self.data)
 
 
-# TODO: Ergibt es Sinn, dass BDInteger von BDFloat erbt?
 class BDInteger:
-    """ Klasse BDInteger erbt von BDFloat """
+    """ Klasse BDInteger """
 
     def __init__(self, data : int):
         """ Konstruktor der Klasse BDInteger """
@@ -151,50 +166,68 @@ class BDInteger:
     def __str__(self):
         return str(self.data)
 
+
 class BDList:
 
-    """ Klasse BDString """
-    data = ""  # Sinnhaftigkeit?
+    """ Klasse BDList """
+    data = list()
 
-    def __init__(self, text=""):  # default-Wert = leerer String
-        """ Konstruktor der BDString-Klasse """
-        self.data = str(text)
+    def __init__(self, data=None):  # default-Wert = leerer String
+        """ Konstruktor der BDList-Klasse """
+        if data is None:
+            data = list()
+        self.data = list(data)
 
-    def replace(self, to_be_replaced, replace_with, case_sensitive=True):
-        """ Ersetze alle Vorkommen von `to_be_replaced` mit `replace_with`, optional case-insensitiv """
-        to_be_replaced = str(to_be_replaced)
-        replace_with = str(replace_with)
-        if case_sensitive:
-            return self.data.replace(to_be_replaced, replace_with)
-        else:
-            return re.sub(re.escape(to_be_replaced), replace_with, self.data, flags=re.IGNORECASE)
+    def append(self, elem):
+        """ fügt elem an das Ende der BDList an """
+        return self.data.append(elem)
 
-    def replace_in_range(self, to_be_replaced, replace_with, start=0, end=None, case_sensitive=True):
-        """ Ersetze alle Vorkommen von `to_be_replaced` mit `replace_with` zwischen `start` und `end`, optional case-insensitiv """
-        to_be_replaced = str(to_be_replaced)
-        replace_with = str(replace_with)
-        end = end if end is not None else len(self.data)
-        sub_content = BDString(self.data[start:end])
-        replaced_sub = sub_content.replace(to_be_replaced, replace_with, case_sensitive)
-        return self.data[:start] + replaced_sub + self.data[end:]
+    def clear(self):
+        """ entfernt alle Elemente der BDList """
+        return self.data.clear()
 
-    def replace_word(self, to_be_replaced, replace_with, case_sensitive=True):
-        """ Ersetze alle alleinstehenden Vorkommen von to_be_replaced (die nicht an alphanumerische Zeichen grenzen, sondern an Leerzeichen oder Sonderzeichen), optional case-insensitiv """
-        to_be_replaced = str(to_be_replaced)
-        replace_with = str(replace_with)
-        pattern = r'\b' + re.escape(to_be_replaced) + r'\b'
-        if case_sensitive:
-            return re.sub(pattern, replace_with, self.data)
-        else:
-            return re.sub(pattern, replace_with, self.data, flags=re.IGNORECASE)
+    def copy(self):
+        """ gibt eine Kopie der BDList zurück """
+        return self.data.copy()
 
-    def set_text(self, text):
-        """ Text setzen/überschreiben """
-        self.data = text
+    def count(self, elem):
+        """ zählt die Vorkommen von elem in der BDList """
+        return self.data.count(elem)
 
-    def get_text(self):
-        """ BDString zurückgeben """
-        return self.__str__()
+    def extend(self, data):
+        """ hängt die Elemente der BDList data an self.data an """
+        return self.data.extend(data)
+
+    def index(self, elem):
+        """ gibt den Index des ersten Vorkommens von elem in der BDList aus """
+        return self.data.index(elem)
+
+    def insert(self, pos, elem):
+        """ fügt elem an der Position pos in die BDList ein """
+        return self.data.insert(pos, elem)
+
+    def pop(self, pos):
+        """ entfernt das Element an Position pos aus der BDList und gibt es aus """
+        return self.data.pop(pos)
+
+    def remove(self, elem):
+        """ entfernt das erste Vorkommen von elem aus der BDList """
+        return self.data.remove(elem)
+
+    def reverse(self):
+        """ stellt die BDList auf den Kopf """
+        return self.data.reverse()
+
+    def sort(self):
+        return self.data.sort()
+
+    def set_list(self, data):
+        """ Liste setzen/überschreiben """
+        self.data = BDList(data)
+
+    def get_list(self):
+        """ BDList zurückgeben """
+        return self.__getstate__()
 
     def __str__(self):
         """ print-Methode/Text (auf der Konsole mit print()) ausgeben """
@@ -280,40 +313,40 @@ class BDImage:
 
 class BDGraph:
     """ Klasse BDGraph """
-    pointsX = []
-    pointsY = []
+    points_x = []
+    points_y = []
     graph = plt
 
     def __init__(self):
-        self.pointsX = []
-        self.pointsY = []
+        self.points_x = []
+        self.points_y = []
 
-    def insertLists(self, x, y):
-        self.pointsX = x
-        self.pointsY = y
+    def insert_lists(self, x, y):
+        self.points_x = x
+        self.points_y = y
 
-    def setGraph(self):
+    def set_graph(self):
         self.graph.xlabel('x')
         self.graph.ylabel('y')
         self.graph.title('Your Graph')
         self.graph.grid(True)
-        self.graph.plot(self.pointsX, self.pointsY, label="first")
+        self.graph.plot(self.points_x, self.points_y, label="first")
         self.graph.legend()
         self.graph.show()
 
-    def getGraph(self):
+    def get_graph(self):
         get_graph = self.graph.gca()
         return get_graph
 
-    def modifyGraph(self, x, y, xlabel, ylabel, title, grid, label):
-        self.pointsX = x
-        self.pointsY = y
+    def modify_graph(self, x, y, xlabel, ylabel, title, grid, label):
+        self.points_x = x
+        self.points_y = y
         self.graph.xlabel(xlabel if xlabel else "x")
         self.graph.ylabel(ylabel if ylabel else "y")
         self.graph.title(title if title else "Your Graph")
         if grid is not None:
             self.graph.grid(grid)
-        self.graph.plot(self.pointsX, self.pointsY, label=label)
+        self.graph.plot(self.points_x, self.points_y, label=label)
         self.graph.legend()
         self.graph.show()
 

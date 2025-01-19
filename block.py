@@ -1416,13 +1416,14 @@ class Block:
     def f_nop(self, *args):
         print("no Operation")
 
+    """ BDInteger Funktions-Handler """
     def f_int_add(self, a, b):
         if self.is_type_bd_int(a, b):
             a.add(b.__getstate__())
             print(a.__getstate__())
             return a
         else:
-                print("Falscher Datentyp!")
+            print("Falscher Datentyp!")
 
     def f_int_sub(self, a, b):
         if self.is_type_bd_int(a, b):
@@ -1431,11 +1432,16 @@ class Block:
             return a
         else:
             print("Falscher Datentyp!")
-        # a und b sind vom Typ der eingabe Parameter (dataType.BDInteger)
-        # es muss eine funktion von BDInteger wie z.B. a.sub(<summand>) durchgeführt werden.
-        # das neue a muss dann returned werden. (als dataType entsprechend der Ausgabe des Blocks.)
-        print("Function")
 
+    def f_int_mul(self, a, b):
+        if self.is_type_bd_int(a, b):
+            a.BDInteger.multiply(b.__getstate__())
+            print(a.__getstate__())
+            return a
+        else:
+            print("Falscher Datentyp!")
+
+    # BDFloat divide Funktion???
     def f_int_div(self, a, b):
         if self.is_type_bd_int(a, b):
             a.BDFloat.divide(b.__getstate__())
@@ -1444,7 +1450,22 @@ class Block:
         else:
             print("Falscher Datentyp!")
 
-    # Unterschied zu f_int_div? Ganzzahldivision???
+    def f_int_pow(self, a, b):
+        if self.is_type_bd_int(a, b):
+            a.BDInteger.pow(b.__getstate__())
+            print(a.__getstate__())
+            return a
+        else:
+            print("Falscher Datentyp!")
+
+    def f_int_mod(self, a, b):
+        if self.is_type_bd_int(a, b):
+            a.BDInteger.modulo(b.__getstate__())
+            print(a.__getstate__())
+            return a
+        else:
+            print("Falscher Datentyp!")
+
     def f_int_div_to_int(self, a, b):
         if self.is_type_bd_int(a, b):
             a.BDInteger.divide(b.__getstate__())
@@ -1453,18 +1474,147 @@ class Block:
         else:
             print("Falscher Datentyp!")
 
-    def f_int_mult(self, a, b):
-        if self.is_type_bd_int(a, b):
-            a.BDInteger.multiply(b.__getstate__())
+    """ BDFloat Funktions-Handler """
+    def f_float_add(self, a, b):
+        if self.is_type_bd_float(a, b):
+            a.BDFloat.add(b.__getstate__())
             print(a.__getstate__())
             return a
         else:
             print("Falscher Datentyp!")
 
+    def f_float_sub(self, a, b):
+        if self.is_type_bd_float(a, b):
+            a.BDFloat.subtract(b.__getstate__())
+            print(a.__getstate__())
+            return a
+        else:
+            print("Falscher Datentyp!")
+
+    def f_float_mul(self, a, b):
+        if self.is_type_bd_float(a, b):
+            a.BDFloat.multiply(b.__getstate__())
+            print(a.__getstate__())
+            return a
+        else:
+            print("Falscher Datentyp!")
+
+    def f_float_div(self, a, b):
+        if self.is_type_bd_float(a, b):
+            a.BDFloat.divide(b.__getstate__())
+            print(a.__getstate__())
+            return a
+        else:
+            print("Falscher Datentyp!")
+
+    def f_float_pow(self, a, b):
+        if self.is_type_bd_int(a, b):
+            a.BDFloat.pow(b.__getstate__())
+            print(a.__getstate__())
+            return a
+        else:
+            print("Falscher Datentyp!")
+
+    """ BDString Funktions-Handler """
+    def f_str_concat(self, s1, s2):
+        if self.is_type_bd_string(s1, s2):
+            s1.BDString.concat(s2)
+            print(s1.__getstate__())
+            return s1
+        else:
+            print("Falscher Datentyp!")
+
+    def f_str_find(self, s1, s2):
+        if self.is_type_bd_string(s1, s2):
+            s1.BDString.find(s2)
+            print(s1.__getstate__())
+            return s1
+        else:
+            print("Falscher Datentyp!")
+
+    def f_str_replace(self, s, s1, s2):
+        if isinstance(s, dataTypes.BDString) and self.is_type_bd_string(s1, s2):
+            s1.BDString.replace(s1, s2)
+            print(s1.__getstate__())
+            return s1
+        else:
+            print("Falscher Datentyp!")
+
+    def f_str_split(self, s1, s2):
+        if self.is_type_bd_string(s1, s2):
+            s1.BDString.find(s2)
+            print(s1.__getstate__())
+            return s1
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_str_trim(s1):
+        if isinstance(s1, dataTypes.BDString):
+            s1.trim()
+            print(s1.__getstate__())
+            return s1
+        else:
+            print("Falscher Datentyp!")
+
+    """ BDList Funktions-Handler """
+    # TODO
+
+    """ BDGraph Funktions-Handler """
+    def f_graph_insert_lists(self, graph, x_list, y_list):
+        if isinstance(graph, dataTypes.BDGraph) and self.is_type_bd_list(x_list, y_list):
+            graph.insert_lists(x_list, y_list)
+            print(graph.__getstate__())
+            return graph
+        else:
+            print("Falsche Datentypen!")
+
+    # TODO: Was tun mit boolean Argument grid?
+    def f_graph_modify(self, graph, x_list, y_list, x_label, y_label, title, grid, label):
+        if (isinstance(graph, dataTypes.BDGraph)
+                and self.is_type_bd_list(x_list, y_list)
+                and self.is_type_bd_string(x_label, y_label))\
+                and self.is_type_bd_string(title, label):
+            graph.modify_graph(x_list, y_list, x_label, y_label, title, grid, label)
+            print(graph.__getstate__())
+            return graph
+        else:
+            print("Falsche Datentypen!")
+
+    @staticmethod
+    def f_graph_get(graph):
+        if isinstance(graph, dataTypes.BDGraph):
+            graph.get_graph()
+            print(graph.__getstate__())
+            return graph
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_graph_set(graph):
+        if isinstance(graph, dataTypes.BDGraph):
+            graph.set_graph()
+            print(graph.__getstate__())
+            return graph
+        else:
+            print("Falscher Datentyp!")
+
+    """ statische Methoden zur Typ-Überprüfung """
     @staticmethod
     def is_type_bd_int(a, b):
         return isinstance(a, dataTypes.BDInteger) and isinstance(b, dataTypes.BDInteger)
 
+    @staticmethod
+    def is_type_bd_float(a, b):
+        return isinstance(a, dataTypes.BDFloat) and isinstance(b, dataTypes.BDFloat)
+
+    @staticmethod
+    def is_type_bd_string(s1, s2):
+        return isinstance(s1, dataTypes.BDString) and isinstance(s2, dataTypes.BDString)
+
+    @staticmethod
+    def is_type_bd_list(l1, l2):
+        return isinstance(l1, dataTypes.BDList) and isinstance(l2, dataTypes.BDList)
 
 if __name__ == "__main__":
     b_obj = Block()
