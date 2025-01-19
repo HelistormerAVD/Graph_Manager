@@ -199,6 +199,43 @@ class BlockEditorView:
             print("err")
             return 0
 
+
+#    def set_selected_block(self, event):
+#        """ Setzt den ausgewählten Block und aktualisiert letzten ausgewählten Block """
+#        item = self.canvas.find_closest(event.x, event.y, start="Block")
+#        if not item:    # kein nächster Block
+#            if self.selectedBlockItem:  # es gibt ausgewählten Block
+#                # last -> current, current -> None
+#                self.lastSelectedBlockItem = self.selectedBlockItem
+#                self.lastSelectedBlockCanvasId = self.selectedBlockCanvasId
+#                self.lastSelectedBlockId = self.selectedBlockId
+#                self.selectedBlockItem = None
+#                self.selectedBlockCanvasId = None
+#                self.selectedBlockId = None
+#            return 1
+#
+#        # nächster Block gefunden
+#        if not self.selectedBlockItem:    # wenn kein ausgewählter Block
+#            # current -> item, last nicht verändern
+#            self.selectedBlockItem = item
+#            self.selectedBlockCanvasId = item[0]
+#            self.selectedBlockId = self.b_obj.findBlockIdFromCanvas(item[0])
+#            return 1
+#
+#        # neuer ausgewählter Block + Block war ausgewählt
+#        if self.selectedBlockId != self.b_obj.findBlockIdFromCanvas(item[0]):
+#            # last -> current, current -> item
+#            self.lastSelectedBlockItem = self.selectedBlockItem
+#            self.lastSelectedBlockCanvasId = self.selectedBlockCanvasId
+#            self.lastSelectedBlockId = self.selectedBlockId
+#            self.selectedBlockItem = item
+#            self.selectedBlockCanvasId = item[0]
+#            self.selectedBlockId = self.b_obj.findBlockIdFromCanvas(item[0])
+#        else:
+#            pass    # derselbe Block wurde erneut ausgewählt: Nichts tun
+#        return 1
+
+
     def checkDualSelection(self):
         if self.selectedBlockItem and self.lastSelectedBlockItem:
             return 1
