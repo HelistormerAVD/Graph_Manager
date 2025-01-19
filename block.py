@@ -292,7 +292,7 @@ class Block:
                 "func": {
                     "func_name": "NameOfFunction",
                     "func_args_list": args,
-                    "isPassThrough": False,
+                    "isPassThrough": True,  # war vorher false?
                     "func_args": None}
             },
             "B_components": components,
@@ -342,7 +342,7 @@ class Block:
                 "func" : {
                     "func_name" : "NameOfFunction",
                     "func_args_list": args,
-                    "isPassThrough": False,
+                    "isPassThrough": True,
                     "func_args" : None}
             },
             "B_components" : components,
@@ -392,7 +392,7 @@ class Block:
                 "func" : {
                     "func_name" : "NameOfFunction",
                     "func_args_list": args,
-                    "isPassThrough": False,
+                    "isPassThrough": True,
                     "func_args" : None}
             },
             "B_components" : components,
@@ -488,7 +488,7 @@ class Block:
                 "id" : None,
                 "block_id" : 7,
                 "block_tag": "float_add",
-                "color": "blue",
+                "color": "royal blue",
                 "connected" : False,
                 "inLoop": False,
                 "block_inputTypes" : {
@@ -502,7 +502,7 @@ class Block:
                 "func" : {
                     "func_name" : "f_float_add",
                     "func_args_list": args,
-                    "isPassThrough": False,
+                    "isPassThrough": True,
                     "func_args" : None}
             },
             "B_components" : components,
@@ -538,7 +538,7 @@ class Block:
                 "id": None,
                 "block_id": 8,
                 "block_tag": "float_sub",
-                "color": "blue",
+                "color": "royal blue",
                 "connected": False,
                 "inLoop": False,
                 "block_inputTypes": {
@@ -552,7 +552,7 @@ class Block:
                 "func": {
                     "func_name": "f_float_sub",
                     "func_args_list": args,
-                    "isPassThrough": False,
+                    "isPassThrough": True,
                     "func_args": None}
             },
             "B_components": components,
@@ -588,7 +588,7 @@ class Block:
                 "id": None,
                 "block_id": 9,
                 "block_tag": "float_div",
-                "color": "blue",
+                "color": "royal blue",
                 "connected": False,
                 "inLoop": False,
                 "block_inputTypes": {
@@ -602,7 +602,7 @@ class Block:
                 "func": {
                     "func_name": "f_float_div",
                     "func_args_list": args,
-                    "isPassThrough": False,
+                    "isPassThrough": True,
                     "func_args": None}
             },
             "B_components": components,
@@ -638,7 +638,7 @@ class Block:
                 "id": None,
                 "block_id": 10,
                 "block_tag": "integer_mult",
-                "color": "blue",
+                "color": "royal blue",
                 "connected": False,
                 "inLoop": False,
                 "block_inputTypes": {
@@ -652,7 +652,7 @@ class Block:
                 "func": {
                     "func_name": "f_float_mult",
                     "func_args_list": args,
-                    "isPassThrough": False,
+                    "isPassThrough": True,
                     "func_args": None}
             },
             "B_components": components,
@@ -685,13 +685,13 @@ class Block:
         components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
         components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
-        args = []
+        args = [1,3]
         self.blocks[index] = {
             "B_type": {
                 "id": None,
                 "block_id": 11,
                 "block_tag": "str_concat",
-                "color": "saddle brown",
+                "color": "deep pink",
                 "outline": "black",
                 "connected": False,
                 "inLoop": False,
@@ -706,7 +706,7 @@ class Block:
                 "func": {
                     "func_name": "f_str_concat",
                     "func_args_list": args,
-                    "isPassThrough": False,
+                    "isPassThrough": True,
                     "func_args": None}
             },
             "B_components": components,
@@ -742,7 +742,7 @@ class Block:
                 "id": None,
                 "block_id": 12,
                 "block_tag": "str_subDiv",
-                "color": "saddle brown",
+                "color": "deep pink",
                 "outline": "black",
                 "connected": False,
                 "inLoop": False,
@@ -757,7 +757,7 @@ class Block:
                 "func": {
                     "func_name": "f_str_subDiv",
                     "func_args_list": args,
-                    "isPassThrough": False,
+                    "isPassThrough": True,
                     "func_args": None}
             },
             "B_components": components,
@@ -793,7 +793,7 @@ class Block:
                 "id": None,
                 "block_id": 13,
                 "block_tag": "str_trim",
-                "color": "saddle brown",
+                "color": "deep pink",
                 "outline": "black",
                 "connected": False,
                 "inLoop": False,
@@ -808,7 +808,7 @@ class Block:
                 "func": {
                     "func_name": "f_str_trim",
                     "func_args_list": args,
-                    "isPassThrough": False,
+                    "isPassThrough": True,
                     "func_args": None}
             },
             "B_components": components,
@@ -844,7 +844,7 @@ class Block:
                 "id": None,
                 "block_id": 14,
                 "block_tag": "str_split",
-                "color": "saddle brown",
+                "color": "deep pink",
                 "outline": "black",
                 "connected": False,
                 "inLoop": False,
@@ -859,7 +859,7 @@ class Block:
                 "func": {
                     "func_name": "f_str_split",
                     "func_args_list": args,
-                    "isPassThrough": False,
+                    "isPassThrough": True,
                     "func_args": None}
             },
             "B_components": components,
@@ -894,7 +894,7 @@ class Block:
                 "id": None,
                 "block_id": 15,
                 "block_tag": "str_find",
-                "color": "saddle brown",
+                "color": "deep pink",
                 "outline": "light gray",
                 "connected": False,
                 "inLoop": False,
@@ -909,7 +909,7 @@ class Block:
                 "func": {
                     "func_name": "f_str_find",
                     "func_args_list": args,
-                    "isPassThrough": False,
+                    "isPassThrough": True,
                     "func_args": None}
             },
             "B_components": components,
@@ -940,7 +940,7 @@ class Block:
                 "id" : None,
                 "block_id" : 16,
                 "block_tag": "funcBlock",
-                "color": "dodger blue",
+                "color": "teal",
                 "connected" : False,
                 "inLoop": False,
                 "block_inputTypes" : {
@@ -984,7 +984,7 @@ class Block:
                 "id" : None,
                 "block_id" : 17,
                 "block_tag": "goto",
-                "color": "dodger blue",
+                "color": "teal",
                 "connected" : False,
                 "inLoop": False,
                 "block_inputTypes" : {
@@ -1016,11 +1016,11 @@ class Block:
             if index == self.deletedPos[i]:
                 self.deletedPos.pop(i)
         b_textView = block_components.TextView()
-        b_textView.setData(0, 10, 20, "Add Integer", "black", 23)
+        b_textView.setData(0, 10, 20, "if", "black", 23)
         b_editText = block_components.EditText()
         b_editText.setData(1, 100, 10, "0", 10)
         b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, "+", "black", 10)
+        b_textView2.setData(0, 175, 20, " ", "black", 10)
         b_editText2 = block_components.EditText()
         b_editText2.setData(1, 200, 10, "0", 10)
         components = []
@@ -1033,20 +1033,20 @@ class Block:
             "B_type" : {
                 "id" : None,
                 "block_id" : 18,
-                "block_tag": "integer_add",
-                "color": "dodger blue",
+                "block_tag": "if",
+                "color": "aqua",
                 "connected" : False,
                 "inLoop": False,
                 "block_inputTypes" : {
                     "input_id" : 0,
-                    "input_t" : dataTypes.BDInteger(0),
+                    "input_t" : dataTypes.BDInteger(0),  #01 true false
                     "inputBlockId" : None},
                 "block_outputTypes" : {
                     "output_id" : 0,
                     "output_t" : dataTypes.BDInteger(0),
                     "outputBlockId" : None},
                 "func" : {
-                    "func_name" : "f_int_add",
+                    "func_name" : "f_if",
                     "func_args_list": args,
                     "isPassThrough": True,
                     "func_args" : None}
@@ -1066,11 +1066,11 @@ class Block:
             if index == self.deletedPos[i]:
                 self.deletedPos.pop(i)
         b_textView = block_components.TextView()
-        b_textView.setData(0, 10, 20, "Add Integer", "black", 23)
+        b_textView.setData(0, 10, 20, "if else", "black", 23)
         b_editText = block_components.EditText()
         b_editText.setData(1, 100, 10, "0", 10)
         b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, "+", "black", 10)
+        b_textView2.setData(0, 175, 20, " ", "black", 10)
         b_editText2 = block_components.EditText()
         b_editText2.setData(1, 200, 10, "0", 10)
         components = []
@@ -1083,8 +1083,8 @@ class Block:
             "B_type" : {
                 "id" : None,
                 "block_id" : 19,
-                "block_tag": "integer_add",
-                "color": "dodger blue",
+                "block_tag": "if_else",
+                "color": "dark cyan",
                 "connected" : False,
                 "inLoop": False,
                 "block_inputTypes" : {
@@ -1096,7 +1096,7 @@ class Block:
                     "output_t" : dataTypes.BDInteger(0),
                     "outputBlockId" : None},
                 "func" : {
-                    "func_name" : "f_int_add",
+                    "func_name" : "f_if_else",
                     "func_args_list": args,
                     "isPassThrough": True,
                     "func_args" : None}
@@ -1116,11 +1116,11 @@ class Block:
             if index == self.deletedPos[i]:
                 self.deletedPos.pop(i)
         b_textView = block_components.TextView()
-        b_textView.setData(0, 10, 20, "Add Integer", "black", 23)
+        b_textView.setData(0, 10, 20, "For-Loop", "black", 23)
         b_editText = block_components.EditText()
         b_editText.setData(1, 100, 10, "0", 10)
         b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, "+", "black", 10)
+        b_textView2.setData(0, 175, 20, " ", "black", 10)
         b_editText2 = block_components.EditText()
         b_editText2.setData(1, 200, 10, "0", 10)
         components = []
@@ -1133,8 +1133,8 @@ class Block:
             "B_type" : {
                 "id" : None,
                 "block_id" : 3,
-                "block_tag": "integer_add",
-                "color": "dodger blue",
+                "block_tag": "for-loop",
+                "color": "aquamarine",
                 "connected" : False,
                 "inLoop": False,
                 "block_inputTypes" : {
@@ -1146,7 +1146,209 @@ class Block:
                     "output_t" : dataTypes.BDInteger(0),
                     "outputBlockId" : None},
                 "func" : {
-                    "func_name" : "f_int_add",
+                    "func_name" : "f_for_loop",
+                    "func_args_list": args,
+                    "isPassThrough": True,
+                    "func_args" : None}
+            },
+            "B_components" : components,
+            "B_position" : {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+# !!! BDList nicht vorhanden
+    def initBlock_List_Insert(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "List Insert", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        b_textView2 = block_components.TextView()
+        b_textView2.setData(0, 175, 20, "insert in", "black", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 200, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
+        args = [1,3]
+        self.blocks[index] = {
+            "B_type" : {
+                "id" : None,
+                "block_id" : 3,
+                "block_tag": "list_insert",
+                "color": "mediumpurple",
+                "connected" : False,
+                "inLoop": False,
+                "block_inputTypes" : {
+                    "input_id" : 0,
+                    "input_t" : dataTypes.BDList(0),
+                    "inputBlockId" : None},
+                "block_outputTypes" : {
+                    "output_id" : 0,
+                    "output_t" : dataTypes.BDList(0),
+                    "outputBlockId" : None},
+                "func" : {
+                    "func_name" : "f_list_insert",
+                    "func_args_list": args,
+                    "isPassThrough": True,
+                    "func_args" : None}
+            },
+            "B_components" : components,
+            "B_position" : {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+
+    def initBlock_List_get(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "get List", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        b_textView2 = block_components.TextView()
+        b_textView2.setData(0, 175, 20, "get", "black", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 200, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
+        args = [1,3]
+        self.blocks[index] = {
+            "B_type" : {
+                "id" : None,
+                "block_id" : 3,
+                "block_tag": "list_get",
+                "color": "mediumpurple",
+                "connected" : False,
+                "inLoop": False,
+                "block_inputTypes" : {
+                    "input_id" : 0,
+                    "input_t" : dataTypes.BDList(0),
+                    "inputBlockId" : None},
+                "block_outputTypes" : {
+                    "output_id" : 0,
+                    "output_t" : dataTypes.BDList(0),
+                    "outputBlockId" : None},
+                "func" : {
+                    "func_name" : "f_list_get",
+                    "func_args_list": args,
+                    "isPassThrough": True,
+                    "func_args" : None}
+            },
+            "B_components" : components,
+            "B_position" : {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+    def initBlock_List_delete(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "delete List", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        b_textView2 = block_components.TextView()
+        b_textView2.setData(0, 175, 20, "delete ", "black", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 200, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
+        args = [1,3]
+        self.blocks[index] = {
+            "B_type" : {
+                "id" : None,
+                "block_id" : 3,
+                "block_tag": "list_delete",
+                "color": "mediumpurple",
+                "connected" : False,
+                "inLoop": False,
+                "block_inputTypes" : {
+                    "input_id" : 0,
+                    "input_t" : dataTypes.BDList(0),
+                    "inputBlockId" : None},
+                "block_outputTypes" : {
+                    "output_id" : 0,
+                    "output_t" : dataTypes.BDList(0),
+                    "outputBlockId" : None},
+                "func" : {
+                    "func_name" : "f_list_delete",
+                    "func_args_list": args,
+                    "isPassThrough": True,
+                    "func_args" : None}
+            },
+            "B_components" : components,
+            "B_position" : {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+    def initBlock_List_sort(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "sort List", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        b_textView2 = block_components.TextView()
+        b_textView2.setData(0, 175, 20, "sort", "black", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 200, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
+        args = [1,3]
+        self.blocks[index] = {
+            "B_type" : {
+                "id" : None,
+                "block_id" : 3,
+                "block_tag": "list_sort",
+                "color": "mediumpurple",
+                "connected" : False,
+                "inLoop": False,
+                "block_inputTypes" : {
+                    "input_id" : 0,
+                    "input_t" : dataTypes.BDList(0),
+                    "inputBlockId" : None},
+                "block_outputTypes" : {
+                    "output_id" : 0,
+                    "output_t" : dataTypes.BDList(0),
+                    "outputBlockId" : None},
+                "func" : {
+                    "func_name" : "f_list_sort",
                     "func_args_list": args,
                     "isPassThrough": True,
                     "func_args" : None}
