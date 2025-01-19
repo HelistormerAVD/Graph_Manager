@@ -76,6 +76,7 @@ class BlockEditorView:
         self.blockMenuControl.configure(background="#6164e0")
         self.blockMenuControl.add_command(label="Function", command=lambda: self.add_block("initBlock_Function"))
         self.blockMenuControl.add_command(label="Goto Function", command=lambda: self.add_block("initBlock_Goto"))
+        self.blockMenuControl.add_command(label="return to Goto call", command=lambda: self.add_block("initBlock_FunctionReturn"))
         self.menu.add_cascade(label="Flow Control", menu=self.blockMenuControl)
 
         self.b_obj = block.Block()
@@ -394,18 +395,60 @@ class BlockEditorView:
 
     def exec_compileExecution(self):
         self.b_obj.funcList = []
+        print("####EMPTY!!!!")
         funcBlocks = self.canvas.find_withtag("funcBlock")
-        for i in range(funcBlocks.__len__()):
-            block = self.b_obj.blocks[i]
+        print(funcBlocks)
+        for i in funcBlocks:
+            block = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(i)]
+            print("Block: " + block.__str__())
             blockComponentList = block["B_components"]
+            print("i = " + i.__str__())
+            print(blockComponentList.__len__())
             for j in range(blockComponentList.__len__()):
                 comp = blockComponentList[j]
                 if comp["entry"]:
                     compInputText = comp["entry"].get()
-                    self.b_obj.funcList.append({"funcName" : compInputText, "block_id" : i, "return_block_id" : None})
+                    self.b_obj.funcList.append({"funcName" : compInputText, "block_canvas_id" : i, "block_id" : self.b_obj.findBlockIdFromCanvas(i), "return_block_id" : None})
+        print("####FULL!!!!")
+        print(self.b_obj.funcList)
 
 
     def onExecuteScript(self):
+        self.exec_compileExecution()
+        startBlockCanvasId = self.canvas.find_withtag("start")[0]
+        currentBlock = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)]
+        block_id = self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)
+        notExecuted = False
+        if not currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
+            print("[Compiler]: nothing connected to Start block!")
+            return 0
+        self.exec_evaluateFunction(block_id)
+
+        while self.END_OF_SCRIPT == 0:
+            if self.exec_hasReachedEndOfScript(block_id):
+                print("[Execute]: end of Script reached!")
+                break
+            else:
+                if notExecuted:
+                    dataTypeObj = self.exec_evaluateFunction(block_id)
+                    block_id, currentBlock, notExecuted = self.exec_checkStructureBlocks(block_id, currentBlock, notExecuted)
+                    if type(self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"]) == type(dataTypeObj):
+                        self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"] = dataTypeObj
+                    notExecuted = False
+                else:
+                    if currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
+                        block_id = currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]
+                        currentBlock = self.b_obj.blocks[currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]]
+                        dataTypeObj = self.exec_evaluateFunction(block_id)
+                        block_id, currentBlock, notExecuted = self.exec_checkStructureBlocks(block_id, currentBlock, notExecuted)
+                        #dataTypeObj = self.exec_evaluateFunction(block_id)
+                        if type(self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"]) == type(dataTypeObj):
+                            self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"] = dataTypeObj
+                    else:
+                        print("[Compiler]: nothing connected to next block!")
+                        return 1
+
+    """ def onExecuteScript(self):
         self.exec_compileExecution()
         startBlockCanvasId = self.canvas.find_withtag("start")[0]
         currentBlock = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)]
@@ -429,7 +472,7 @@ class BlockEditorView:
                         self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"] = dataTypeObj
                 else:
                     print("[Compiler]: nothing connected to next block!")
-                    return 1
+                    return 1"""
 
     """ Variablen für die Funktion: """
     # startBlock_id: finde die ID des Startblocks in b_obj.blocks
@@ -442,23 +485,59 @@ class BlockEditorView:
     """-----------------------------"""
 
     # testet, ob der aktuelle Block ein Struktur Block ist.
-    def exec_checkStructureBlocks(self, block_id, currentBlock):
+    def exec_checkStructureBlocks(self, block_id, currentBlock, dontSkip):
+        print("------START-------")
         block = self.b_obj.blocks[block_id]["B_type"]
+        print("Block: " + block.__str__())
         blockComponentList = self.b_obj.blocks[block_id]["B_components"]
+        print("CompList: " + blockComponentList.__str__())
         for i in range(blockComponentList.__len__()):
             comp = blockComponentList[i]
             if comp["entry"]:
                 compInputText = comp["entry"].get()
+                print("Hat Entry gefunden: " + compInputText)
                 if block["block_id"] == 17:  # wenn goto block, dann finde den Passenden Funktionsblock
+                    print("ist Block_id 17? : " + block["block_id"].__str__())
                     if compInputText.startswith("f_", 0, 2):
+                        print("startet Mit f_ !")
+                        print("funcList länge: " + self.b_obj.funcList.__len__().__str__())
                         for j in range(self.b_obj.funcList.__len__()):
+                            print("funcName: " + self.b_obj.funcList.__getitem__(j)["funcName"] + " == " + compInputText)
                             if self.b_obj.funcList.__getitem__(j)["funcName"] == compInputText:
                                 self.b_obj.funcList.__getitem__(j)["return_block_id"] = block_id
                                 block_id = self.b_obj.funcList.__getitem__(j)["block_id"]
-                                currentBlock = self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["outputBlockId"]
+                                currentBlock = self.b_obj.blocks[block_id] #self.b_obj.blocks[self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["outputBlockId"]]
+                                dontSkip = True
                                 print("DOCH!!!")
-                                return block_id, currentBlock
-        return block_id, currentBlock
+                                print(currentBlock)
+                                return block_id, currentBlock, dontSkip
+                elif block["block_id"] == 18: # wenn goto block, dann finde den passenden Block unter dem Goto Block
+                    if compInputText.startswith("f_", 0, 2):
+                        print("startet Mit f_ !")
+                        print("funcList länge: " + self.b_obj.funcList.__len__().__str__())
+                        for j in range(self.b_obj.funcList.__len__()):
+                            print("funcName: " + self.b_obj.funcList.__getitem__(j)["funcName"] + " == " + compInputText)
+                            if self.b_obj.funcList.__getitem__(j)["funcName"] == compInputText:
+                                return_block_id = self.b_obj.funcList.__getitem__(j)["return_block_id"]
+                                print("Blocks: " + return_block_id.__str__())
+                                allBlocks = self.canvas.find_withtag("Block")
+                                print("Blocks: " + allBlocks.__str__())
+                                for k in allBlocks:
+                                    iteratedBlock = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(k)]
+                                    print("iteratedBlock: " + iteratedBlock.__str__())
+                                    if iteratedBlock["B_type"]["connected"]:
+                                        print("return_block_id: " + self.b_obj.findBlockIdFromCanvas(return_block_id).__str__())
+                                        print("return_block_id2: " + return_block_id.__str__())
+                                        if iteratedBlock["B_type"]["block_inputTypes"]["inputBlockId"] == return_block_id:
+                                            block_id = self.b_obj.findBlockIdFromCanvas(k)
+                                            currentBlock = self.b_obj.blocks[block_id]
+                                            print("Das könnte Klappen!!!")
+                                            dontSkip = True
+                                            return block_id, currentBlock, dontSkip
+                                                # return_block_id muss in Blocks gefunden werden und dahin gesprungen werden
+                                                # dabei muss ein Block gefunden werden, der connected == True ah und als inputBlockId == return_block_id hat.
+        print("-------END--------")
+        return block_id, currentBlock, dontSkip
 
 
     def exec_evaluateFunction(self, block_id):

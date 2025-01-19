@@ -974,7 +974,7 @@ class Block:
         b_textView = block_components.TextView()
         b_textView.setData(0, 10, 20, "Goto", "black", 23)
         b_editText = block_components.EditText()
-        b_editText.setData(1, 100, 10, "0", 10)
+        b_editText.setData(1, 100, 10, "f_nameOfFunction", 10)
         components = []
         components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
         components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
@@ -984,6 +984,51 @@ class Block:
                 "id" : None,
                 "block_id" : 17,
                 "block_tag": "goto",
+                "color": "teal",
+                "connected" : False,
+                "inLoop": False,
+                "block_inputTypes" : {
+                    "input_id" : 0,
+                    "input_t" : dataTypes.BDInteger(0),
+                    "inputBlockId" : None},
+                "block_outputTypes" : {
+                    "output_id" : 0,
+                    "output_t" : dataTypes.BDInteger(0),
+                    "outputBlockId" : None},
+                "func" : {
+                    "func_name" : "f_nop",
+                    "func_args_list": args,
+                    "isPassThrough": False,
+                    "func_args" : None}
+            },
+            "B_components" : components,
+            "B_position" : {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+
+    def initBlock_FunctionReturn(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "return to", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "f_nameOfFunction", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
+        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+        args = [1,3]
+        self.blocks[index] = {
+            "B_type" : {
+                "id" : None,
+                "block_id" : 18,
+                "block_tag": "funcReturn",
                 "color": "teal",
                 "connected" : False,
                 "inLoop": False,
@@ -1032,7 +1077,7 @@ class Block:
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
-                "block_id" : 18,
+                "block_id" : 19,
                 "block_tag": "if",
                 "color": "aqua",
                 "connected" : False,
@@ -1082,7 +1127,7 @@ class Block:
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
-                "block_id" : 19,
+                "block_id" : 20,
                 "block_tag": "if_else",
                 "color": "dark cyan",
                 "connected" : False,
@@ -1132,7 +1177,7 @@ class Block:
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
-                "block_id" : 20,
+                "block_id" : 21,
                 "block_tag": "for-loop",
                 "color": "aquamarine",
                 "connected" : False,
@@ -1183,7 +1228,7 @@ class Block:
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
-                "block_id" : 21,
+                "block_id" : 22,
                 "block_tag": "list_insert",
                 "color": "mediumpurple",
                 "connected" : False,
@@ -1234,7 +1279,7 @@ class Block:
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
-                "block_id" : 22,
+                "block_id" : 23,
                 "block_tag": "list_get",
                 "color": "mediumpurple",
                 "connected" : False,
@@ -1284,7 +1329,7 @@ class Block:
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
-                "block_id" : 23,
+                "block_id" : 24,
                 "block_tag": "list_delete",
                 "color": "mediumpurple",
                 "connected" : False,
@@ -1334,7 +1379,7 @@ class Block:
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
-                "block_id" : 24,
+                "block_id" : 25,
                 "block_tag": "list_sort",
                 "color": "mediumpurple",
                 "connected" : False,
