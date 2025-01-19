@@ -24,6 +24,7 @@ class Block:
         self.deletedPos = []
         self.editorObjects = {}
         self.exec_obj = []
+        self.funcList = []
         #self.blocks[0] = {"B_type" : {"id" : 0, "block_id" : 0, "color": "green2", "connected" : False, "block_inputTypes" : {"input_id" : 0, "input_t" : dataTypes, "inputBlockId" : None}, "block_outputTypes" : {"output_id" : 0, "output_t" : dataTypes, "outputBlockId" : None}, "func" : {"func_name" : "NameOfFunction"}},
         #                  "B_components" : {"id" : 0, "component" : None},
         #                  "B_position" : {"x1": 50, "y1": 50, "x2": 150, "y2": 150}}
@@ -938,7 +939,7 @@ class Block:
             "B_type" : {
                 "id" : None,
                 "block_id" : 16,
-                "block_tag": "integer_add",
+                "block_tag": "funcBlock",
                 "color": "dodger blue",
                 "connected" : False,
                 "inLoop": False,
@@ -951,7 +952,7 @@ class Block:
                     "output_t" : dataTypes.BDInteger(0),
                     "outputBlockId" : None},
                 "func" : {
-                    "func_name" : "f_int_add",
+                    "func_name" : "f_nop",
                     "func_args_list": args,
                     "isPassThrough": False,
                     "func_args" : None}
@@ -982,7 +983,7 @@ class Block:
             "B_type" : {
                 "id" : None,
                 "block_id" : 17,
-                "block_tag": "integer_add",
+                "block_tag": "goto",
                 "color": "dodger blue",
                 "connected" : False,
                 "inLoop": False,
@@ -995,9 +996,9 @@ class Block:
                     "output_t" : dataTypes.BDInteger(0),
                     "outputBlockId" : None},
                 "func" : {
-                    "func_name" : "f_int_add",
+                    "func_name" : "f_nop",
                     "func_args_list": args,
-                    "isPassThrough": True,
+                    "isPassThrough": False,
                     "func_args" : None}
             },
             "B_components" : components,
@@ -1163,6 +1164,9 @@ class Block:
     #--------------------------------------------------------------------------------------------------------------------------------
 
     def f_start(self):
+        print("no Operation")
+
+    def f_nop(self, *args):
         print("no Operation")
 
     def f_int_add(self, a, b):

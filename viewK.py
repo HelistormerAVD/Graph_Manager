@@ -35,7 +35,7 @@ class BlockEditorView:
         self.add_block_button = tk.Button(self.toolbar, text="Link", command=lambda: self.switchEditorTool(2))
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
-        self.add_block_button = tk.Button(self.toolbar, text="Delete", command=lambda: self.switchEditorTool(3))
+        self.add_block_button = tk.Button(self.toolbar, text="Delete", command=self.exec_compileExecution)
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
         self.execute_button = tk.Button(self.toolbar, text="Execute", command=self.onExecuteScript)
@@ -72,6 +72,11 @@ class BlockEditorView:
         self.blockMenuGraph = Menu(self.menu)
         self.blockMenuGraph.configure(background="#6164e0")
         self.menu.add_cascade(label="Graph", menu=self.blockMenuGraph)
+        self.blockMenuControl = Menu(self.menu)
+        self.blockMenuControl.configure(background="#6164e0")
+        self.blockMenuControl.add_command(label="Function", command=lambda: self.add_block("initBlock_Function"))
+        self.blockMenuControl.add_command(label="Goto Function", command=lambda: self.add_block("initBlock_Goto"))
+        self.menu.add_cascade(label="Flow Control", menu=self.blockMenuControl)
 
         self.b_obj = block.Block()
         self.g_var = Var()
@@ -350,7 +355,21 @@ class BlockEditorView:
         # ansonsten print("fehler")
         print("deleted")
 
+    def exec_compileExecution(self):
+        self.b_obj.funcList = []
+        funcBlocks = self.canvas.find_withtag("funcBlock")
+        for i in range(funcBlocks.__len__()):
+            block = self.b_obj.blocks[i]
+            blockComponentList = block["B_components"]
+            for j in range(blockComponentList.__len__()):
+                comp = blockComponentList[j]
+                if comp["entry"]:
+                    compInputText = comp["entry"].get()
+                    self.b_obj.funcList.append({"funcName" : compInputText, "block_id" : i, "return_block_id" : None})
+
+
     def onExecuteScript(self):
+        self.exec_compileExecution()
         startBlockCanvasId = self.canvas.find_withtag("start")[0]
         currentBlock = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)]
         block_id = self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)
@@ -395,7 +414,13 @@ class BlockEditorView:
                 compInputText = comp["entry"].get()
                 if block["block_id"] == 17:  # wenn goto block, dann finde den Passenden Funktionsblock
                     if compInputText.startswith("f_", 0, 2):
-                        print("test")
+                        for j in range(self.b_obj.funcList.__len__()):
+                            if self.b_obj.funcList.__getitem__(j)["funcName"] == compInputText:
+                                self.b_obj.funcList.__getitem__(j)["return_block_id"] = block_id
+                                block_id = self.b_obj.funcList.__getitem__(j)["block_id"]
+                                currentBlock = self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["outputBlockId"]
+                                print("DOCH!!!")
+                                return block_id, currentBlock
         return block_id, currentBlock
 
 
@@ -438,15 +463,16 @@ class BlockEditorView:
                 if comp["entry"]:
                     compInputText = comp["entry"].get() #Überprüfung ob es eine Variable ist.
                     converted = h_convertToDataTypesFromString(compInputText)
-                    if type(converted) == int:
-                        self.b_obj.exec_obj.append(dataTypes.BDInteger(converted))
-                    elif type(converted) == float:
-                        self.b_obj.exec_obj.append(dataTypes.BDFloat(converted))
+                    if compInputText.__getitem__(0) == "$":  # compInputText.__getitem__(0) == "$"
+                        converted = self.g_var.get_value(compInputText)
+                        self.b_obj.exec_obj.append(converted)
                     else:
-                        self.b_obj.exec_obj.append(dataTypes.BDString(converted))
-                elif compInputText.__getitem__(0) == "$":  # compInputText.__getitem__(0) == "$"
-                    converted = self.g_var.get_value(compInputText)
-                    self.b_obj.exec_obj.append(converted)
+                        if type(converted) == int:
+                            self.b_obj.exec_obj.append(dataTypes.BDInteger(converted))
+                        elif type(converted) == float:
+                            self.b_obj.exec_obj.append(dataTypes.BDFloat(converted))
+                        else:
+                            self.b_obj.exec_obj.append(dataTypes.BDString(converted))
             dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName))
             return dataTypeObj
 
