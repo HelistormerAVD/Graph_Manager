@@ -78,6 +78,10 @@ class BlockEditorView:
         self.blockMenuControl.add_command(label="Goto Function", command=lambda: self.add_block("initBlock_Goto"))
         self.blockMenuControl.add_command(label="return to Goto call", command=lambda: self.add_block("initBlock_FunctionReturn"))
         self.menu.add_cascade(label="Flow Control", menu=self.blockMenuControl)
+        self.blockMenuMisc = Menu(self.menu)
+        self.blockMenuMisc.configure(background="#6164e0")
+        self.blockMenuMisc.add_command(label="Function", command=lambda: self.add_block("initBlock_setVariable"))
+        self.menu.add_cascade(label="Misc", menu=self.blockMenuMisc)
 
         self.b_obj = block.Block()
         self.g_var = Var()
@@ -496,7 +500,7 @@ class BlockEditorView:
             if comp["entry"]:
                 compInputText = comp["entry"].get()
                 print("Hat Entry gefunden: " + compInputText)
-                if block["block_id"] == 17:  # wenn goto block, dann finde den Passenden Funktionsblock
+                if block["block_id"] == 17:  # wenn goto block, dann finde den passenden Funktionsblock
                     print("ist Block_id 17? : " + block["block_id"].__str__())
                     if compInputText.startswith("f_", 0, 2):
                         print("startet Mit f_ !")
@@ -561,8 +565,12 @@ class BlockEditorView:
                         converted = compInputText
                         self.b_obj.exec_obj.append(converted)
                     elif compInputText.__getitem__(0) == "$": #compInputText.__getitem__(0) == "$"
-                        converted = self.g_var.get_value(compInputText)
-                        self.b_obj.exec_obj.append(converted)
+                        if block["block_id"] == 2:
+                            self.b_obj.exec_obj.append(self.g_var)
+                            self.b_obj.exec_obj.append(dataTypes.BDString(compInputText))
+                        else:
+                            converted = self.g_var.get_value(compInputText)
+                            self.b_obj.exec_obj.append(converted)
                     else:
                         converted = h_convertToDataTypesFromString(compInputText)
                         if type(converted) == int:

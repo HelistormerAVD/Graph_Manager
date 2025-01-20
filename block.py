@@ -131,7 +131,7 @@ class Block:
         components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
         components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
-        args = []
+        args = [1, 3]
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
@@ -149,9 +149,9 @@ class Block:
                     "output_t" : dataTypes,
                     "outputBlockId" : None},
                 "func" : {
-                    "func_name" : "NameOfFunction",
+                    "func_name" : "f_set_variable",
                     "func_args_list": args,
-                    "isPassThrough": False,
+                    "isPassThrough": True,
                     "func_args" : None}
             },
             "B_components" : components,
@@ -1563,6 +1563,13 @@ class Block:
 
     def f_nop(self, *args):
         print("no Operation")
+
+    def f_set_variable(self, g_var, a, b):
+        if isinstance(a, dataTypes.BDString):
+            g_var.insert_value(a.__getstate__(), b)
+            return b
+        else:
+            print("Variable muss ein String mit $<name> sein!")
 
     """ BDInteger Funktions-Handler """
     def f_int_add(self, a, b):
