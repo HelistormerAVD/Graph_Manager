@@ -1713,7 +1713,124 @@ class Block:
             print("Falscher Datentyp!")
 
     """ BDList Funktions-Handler """
-    # TODO
+    @staticmethod
+    def f_list_init(data):
+        if isinstance(data, dataTypes.BDList):
+            dataTypes.BDList(data)
+            print(data.__getstate__())
+            return data
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_list_append(bd_list, elem):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.append(elem)
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_list_clear(bd_list):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.clear()
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_list_copy(bd_list):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.copy()
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_list_count(bd_list, elem):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.count(elem)
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_list_extend(bd_list, data):
+        if isinstance(bd_list, dataTypes.BDList) and isinstance(data, dataTypes.BDList):
+            bd_list.extend(data)
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_list_index(bd_list, elem):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.index(elem)
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    # TODO: pos vom Typ BDInteger oder int???
+    def f_list_insert(self, bd_list, pos, elem):
+        if isinstance(bd_list, dataTypes.BDList) and self.is_type_int(pos):
+            bd_list.insert(pos.__getstate__(), elem)
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    def f_list_pop(self, bd_list, pos):
+        if isinstance(bd_list, dataTypes.BDList) and self.is_type_int(pos):
+            bd_list.pop(pos.__getstate__())
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_list_remove(bd_list, elem):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.remove(elem)
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_list_reverse(bd_list):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.reverse()
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_list_sort(bd_list):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.sort()
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    def f_list_set(self, data):
+        self.f_list_init(data)
+
+    @staticmethod
+    def f_list_get(bd_list):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.get_list()
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
 
     """ BDGraph Funktions-Handler """
     def f_graph_insert_lists(self, graph, x_list, y_list):
@@ -1770,6 +1887,11 @@ class Block:
     @staticmethod
     def is_type_bd_list(l1, l2):
         return isinstance(l1, dataTypes.BDList) and isinstance(l2, dataTypes.BDList)
+
+    @staticmethod
+    def is_type_int(x):
+        return isinstance(x, int) or isinstance(x, dataTypes.BDInteger)
+
 
 if __name__ == "__main__":
     b_obj = Block()
