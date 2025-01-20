@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import *
 import json
+
+from unicurses import deleteln
+
 import block
 from tkinter import filedialog, messagebox
 
@@ -35,7 +38,7 @@ class BlockEditorView:
         self.add_block_button = tk.Button(self.toolbar, text="Link", command=lambda: self.switchEditorTool(2))
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
-        self.add_block_button = tk.Button(self.toolbar, text="Delete", command=self.exec_compileExecution)
+        self.add_block_button = tk.Button(self.toolbar, text="Delete", command=self.onDeleteBlock)
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
         self.execute_button = tk.Button(self.toolbar, text="Execute", command=self.onExecuteScript)
@@ -172,8 +175,17 @@ class BlockEditorView:
         else:
             self.selectedTool = toolNumber
 
-    def setSelectedBlock(self, event):
-        item = self.canvas.find_closest(event.x, event.y, start="Block")
+    def setSelectedBlock(self, *args):
+        x = 0
+        y = 0
+        if args:
+            print(args)
+            if args.__len__() > 1:
+                x = args[0]
+                y = args[1]
+            else:
+                print("Cant find position to select from!")
+        item = self.canvas.find_closest(x, y, start="Block")
         if item:
             if self.selectedBlockItem:
                 self.lastSelectedBlockItem = self.selectedBlockItem
@@ -328,7 +340,7 @@ class BlockEditorView:
         match self.checkSelectedTool():
             case 1:
                 block_id = self.selectedBlockId
-                self.setSelectedBlock(event)
+                self.setSelectedBlock(event.x, event.y)
                 self.updateAllBlocksAppearance()
             case 2:
                 if self.selectedBlockItem:
@@ -387,8 +399,28 @@ class BlockEditorView:
         #   in block-dict vom selected_block_id setze "connected" = True
         #   funktion moveBlock(aus b_obj) mit selected_block_id an x1 von block_id und (y2 von block_id) + Blockhöhe (40)
 
-    def onDeleteBlock(self, block_id, selected_block_id):
+    def onDeleteBlock(self):
+        block_id = self.selectedBlockId
         print("deletes a block from the Canvas and from block-dict. (self.b_obj.blocks[index])")
+        canvas_id = self.b_obj.blocks[block_id]["B_type"]["id"]
+        lastBlockPosX = self.b_obj.blocks[block_id]["B_position"]["x1"]
+        lastBlockPosY = self.b_obj.blocks[block_id]["B_position"]["y1"]
+        block = self.b_obj.blocks[block_id]["B_type"]
+        if block["block_id"] == 0 or block["block_id"] == 1:
+            print("cannot delete Start-Block or End-Block!")
+            return 0
+        if block["connected"]:
+            if block["block_inputTypes"]["inputBlockId"]:
+                self.b_obj.blocks[block["block_inputTypes"]["inputBlockId"]]["block_outputTypes"]["outputBlockId"] = None
+            if block["block_outputTypes"]["outputBlockId"]:
+                self.b_obj.blocks[block["block_outputTypes"]["outputBlockId"]]["block_inputTypes"]["inputBlockId"] = None
+        self.b_obj.deletedPos.append(block_id)
+        for comp in self.b_obj.blocks[block_id]["B_components"]:
+            self.canvas.delete(comp["id"])
+        self.canvas.delete(canvas_id)
+        self.b_obj.blocks[block_id] = {}
+        self.setSelectedBlock(lastBlockPosX, lastBlockPosY)
+        self.updateAllBlocksAppearance()
         # überprüfe, od es der Startblock ist (der darf nicht gelöscht werden)
         # überprüfe, ob block_id == selected_block_id
         #   lösche block_id vom Canvas
@@ -396,6 +428,7 @@ class BlockEditorView:
         #   setze self.selectedBlock auf None
         # ansonsten print("fehler")
         print("deleted")
+        return 1
 
     def exec_compileExecution(self):
         self.b_obj.funcList = []
