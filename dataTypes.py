@@ -359,3 +359,8 @@ if __name__ == '__main__':
     i.add(5)
     i.multiply(7)
     print(i)
+
+    number = BDInteger(324732895)
+    x = number.__getstate__()
+    if isinstance(x, int):
+        print(x)
