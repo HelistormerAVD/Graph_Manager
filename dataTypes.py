@@ -321,7 +321,7 @@ class BDGraph:
         self.points_x = []
         self.points_y = []
 
-    def insert_lists(self, x, y):
+    def set_points(self, x, y):
         self.points_x = x
         self.points_y = y
 
@@ -338,11 +338,11 @@ class BDGraph:
         get_graph = self.graph.gca()
         return get_graph
 
-    def modify_graph(self, x, y, xlabel, ylabel, title, grid, label):
+    def modify_graph(self, x, y, x_label, y_label, title, grid, label):
         self.points_x = x
         self.points_y = y
-        self.graph.xlabel(xlabel if xlabel else "x")
-        self.graph.ylabel(ylabel if ylabel else "y")
+        self.graph.xlabel(x_label if x_label else "x")
+        self.graph.ylabel(y_label if y_label else "y")
         self.graph.title(title if title else "Your Graph")
         if grid is not None:
             self.graph.grid(grid)

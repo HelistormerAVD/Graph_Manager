@@ -1713,10 +1713,9 @@ class Block:
             print("Falscher Datentyp!")
 
     """ BDList Funktions-Handler """
-    @staticmethod
-    def f_list_init(data):
-        if isinstance(data, dataTypes.BDList):
-            dataTypes.BDList(data)
+    def f_list_init(self, data):
+        if isinstance(data, list) or isinstance(data, dataTypes.BDList):
+            dataTypes.BDList(self.get_list_value(data))
             print(data.__getstate__())
             return data
         else:
@@ -1758,10 +1757,9 @@ class Block:
         else:
             print("Falscher Datentyp!")
 
-    @staticmethod
-    def f_list_extend(bd_list, data):
-        if isinstance(bd_list, dataTypes.BDList) and isinstance(data, dataTypes.BDList):
-            bd_list.extend(data)
+    def f_list_extend(self, bd_list, data):
+        if isinstance(bd_list, dataTypes.BDList) and self.is_type_list(data):
+            bd_list.extend(self.get_list_value(data))
             print(bd_list.__getstate__())
             return bd_list
         else:
@@ -1836,9 +1834,12 @@ class Block:
             print("Falscher Datentyp!")
 
     """ BDGraph Funktions-Handler """
-    def f_graph_insert_lists(self, graph, x_list, y_list):
+    def f_graph_points(self, graph, x_list, y_list):
         if isinstance(graph, dataTypes.BDGraph) and self.is_type_bd_list(x_list, y_list):
-            graph.insert_lists(x_list, y_list)
+            graph.set_points(
+                self.get_list_value(x_list),
+                self.get_list_value(y_list)
+            )
             print(graph.__getstate__())
             return graph
         else:
@@ -1851,8 +1852,8 @@ class Block:
                 and self.is_type_string(x_label) and self.is_type_string(y_label)
                 and self.is_type_string(title) and self.is_type_string(label)):
             graph.modify_graph(
-                x_list,
-                y_list,
+                self.get_list_value(x_list),
+                self.get_list_value(y_list),
                 self.get_str_value(x_label),
                 self.get_str_value(y_label),
                 self.get_str_value(title),
@@ -2004,6 +2005,10 @@ class Block:
     def is_type_int(x):
         return isinstance(x, int) or isinstance(x, dataTypes.BDInteger)
 
+    @staticmethod
+    def is_type_list(data):
+        return isinstance(data, list) or isinstance(data, dataTypes.BDList)
+
     """ statische Funktionen um den Wert je nach Datentyp zurückzugeben """
     @staticmethod
     def get_int_value(number):
@@ -2025,6 +2030,13 @@ class Block:
             return s.__getstate__()
         else:
             return str(s)
+
+    @staticmethod
+    def get_list_value(data):
+        if isinstance(data, dataTypes.BDList):
+            return data.__getstate__()
+        else:
+            return list(data)
 
 
 if __name__ == "__main__":
