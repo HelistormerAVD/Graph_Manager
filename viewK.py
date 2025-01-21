@@ -20,9 +20,21 @@ class BlockEditorView:
         self.root = root
         self.root.title("Block-Based Graphical Editor")
 
-        self.canvas = tk.Canvas(root, bg="white", width=1080, height=720)
+        self.main_frame = tk.Frame(root)
+        self.main_frame.pack(fill=tk.BOTH, expand=True)
+
+        # Sidebar (left side)
+        self.sidebarRight = tk.Frame(self.main_frame, bg="lightgray", width=200)
+        self.sidebarRight.pack(side=tk.RIGHT, fill=tk.Y)
+
+        self.sidebarLeft = tk.Frame(self.main_frame, bg="lightgray", width=200)
+        self.sidebarLeft.pack(side=tk.LEFT, fill=tk.Y)
+
+        # Canvas (right side)
+        self.canvas = tk.Canvas(self.main_frame, bg="white", width=1080, height=720)
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
+        # Toolbar (top)
         self.toolbar = tk.Frame(root, bg="lightgray")
         self.toolbar.pack(fill=tk.X)
 
@@ -43,6 +55,15 @@ class BlockEditorView:
 
         self.execute_button = tk.Button(self.toolbar, text="Execute", command=self.onExecuteScript)
         self.execute_button.pack(side=tk.RIGHT, padx=5, pady=5)
+
+        self.Save_button = tk.Button(self.sidebarRight, text="Save", command=self.onSaveEditor)
+        self.Save_button.pack(side=tk.TOP, padx=5, pady=5)
+
+        self.Load_button = tk.Button(self.sidebarRight, text="Load", command=self.onLoadEditor)
+        self.Load_button.pack(side=tk.TOP, padx=5, pady=5)
+
+        self.Load_button = tk.Button(self.sidebarLeft, text="Toggle Fold", command=self.onLoadEditor)
+        self.Load_button.pack(side=tk.TOP, padx=5, pady=5)
 
         self.menu = Menu(self.root)
         self.root.config(menu=self.menu, background="#729ecf")
@@ -345,9 +366,10 @@ class BlockEditorView:
             case 2:
                 if self.selectedBlockItem:
                     block_id = self.selectedBlockId
-                    self.b_obj.moveBlock(block_id, event.x, event.y)
-                    self.updateBlockPosition(block_id)
-                    #self.updateBlockAppearance(block_id)
+                    if not self.b_obj.blocks[block_id]["B_type"]["connected"]:
+                        self.b_obj.moveBlock(block_id, event.x, event.y)
+                        self.updateBlockPosition(block_id)
+                        #self.updateBlockAppearance(block_id)
                     self.updateAllBlocksAppearance()
                 else:
                     print("no Block Selected")
@@ -429,6 +451,9 @@ class BlockEditorView:
         # ansonsten print("fehler")
         print("deleted")
         return 1
+
+    def onDisconnectLink(self):
+        print("diconnected Block")
 
     def exec_compileExecution(self):
         self.b_obj.funcList = []
@@ -761,6 +786,8 @@ class BlockEditorView:
                 #print("Appearens: " + self.selectedBlockCanvasId.__str__() + canvasBlock_id.__str__())
                 if self.selectedBlockCanvasId == canvasBlock_id[0]:
                     self.canvas.itemconfigure(self.selectedBlockCanvasId, outline="yellow", width=10)
+                elif self.lastSelectedBlockCanvasId == canvasBlock_id[0]:
+                    self.canvas.itemconfigure(self.lastSelectedBlockCanvasId, outline="goldenrod", width=10)
                 else:
                     outl = "black"
                     wdth = 1
@@ -810,6 +837,54 @@ class BlockEditorView:
             #print(componentId)
             actualCompPosX, actualCompPosY = self.canvas.coords(canvas_id)
             #print("Components auf dem Canvas: " + actualCompPosX.__str__() + " " + actualCompPosY.__str__())
+
+    def onSaveEditor(self):
+        def custom_serializer(obj):
+            if isinstance(obj, dataTypes.BDInteger):
+                return {"type": "BDInteger"}
+            if isinstance(obj, dataTypes.BDFloat):
+                return {"type": "BDFloat"}
+            if isinstance(obj, dataTypes.BDString):
+                return {"type": "BDString"}
+            if isinstance(obj, block_components.TextView):
+                return obj.getData()
+            if isinstance(obj, block_components.EditText):
+                return obj.getData()
+
+            raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
+
+        file_path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
+        if file_path:
+            try:
+                with open(file_path, "w") as file:
+                    json.dump(self.b_obj.blocks, file, default=custom_serializer, indent=4)
+                messagebox.showinfo("Save Layout", "Layout saved successfully!")
+            except Exception as e:
+                messagebox.showerror("Save Error", f"An error occurred while saving: {e}")
+
+    def onLoadEditor(self):
+        def custom_deserializer(obj):
+            if isinstance(obj, dataTypes.BDInteger):
+                return {"type": "BDInteger"}
+            if isinstance(obj, dataTypes.BDFloat):
+                return {"type": "BDFloat"}
+            if isinstance(obj, dataTypes.BDString):
+                return {"type": "BDString"}
+            if isinstance(obj, block_components.TextView):
+                return obj.getData()
+            if isinstance(obj, block_components.EditText):
+                return obj.getData()
+
+            raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
+
+        file_path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
+        if file_path:
+            try:
+                with open(file_path, "r") as file:
+                    loaded_data = json.load(file, object_hook=custom_deserializer)
+
+            except Exception as e:
+                messagebox.showerror("Load Error", f"An error occurred while loading: {e}")
 
 
     def debug_line(self, x1, y1, x2, y2):
