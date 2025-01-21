@@ -463,7 +463,7 @@ class Block:
     #
     #                       Funktionen für Blöcke
 
- #flaot / double
+    #float / double
     def initBlock_Float_add(self):
         index = h_getNextEmptyDictionary(self.blocks)
         for i in range(len(self.deletedPos)):
@@ -666,7 +666,7 @@ class Block:
 
 
 
-# string
+    # string
     def initBlock_Str_concat(self):
         index = h_getNextEmptyDictionary(self.blocks)
         for i in range(len(self.deletedPos)):
@@ -1205,7 +1205,7 @@ class Block:
         }
         return index
 
-# !!! BDList nicht vorhanden
+    # !!! BDList nicht vorhanden
     def initBlock_List_Insert(self):
         index = h_getNextEmptyDictionary(self.blocks)
         for i in range(len(self.deletedPos)):
@@ -1713,12 +1713,133 @@ class Block:
             print("Falscher Datentyp!")
 
     """ BDList Funktions-Handler """
-    # TODO
+    def f_list_init(self, data):
+        if isinstance(data, list) or isinstance(data, dataTypes.BDList):
+            dataTypes.BDList(self.get_list_value(data))
+            print(data.__getstate__())
+            return data
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_list_append(bd_list, elem):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.append(elem)
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_list_clear(bd_list):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.clear()
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_list_copy(bd_list):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.copy()
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_list_count(bd_list, elem):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.count(elem)
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    def f_list_extend(self, bd_list, data):
+        if isinstance(bd_list, dataTypes.BDList) and self.is_type_list(data):
+            bd_list.extend(self.get_list_value(data))
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_list_index(bd_list, elem):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.index(elem)
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    # TODO: pos vom Typ BDInteger oder int???
+    def f_list_insert(self, bd_list, pos, elem):
+        if isinstance(bd_list, dataTypes.BDList) and self.is_type_int(pos):
+            bd_list.insert(
+                self.get_int_value(pos),
+                elem
+            )
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    def f_list_pop(self, bd_list, pos):
+        if isinstance(bd_list, dataTypes.BDList) and self.is_type_int(pos):
+            bd_list.pop(self.get_int_value(pos))
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_list_remove(bd_list, elem):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.remove(elem)
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_list_reverse(bd_list):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.reverse()
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_list_sort(bd_list):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.sort()
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
+
+    def f_list_set(self, data):
+        self.f_list_init(data)
+
+    @staticmethod
+    def f_list_get(bd_list):
+        if isinstance(bd_list, dataTypes.BDList):
+            bd_list.get_list()
+            print(bd_list.__getstate__())
+            return bd_list
+        else:
+            print("Falscher Datentyp!")
 
     """ BDGraph Funktions-Handler """
-    def f_graph_insert_lists(self, graph, x_list, y_list):
+    def f_graph_points(self, graph, x_list, y_list):
         if isinstance(graph, dataTypes.BDGraph) and self.is_type_bd_list(x_list, y_list):
-            graph.insert_lists(x_list, y_list)
+            graph.set_points(
+                self.get_list_value(x_list),
+                self.get_list_value(y_list)
+            )
             print(graph.__getstate__())
             return graph
         else:
@@ -1728,9 +1849,17 @@ class Block:
     def f_graph_modify(self, graph, x_list, y_list, x_label, y_label, title, grid, label):
         if (isinstance(graph, dataTypes.BDGraph)
                 and self.is_type_bd_list(x_list, y_list)
-                and self.is_type_bd_string(x_label, y_label))\
-                and self.is_type_bd_string(title, label):
-            graph.modify_graph(x_list, y_list, x_label, y_label, title, grid, label)
+                and self.is_type_string(x_label) and self.is_type_string(y_label)
+                and self.is_type_string(title) and self.is_type_string(label)):
+            graph.modify_graph(
+                self.get_list_value(x_list),
+                self.get_list_value(y_list),
+                self.get_str_value(x_label),
+                self.get_str_value(y_label),
+                self.get_str_value(title),
+                grid,
+                self.get_str_value(label)
+            )
             print(graph.__getstate__())
             return graph
         else:
@@ -1754,6 +1883,96 @@ class Block:
         else:
             print("Falscher Datentyp!")
 
+    """ BDImage Funktions-Handler """
+    def f_image_resize(self, image, width, height):
+        if isinstance(image, dataTypes.BDImage) and self.is_type_int(width) and self.is_type_int(height):
+            image.resize(
+                self.get_int_value(width),
+                self.get_int_value(height)
+            )
+            print(image.__getstate__())
+            return image
+        else:
+            print("Falsche Datentypen!")
+
+    def f_image_crop(self, image, left, top, right, bottom):
+        if ((isinstance(image, dataTypes.BDImage)
+             and self.is_type_int(left)
+             and self.is_type_int(top))
+                and self.is_type_int(right)
+                and self.is_type_int(bottom)):
+            image.crop(
+                self.get_num_value(left),
+                self.get_num_value(top),
+                self.get_num_value(right),
+                self.get_num_value(bottom)
+            )
+            print(image.__getstate__())
+            return image
+        else:
+            print("Falsche Datentypen!")
+
+    def f_image_filter(self, image, filter_type):
+        if isinstance(image, dataTypes.BDImage) and self.is_type_string(filter_type):
+            image.apply_filter(self.get_str_value(filter_type))
+            print(image.__getstate__())
+            return image
+        else:
+            print("Falsche Datentypen!")
+
+    def f_image_brightness(self, image, factor):
+        if isinstance(image, dataTypes.BDImage) and self.is_type_num(factor):
+            image.adjust_brightness(self.get_num_value(factor))
+            print(image.__getstate__())
+            return image
+        else:
+            print("Falsche Datentypen!")
+
+    @staticmethod
+    def f_image_reset(image):
+        if isinstance(image, dataTypes.BDImage):
+            image.reset()
+            print(image.__getstate__())
+            return image
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_image_get_size(image):
+        if isinstance(image, dataTypes.BDImage):
+            image.get_size()
+            print(image.__getstate__())
+            return image
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_image_show(image):
+        if isinstance(image, dataTypes.BDImage):
+            image.show()
+            print(image.__getstate__())
+            return image
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_image_set(image, data):
+        if isinstance(image, dataTypes.BDImage) and isinstance(data, dataTypes.BDImage):
+            image.set_image(data)
+            print(image.__getstate__())
+            return image
+        else:
+            print("Falscher Datentyp!")
+
+    @staticmethod
+    def f_image_get(image):
+        if isinstance(image, dataTypes.BDImage):
+            image.get_image()
+            print(image.__getstate__())
+            return image
+        else:
+            print("Falscher Datentyp!")
+
     """ statische Methoden zur Typ-Überprüfung """
     @staticmethod
     def is_type_bd_int(a, b):
@@ -1768,8 +1987,57 @@ class Block:
         return isinstance(s1, dataTypes.BDString) and isinstance(s2, dataTypes.BDString)
 
     @staticmethod
+    def is_type_string(s):
+        return isinstance(s, dataTypes.BDString) or isinstance(s, str)
+
+    @staticmethod
     def is_type_bd_list(l1, l2):
         return isinstance(l1, dataTypes.BDList) and isinstance(l2, dataTypes.BDList)
+
+    @staticmethod
+    def is_type_num(x):
+        return (isinstance(x, dataTypes.BDInteger)
+                or isinstance(x, dataTypes.BDFloat)
+                or isinstance(x, int)
+                or isinstance(x, float))
+
+    @staticmethod
+    def is_type_int(x):
+        return isinstance(x, int) or isinstance(x, dataTypes.BDInteger)
+
+    @staticmethod
+    def is_type_list(data):
+        return isinstance(data, list) or isinstance(data, dataTypes.BDList)
+
+    """ statische Funktionen um den Wert je nach Datentyp zurückzugeben """
+    @staticmethod
+    def get_int_value(number):
+        if isinstance(number, dataTypes.BDInteger):
+            return number.__getstate__()
+        else:
+            return int(number)
+
+    @staticmethod
+    def get_num_value(number):
+        if isinstance(number, dataTypes.BDInteger) or isinstance(number, dataTypes.BDFloat):
+            return number.__getstate__()
+        else:
+            return float(number)
+
+    @staticmethod
+    def get_str_value(s):
+        if isinstance(s, dataTypes.BDString):
+            return s.__getstate__()
+        else:
+            return str(s)
+
+    @staticmethod
+    def get_list_value(data):
+        if isinstance(data, dataTypes.BDList):
+            return data.__getstate__()
+        else:
+            return list(data)
+
 
 if __name__ == "__main__":
     b_obj = Block()
