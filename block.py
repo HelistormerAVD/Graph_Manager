@@ -1420,7 +1420,7 @@ class Block:
         b_editText = block_components.EditText()
         b_editText.setData(1, 100, 10, "x-werte", 10)
         b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, " ", "black", 10)
+        b_textView2.setData(0, 175, 20, "y:", "black", 10)
         b_editText2 = block_components.EditText()
         b_editText2.setData(1, 200, 10, "y-werte", 10)
         components = []
@@ -1428,7 +1428,7 @@ class Block:
         components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
         components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
-        args = [1]
+        args = [1, 3]
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
@@ -1558,6 +1558,7 @@ class Block:
     #
     #--------------------------------------------------------------------------------------------------------------------------------
 
+    # wenn es zu fehlern mit der Ausführung kommt, kann es sein das Methoden als Static deklariert sein müssen oder auch nicht.
     def f_start(self):
         print("no Operation")
 

@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import *
 import json
+
+from unicurses import deleteln
+
 import block
 from tkinter import filedialog, messagebox
 
@@ -17,16 +20,28 @@ class BlockEditorView:
         self.root = root
         self.root.title("Block-Based Graphical Editor")
 
-        self.canvas = tk.Canvas(root, bg="white", width=1080, height=720)
+        self.main_frame = tk.Frame(root)
+        self.main_frame.pack(fill=tk.BOTH, expand=True)
+
+        # Sidebar (left side)
+        self.sidebarRight = tk.Frame(self.main_frame, bg="lightgray", width=200)
+        self.sidebarRight.pack(side=tk.RIGHT, fill=tk.Y)
+
+        self.sidebarLeft = tk.Frame(self.main_frame, bg="lightgray", width=200)
+        self.sidebarLeft.pack(side=tk.LEFT, fill=tk.Y)
+
+        # Canvas (right side)
+        self.canvas = tk.Canvas(self.main_frame, bg="white", width=1080, height=720)
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
+        # Toolbar (top)
         self.toolbar = tk.Frame(root, bg="lightgray")
         self.toolbar.pack(fill=tk.X)
 
         self.add_block_button = tk.Button(self.toolbar, text="Select", command=lambda: self.switchEditorTool(0))
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
-        self.add_block_button = tk.Button(self.toolbar, text="Add Block", command=lambda: self.add_block("initBlock_get_Graph"))
+        self.add_block_button = tk.Button(self.toolbar, text="Add Block", command=lambda: self.add_block("initBlock_Integer_add"))
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
         self.add_block_button = tk.Button(self.toolbar, text="Move", command=lambda: self.switchEditorTool(1))
@@ -35,11 +50,20 @@ class BlockEditorView:
         self.add_block_button = tk.Button(self.toolbar, text="Link", command=lambda: self.switchEditorTool(2))
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
-        self.add_block_button = tk.Button(self.toolbar, text="Delete", command=self.exec_compileExecution)
+        self.add_block_button = tk.Button(self.toolbar, text="Delete", command=self.onDeleteBlock)
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
         self.execute_button = tk.Button(self.toolbar, text="Execute", command=self.onExecuteScript)
         self.execute_button.pack(side=tk.RIGHT, padx=5, pady=5)
+
+        self.Save_button = tk.Button(self.sidebarRight, text="Save", command=self.onSaveEditor)
+        self.Save_button.pack(side=tk.TOP, padx=5, pady=5)
+
+        self.Load_button = tk.Button(self.sidebarRight, text="Load", command=self.onLoadEditor)
+        self.Load_button.pack(side=tk.TOP, padx=5, pady=5)
+
+        self.Load_button = tk.Button(self.sidebarLeft, text="Toggle Fold", command=self.onLoadEditor)
+        self.Load_button.pack(side=tk.TOP, padx=5, pady=5)
 
         self.menu = Menu(self.root)
         self.root.config(menu=self.menu, background="#729ecf")
@@ -76,7 +100,12 @@ class BlockEditorView:
         self.blockMenuControl.configure(background="#6164e0")
         self.blockMenuControl.add_command(label="Function", command=lambda: self.add_block("initBlock_Function"))
         self.blockMenuControl.add_command(label="Goto Function", command=lambda: self.add_block("initBlock_Goto"))
+        self.blockMenuControl.add_command(label="return to Goto call", command=lambda: self.add_block("initBlock_FunctionReturn"))
         self.menu.add_cascade(label="Flow Control", menu=self.blockMenuControl)
+        self.blockMenuMisc = Menu(self.menu)
+        self.blockMenuMisc.configure(background="#6164e0")
+        self.blockMenuMisc.add_command(label="Function", command=lambda: self.add_block("initBlock_setVariable"))
+        self.menu.add_cascade(label="Misc", menu=self.blockMenuMisc)
 
         self.b_obj = block.Block()
         self.g_var = Var()
@@ -167,8 +196,17 @@ class BlockEditorView:
         else:
             self.selectedTool = toolNumber
 
-    def setSelectedBlock(self, event):
-        item = self.canvas.find_closest(event.x, event.y, start="Block")
+    def setSelectedBlock(self, *args):
+        x = 0
+        y = 0
+        if args:
+            print(args)
+            if args.__len__() > 1:
+                x = args[0]
+                y = args[1]
+            else:
+                print("Cant find position to select from!")
+        item = self.canvas.find_closest(x, y, start="Block")
         if item:
             if self.selectedBlockItem:
                 self.lastSelectedBlockItem = self.selectedBlockItem
@@ -323,14 +361,15 @@ class BlockEditorView:
         match self.checkSelectedTool():
             case 1:
                 block_id = self.selectedBlockId
-                self.setSelectedBlock(event)
+                self.setSelectedBlock(event.x, event.y)
                 self.updateAllBlocksAppearance()
             case 2:
                 if self.selectedBlockItem:
                     block_id = self.selectedBlockId
-                    self.b_obj.moveBlock(block_id, event.x, event.y)
-                    self.updateBlockPosition(block_id)
-                    #self.updateBlockAppearance(block_id)
+                    if not self.b_obj.blocks[block_id]["B_type"]["connected"]:
+                        self.b_obj.moveBlock(block_id, event.x, event.y)
+                        self.updateBlockPosition(block_id)
+                        #self.updateBlockAppearance(block_id)
                     self.updateAllBlocksAppearance()
                 else:
                     print("no Block Selected")
@@ -382,8 +421,28 @@ class BlockEditorView:
         #   in block-dict vom selected_block_id setze "connected" = True
         #   funktion moveBlock(aus b_obj) mit selected_block_id an x1 von block_id und (y2 von block_id) + Blockhöhe (40)
 
-    def onDeleteBlock(self, block_id, selected_block_id):
+    def onDeleteBlock(self):
+        block_id = self.selectedBlockId
         print("deletes a block from the Canvas and from block-dict. (self.b_obj.blocks[index])")
+        canvas_id = self.b_obj.blocks[block_id]["B_type"]["id"]
+        lastBlockPosX = self.b_obj.blocks[block_id]["B_position"]["x1"]
+        lastBlockPosY = self.b_obj.blocks[block_id]["B_position"]["y1"]
+        block = self.b_obj.blocks[block_id]["B_type"]
+        if block["block_id"] == 0 or block["block_id"] == 1:
+            print("cannot delete Start-Block or End-Block!")
+            return 0
+        if block["connected"]:
+            if block["block_inputTypes"]["inputBlockId"]:
+                self.b_obj.blocks[block["block_inputTypes"]["inputBlockId"]]["block_outputTypes"]["outputBlockId"] = None
+            if block["block_outputTypes"]["outputBlockId"]:
+                self.b_obj.blocks[block["block_outputTypes"]["outputBlockId"]]["block_inputTypes"]["inputBlockId"] = None
+        self.b_obj.deletedPos.append(block_id)
+        for comp in self.b_obj.blocks[block_id]["B_components"]:
+            self.canvas.delete(comp["id"])
+        self.canvas.delete(canvas_id)
+        self.b_obj.blocks[block_id] = {}
+        self.setSelectedBlock(lastBlockPosX, lastBlockPosY)
+        self.updateAllBlocksAppearance()
         # überprüfe, od es der Startblock ist (der darf nicht gelöscht werden)
         # überprüfe, ob block_id == selected_block_id
         #   lösche block_id vom Canvas
@@ -391,21 +450,67 @@ class BlockEditorView:
         #   setze self.selectedBlock auf None
         # ansonsten print("fehler")
         print("deleted")
+        return 1
+
+    def onDisconnectLink(self):
+        print("diconnected Block")
 
     def exec_compileExecution(self):
         self.b_obj.funcList = []
+        print("####EMPTY!!!!")
         funcBlocks = self.canvas.find_withtag("funcBlock")
-        for i in range(funcBlocks.__len__()):
-            block = self.b_obj.blocks[i]
+        print(funcBlocks)
+        for i in funcBlocks:
+            block = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(i)]
+            print("Block: " + block.__str__())
             blockComponentList = block["B_components"]
+            print("i = " + i.__str__())
+            print(blockComponentList.__len__())
             for j in range(blockComponentList.__len__()):
                 comp = blockComponentList[j]
                 if comp["entry"]:
                     compInputText = comp["entry"].get()
-                    self.b_obj.funcList.append({"funcName" : compInputText, "block_id" : i, "return_block_id" : None})
+                    self.b_obj.funcList.append({"funcName" : compInputText, "block_canvas_id" : i, "block_id" : self.b_obj.findBlockIdFromCanvas(i), "return_block_id" : None})
+        print("####FULL!!!!")
+        print(self.b_obj.funcList)
 
 
     def onExecuteScript(self):
+        self.exec_compileExecution()
+        startBlockCanvasId = self.canvas.find_withtag("start")[0]
+        currentBlock = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)]
+        block_id = self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)
+        notExecuted = False
+        if not currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
+            print("[Compiler]: nothing connected to Start block!")
+            return 0
+        self.exec_evaluateFunction(block_id)
+
+        while self.END_OF_SCRIPT == 0:
+            if self.exec_hasReachedEndOfScript(block_id):
+                print("[Execute]: end of Script reached!")
+                break
+            else:
+                if notExecuted:
+                    dataTypeObj = self.exec_evaluateFunction(block_id)
+                    block_id, currentBlock, notExecuted = self.exec_checkStructureBlocks(block_id, currentBlock, notExecuted)
+                    if type(self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"]) == type(dataTypeObj):
+                        self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"] = dataTypeObj
+                    notExecuted = False
+                else:
+                    if currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
+                        block_id = currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]
+                        currentBlock = self.b_obj.blocks[currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]]
+                        dataTypeObj = self.exec_evaluateFunction(block_id)
+                        block_id, currentBlock, notExecuted = self.exec_checkStructureBlocks(block_id, currentBlock, notExecuted)
+                        #dataTypeObj = self.exec_evaluateFunction(block_id)
+                        if type(self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"]) == type(dataTypeObj):
+                            self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"] = dataTypeObj
+                    else:
+                        print("[Compiler]: nothing connected to next block!")
+                        return 1
+
+    """ def onExecuteScript(self):
         self.exec_compileExecution()
         startBlockCanvasId = self.canvas.find_withtag("start")[0]
         currentBlock = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)]
@@ -429,7 +534,7 @@ class BlockEditorView:
                         self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"] = dataTypeObj
                 else:
                     print("[Compiler]: nothing connected to next block!")
-                    return 1
+                    return 1"""
 
     """ Variablen für die Funktion: """
     # startBlock_id: finde die ID des Startblocks in b_obj.blocks
@@ -442,23 +547,59 @@ class BlockEditorView:
     """-----------------------------"""
 
     # testet, ob der aktuelle Block ein Struktur Block ist.
-    def exec_checkStructureBlocks(self, block_id, currentBlock):
+    def exec_checkStructureBlocks(self, block_id, currentBlock, dontSkip):
+        print("------START-------")
         block = self.b_obj.blocks[block_id]["B_type"]
+        print("Block: " + block.__str__())
         blockComponentList = self.b_obj.blocks[block_id]["B_components"]
+        print("CompList: " + blockComponentList.__str__())
         for i in range(blockComponentList.__len__()):
             comp = blockComponentList[i]
             if comp["entry"]:
                 compInputText = comp["entry"].get()
-                if block["block_id"] == 17:  # wenn goto block, dann finde den Passenden Funktionsblock
+                print("Hat Entry gefunden: " + compInputText)
+                if block["block_id"] == 17:  # wenn goto block, dann finde den passenden Funktionsblock
+                    print("ist Block_id 17? : " + block["block_id"].__str__())
                     if compInputText.startswith("f_", 0, 2):
+                        print("startet Mit f_ !")
+                        print("funcList länge: " + self.b_obj.funcList.__len__().__str__())
                         for j in range(self.b_obj.funcList.__len__()):
+                            print("funcName: " + self.b_obj.funcList.__getitem__(j)["funcName"] + " == " + compInputText)
                             if self.b_obj.funcList.__getitem__(j)["funcName"] == compInputText:
                                 self.b_obj.funcList.__getitem__(j)["return_block_id"] = block_id
                                 block_id = self.b_obj.funcList.__getitem__(j)["block_id"]
-                                currentBlock = self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["outputBlockId"]
+                                currentBlock = self.b_obj.blocks[block_id] #self.b_obj.blocks[self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["outputBlockId"]]
+                                dontSkip = True
                                 print("DOCH!!!")
-                                return block_id, currentBlock
-        return block_id, currentBlock
+                                print(currentBlock)
+                                return block_id, currentBlock, dontSkip
+                elif block["block_id"] == 18: # wenn goto block, dann finde den passenden Block unter dem Goto Block
+                    if compInputText.startswith("f_", 0, 2):
+                        print("startet Mit f_ !")
+                        print("funcList länge: " + self.b_obj.funcList.__len__().__str__())
+                        for j in range(self.b_obj.funcList.__len__()):
+                            print("funcName: " + self.b_obj.funcList.__getitem__(j)["funcName"] + " == " + compInputText)
+                            if self.b_obj.funcList.__getitem__(j)["funcName"] == compInputText:
+                                return_block_id = self.b_obj.funcList.__getitem__(j)["return_block_id"]
+                                print("Blocks: " + return_block_id.__str__())
+                                allBlocks = self.canvas.find_withtag("Block")
+                                print("Blocks: " + allBlocks.__str__())
+                                for k in allBlocks:
+                                    iteratedBlock = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(k)]
+                                    print("iteratedBlock: " + iteratedBlock.__str__())
+                                    if iteratedBlock["B_type"]["connected"]:
+                                        print("return_block_id: " + self.b_obj.findBlockIdFromCanvas(return_block_id).__str__())
+                                        print("return_block_id2: " + return_block_id.__str__())
+                                        if iteratedBlock["B_type"]["block_inputTypes"]["inputBlockId"] == return_block_id:
+                                            block_id = self.b_obj.findBlockIdFromCanvas(k)
+                                            currentBlock = self.b_obj.blocks[block_id]
+                                            print("Das könnte Klappen!!!")
+                                            dontSkip = True
+                                            return block_id, currentBlock, dontSkip
+                                                # return_block_id muss in Blocks gefunden werden und dahin gesprungen werden
+                                                # dabei muss ein Block gefunden werden, der connected == True ah und als inputBlockId == return_block_id hat.
+        print("-------END--------")
+        return block_id, currentBlock, dontSkip
 
 
     def exec_evaluateFunction(self, block_id):
@@ -482,8 +623,12 @@ class BlockEditorView:
                         converted = compInputText
                         self.b_obj.exec_obj.append(converted)
                     elif compInputText.__getitem__(0) == "$": #compInputText.__getitem__(0) == "$"
-                        converted = self.g_var.get_value(compInputText)
-                        self.b_obj.exec_obj.append(converted)
+                        if block["block_id"] == 2:
+                            self.b_obj.exec_obj.append(self.g_var)
+                            self.b_obj.exec_obj.append(dataTypes.BDString(compInputText))
+                        else:
+                            converted = self.g_var.get_value(compInputText)
+                            self.b_obj.exec_obj.append(converted)
                     else:
                         converted = h_convertToDataTypesFromString(compInputText)
                         if type(converted) == int:
@@ -641,6 +786,8 @@ class BlockEditorView:
                 #print("Appearens: " + self.selectedBlockCanvasId.__str__() + canvasBlock_id.__str__())
                 if self.selectedBlockCanvasId == canvasBlock_id[0]:
                     self.canvas.itemconfigure(self.selectedBlockCanvasId, outline="yellow", width=10)
+                elif self.lastSelectedBlockCanvasId == canvasBlock_id[0]:
+                    self.canvas.itemconfigure(self.lastSelectedBlockCanvasId, outline="goldenrod", width=10)
                 else:
                     outl = "black"
                     wdth = 1
@@ -690,6 +837,54 @@ class BlockEditorView:
             #print(componentId)
             actualCompPosX, actualCompPosY = self.canvas.coords(canvas_id)
             #print("Components auf dem Canvas: " + actualCompPosX.__str__() + " " + actualCompPosY.__str__())
+
+    def onSaveEditor(self):
+        def custom_serializer(obj):
+            if isinstance(obj, dataTypes.BDInteger):
+                return {"type": "BDInteger"}
+            if isinstance(obj, dataTypes.BDFloat):
+                return {"type": "BDFloat"}
+            if isinstance(obj, dataTypes.BDString):
+                return {"type": "BDString"}
+            if isinstance(obj, block_components.TextView):
+                return obj.getData()
+            if isinstance(obj, block_components.EditText):
+                return obj.getData()
+
+            raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
+
+        file_path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
+        if file_path:
+            try:
+                with open(file_path, "w") as file:
+                    json.dump(self.b_obj.blocks, file, default=custom_serializer, indent=4)
+                messagebox.showinfo("Save Layout", "Layout saved successfully!")
+            except Exception as e:
+                messagebox.showerror("Save Error", f"An error occurred while saving: {e}")
+
+    def onLoadEditor(self):
+        def custom_deserializer(obj):
+            if isinstance(obj, dataTypes.BDInteger):
+                return {"type": "BDInteger"}
+            if isinstance(obj, dataTypes.BDFloat):
+                return {"type": "BDFloat"}
+            if isinstance(obj, dataTypes.BDString):
+                return {"type": "BDString"}
+            if isinstance(obj, block_components.TextView):
+                return obj.getData()
+            if isinstance(obj, block_components.EditText):
+                return obj.getData()
+
+            raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
+
+        file_path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
+        if file_path:
+            try:
+                with open(file_path, "r") as file:
+                    loaded_data = json.load(file, object_hook=custom_deserializer)
+
+            except Exception as e:
+                messagebox.showerror("Load Error", f"An error occurred while loading: {e}")
 
 
     def debug_line(self, x1, y1, x2, y2):

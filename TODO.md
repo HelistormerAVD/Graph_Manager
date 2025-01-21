@@ -1,5 +1,15 @@
 
+
+
 # Aktuelle Priorisierte Aufgaben:
+### - view: "onLoadEditor()" muss noch funktionieren. (Kenneth)
+### - view: "onDisconnectLink()" muss noch geschrieben werden. (Lorenz)
+### - view: "onDeleteBlock()" muss gefixt werden, vermutlich mit update Blocks Lösch-Anomalie (Kenneth)
+### - view/blocks: for schleife implementieren. (Kenneth)
+### - view/blocks: if Bedingung implementieren. (Kenneth)
+### - blocks: blöcke anpassen zu den Funktionen und Textfeldern (Victoria)
+
+### --------------------------------------------------------------------------------------------------------
 ### - dataTypes: BDList muss erstellt werden (aktuell nur das gleiche wie BDString) (Lorenz)
 ### - block: graph (+ image) Blöcke erstellen. (Victoria)
     -   Funktionen dazu (Lorenz)
