@@ -452,8 +452,25 @@ class BlockEditorView:
         print("deleted")
         return 1
 
-    def onDisconnectLink(self):
-        print("diconnected Block")
+    def on_disconnect_link(self):
+        if self.b_obj.blocks["B_type"]["connected"]:
+            self.b_obj.blocks["B_type"]["connected"] = False
+            # auf die beiden Blöcke zugreifen und inputBlockId, outputBlockId = None setzen
+            if self.b_obj.blocks["B_type"]["inLoop"]:
+                self.b_obj.blocks["B_type"]["inLoop"] = False
+            print("Blocks disconnected")
+        else:
+            print("Cannot disconnect blocks because the blocks are not connected")
+
+        # überprüfe ob block schon verlinkt ist.
+        #   connected auf false gesetzt werden.
+        #   in blocks[block_id]["B-type"][block_inputTypes]["inputBlockId"] = None
+        #   in blocks[block_id]["B-type"][block_outputTypes]["outputBlockId"] = None
+        #   bevor das passiert, muss in blocks[blocks[block_id]["B-type"][block_outputTypes]["outputBlockId"]]
+        #   die "inputBlockId" = None gesetzt wird.
+        #   und es muss in blocks[blocks[block_id]["B-type"][block_inputTypes]["inputBlockId"]]
+        #   die "outputBlockId" = None gesetzt wird.
+        #   falls inLoop, dann inLoop = False.
 
     def exec_compileExecution(self):
         self.b_obj.funcList = []
