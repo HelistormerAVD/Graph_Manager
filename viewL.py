@@ -389,12 +389,11 @@ class BlockEditorView:
         """ erstellt einen Link zwischen den beiden Blöcken mit den block_ids block_id und selected_block_id """
         print("create a link between two blocks")
         if not self.checkDualSelectionIsSame():
-            if block_id != None and selected_block_id != None:
+            if block_id is not None and selected_block_id is not None:
 
                 block_dict = self.b_obj.blocks[block_id]["B_type"]
                 selected_block_dict = self.b_obj.blocks[selected_block_id]["B_type"]
 
-                #selected_block_dict["block_inputTypes"]["input_t"] = block_dict["block_outputTypes"]["output_t"]
                 selected_block_dict["block_inputTypes"]["inputBlockId"] = block_id
                 selected_block_dict["connected"] = True
 
@@ -452,16 +451,58 @@ class BlockEditorView:
         print("deleted")
         return 1
 
-    def on_disconnect_link(self):
-        if self.b_obj.blocks["B_type"]["connected"]:
-            self.b_obj.blocks["B_type"]["connected"] = False
-            # auf die beiden Blöcke zugreifen und inputBlockId, outputBlockId = None setzen
-            if self.b_obj.blocks["B_type"]["inLoop"]:
-                self.b_obj.blocks["B_type"]["inLoop"] = False
-            print("Blocks disconnected")
-        else:
-            print("Cannot disconnect blocks because the blocks are not connected")
+    def on_disconnect_link(self, block_id, selected_block_id):
+        """ entfernt den Link zwischen zwei verlinkten Blöcken """
 
+        # 0. prüfen, ob nicht zweimal derselbe Block ausgewählt wurde
+        if not self.checkDualSelectionIsSame():
+
+            block_dict = self.b_obj.blocks[block_id]["B_type"]
+            selected_block_dict = self.b_obj.blocks[selected_block_id]["B_type"]
+
+            # 1. prüfen, ob connected = True bei beiden Blöcken
+            if block_dict["connected"] and selected_block_dict["connected"]:
+
+                # TODO: blocks[blocks[block_id]["B-type"][block_outputTypes]["outputBlockId"]]
+                #   die "inputBlockId" = None setzen
+
+                # 2.1 prüfen, ob die Blöcke input/output-Block voneinander sind
+                if (block_dict["block_outputTypes"]["outputBlockId"] == selected_block_id
+                        and selected_block_dict["block_inputTypes"]["inputBlockId"] == block_id):
+                    block_dict["block_outputTypes"]["outputBlockId"] = None
+                    selected_block_dict["block_inputTypes"]["inputBlockId"] = None
+
+                # TODO: blocks[blocks[block_id]["B-type"][block_inputTypes]["inputBlockId"]]
+                #   die "outputBlockId" = None setzen
+
+                # 2.2 zweiter möglicher Fall
+                elif (selected_block_dict["block_outputTypes"]["outputBlockId"] == block_id
+                      and block_dict["block_inputTypes"]["inputBlockId"] == selected_block_id):
+                    selected_block_dict["block_outputTypes"]["outputBlockId"] = None
+                    block_dict["block_inputTypes"]["inputBlockId"] = None
+                else:
+                    print(f"block_id {block_id} and selected_block_id {selected_block_id} are not connected to each other")
+                    return 0
+
+                # 3. Blöcke disconnecten
+                selected_block_dict["connected"] = False
+                block_dict["connected"] = False
+
+                # TODO: Was ist wenn der eine Block inLoop und der andere außerhalb einer Loop ist?
+                #   (Ist das möglich?)
+                # 4. wenn sie inLoop sind, inLoop = False
+                if block_dict["inLoop"] or selected_block_dict["inLoop"]:
+                    block_dict["inLoop"] = False
+                    selected_block_dict["inLoop"] = False
+
+                print("Blocks disconnected")
+                return 1
+            else:
+                print("Cannot disconnect blocks because the two selected blocks are not connected")
+                return 0
+        else:
+            print(f"block_id {block_id} and selected_block_id {selected_block_id} must not be equal")
+            return 0
         # überprüfe ob block schon verlinkt ist.
         #   connected auf false gesetzt werden.
         #   in blocks[block_id]["B-type"][block_inputTypes]["inputBlockId"] = None
