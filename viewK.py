@@ -101,6 +101,8 @@ class BlockEditorView:
         self.blockMenuControl.add_command(label="Function", command=lambda: self.add_block("initBlock_Function"))
         self.blockMenuControl.add_command(label="Goto Function", command=lambda: self.add_block("initBlock_Goto"))
         self.blockMenuControl.add_command(label="return to Goto call", command=lambda: self.add_block("initBlock_FunctionReturn"))
+        self.blockMenuControl.add_command(label="While-Loop", command=lambda: self.add_block("initBlock_WhileLoop"))
+        self.blockMenuControl.add_command(label="End While-Loop", command=lambda: self.add_block("initBlock_WhileLoop_end"))
         self.menu.add_cascade(label="Flow Control", menu=self.blockMenuControl)
         self.blockMenuMisc = Menu(self.menu)
         self.blockMenuMisc.configure(background="#6164e0")
@@ -135,12 +137,15 @@ class BlockEditorView:
 
     def debugHotkey1(self, event):
         self.switchEditorTool(0)
+        self.canvas.focus_set()
 
     def debugHotkey2(self, event):
         self.switchEditorTool(1)
+        self.canvas.focus_set()
 
     def debugHotkey3(self, event):
         self.switchEditorTool(2)
+        self.canvas.focus_set()
 
 
     def onStartUp(self):
@@ -215,6 +220,7 @@ class BlockEditorView:
                 self.selectedBlockItem = item
                 self.selectedBlockCanvasId = item[0]
                 self.selectedBlockId = self.b_obj.findBlockIdFromCanvas(item[0])
+                print(f"selectedBlock: {self.selectedBlockId}")
                 return 1
             else:
                 if self.selectedBlockItem != self.lastSelectedBlockItem:
@@ -358,6 +364,7 @@ class BlockEditorView:
 
 
     def onCanvasClick(self, event):
+        self.canvas.focus_set()
         match self.checkSelectedTool():
             case 1:
                 block_id = self.selectedBlockId
@@ -381,7 +388,7 @@ class BlockEditorView:
             case 4:
                 if self.selectedBlockItem:
                     block_id = self.selectedBlockId
-                    self.onDeleteBlock(block_id, self.selectedBlockItem)
+                    self.onDeleteBlock()
                 else:
                     print("no Block Selected")
 
@@ -409,6 +416,8 @@ class BlockEditorView:
 
                 self.b_obj.moveBlock(selected_block_id, x1, y1)
                 self.updateBlockPosition(selected_block_id)
+                if selected_block_dict["block_id"] == 20:
+                    self.createLoop(selected_block_id)
                 self.updateAllBlocksAppearance()
                 print("link created")
         else:
@@ -467,8 +476,10 @@ class BlockEditorView:
 
     def exec_compileExecution(self):
         self.b_obj.funcList = []
+        self.b_obj.loopList = []
         print("####EMPTY!!!!")
         funcBlocks = self.canvas.find_withtag("funcBlock")
+        loopBlocks = self.canvas.find_withtag("whileLoop")
         print(funcBlocks)
         for i in funcBlocks:
             block = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(i)]
@@ -481,8 +492,29 @@ class BlockEditorView:
                 if comp["entry"]:
                     compInputText = comp["entry"].get()
                     self.b_obj.funcList.append({"funcName" : compInputText, "block_canvas_id" : i, "block_id" : self.b_obj.findBlockIdFromCanvas(i), "return_block_id" : None})
-        print("####FULL!!!!")
-        print(self.b_obj.funcList)
+        for i in loopBlocks:
+            block = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(i)]
+            blockComponentList = block["B_components"]
+            for j in range(blockComponentList.__len__()):
+                comp = blockComponentList[j]
+                if comp["entry"]:
+                    compInputText = comp["entry"].get()
+                    if compInputText.startswith("l_", 0, 2):
+                        self.b_obj.loopList.append({"loopName" : compInputText, "block_canvas_id" : i, "block_id" : self.b_obj.findBlockIdFromCanvas(i), "return_block_id" : None})
+        loopBlocks = self.canvas.find_withtag("whileLoopEnd")
+        for i in loopBlocks:
+            block = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(i)]
+            blockComponentList = block["B_components"]
+            for j in range(blockComponentList.__len__()):
+                comp = blockComponentList[j]
+                if comp["entry"]:
+                    compInputText = comp["entry"].get()
+                    for k in self.b_obj.loopList:
+                        if k["loopName"] == compInputText:
+                            k["return_block_id"] = self.b_obj.findBlockIdFromCanvas(i)
+                            print("Done!")
+
+
 
 
     def onExecuteScript(self):
@@ -578,12 +610,12 @@ class BlockEditorView:
                             if self.b_obj.funcList.__getitem__(j)["funcName"] == compInputText:
                                 self.b_obj.funcList.__getitem__(j)["return_block_id"] = block_id
                                 block_id = self.b_obj.funcList.__getitem__(j)["block_id"]
-                                currentBlock = self.b_obj.blocks[block_id] #self.b_obj.blocks[self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["outputBlockId"]]
+                                currentBlock = self.b_obj.blocks[block_id]
                                 dontSkip = True
                                 print("DOCH!!!")
                                 print(currentBlock)
                                 return block_id, currentBlock, dontSkip
-                elif block["block_id"] == 18: # wenn goto block, dann finde den passenden Block unter dem Goto Block
+                elif block["block_id"] == 18: # wenn goto return block, dann finde den passenden Block unter dem Goto Block
                     if compInputText.startswith("f_", 0, 2):
                         print("startet Mit f_ !")
                         print("funcList länge: " + self.b_obj.funcList.__len__().__str__())
@@ -606,8 +638,34 @@ class BlockEditorView:
                                             print("Das könnte Klappen!!!")
                                             dontSkip = True
                                             return block_id, currentBlock, dontSkip
-                                                # return_block_id muss in Blocks gefunden werden und dahin gesprungen werden
-                                                # dabei muss ein Block gefunden werden, der connected == True ah und als inputBlockId == return_block_id hat.
+                                            # return_block_id muss in Blocks gefunden werden und dahin gesprungen werden
+                                            # dabei muss ein Block gefunden werden, der connected == True ah und als inputBlockId == return_block_id hat.
+                elif block["block_id"] == 20:
+                    if compInputText.startswith("l_", 0, 2):
+                        block_id = block["block_outputTypes"]["outputBlockId"]
+                        dontSkip = False
+                        return block_id, currentBlock, dontSkip
+                elif block["block_id"] == 21:
+                    if compInputText.startswith("l_", 0, 2):
+                        self.b_obj.tempEntry = compInputText
+                    else:
+                        converted = h_convertToDataTypesFromString(compInputText)
+                        if converted != 1:
+                            allBlocks = self.canvas.find_withtag("Block")
+                            for j in range(self.b_obj.loopList.__len__()):
+                                if self.b_obj.loopList.__getitem__(j)["loopName"] == self.b_obj.tempEntry:
+                                    return_block_id = self.b_obj.loopList.__getitem__(j)["return_block_id"]
+                                    for k in allBlocks:
+                                        activeBlock = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(k)]["B_type"]
+                                        if activeBlock["block_inputTypes"]["inputBlockId"] == return_block_id:
+                                            block_id = self.b_obj.findBlockIdFromCanvas(k)
+                                            currentBlock = self.b_obj.blocks[block_id]
+                                            dontSkip = True
+                                            return block_id, currentBlock, dontSkip
+                        else:
+                            dontSkip = True
+                            return block_id, currentBlock, dontSkip
+
         print("-------END--------")
         return block_id, currentBlock, dontSkip
 
@@ -740,6 +798,37 @@ class BlockEditorView:
         else:
             return True
 
+    def createLoop(self, block_id):
+        endReached = False
+        isLoop = False
+        block = self.b_obj.blocks[block_id]["B_type"]
+        block_canvas_id = block["id"]
+        current_block_id = block_id
+        loopBlock_id = block_id
+        block_idList = []
+        next_block_id = None
+        while not endReached:
+            block = self.b_obj.blocks[current_block_id]["B_type"]
+            if block["block_inputTypes"]["inputBlockId"]:
+                next_block_id = self.b_obj.findBlockIdFromCanvas(block["block_inputTypes"]["inputBlockId"])
+                next_block = self.b_obj.blocks[next_block_id]
+                block_idList.append(current_block_id)
+            else:
+                endReached = True
+
+            if block["block_id"] == 21:
+                block["block_outputTypes"]["outputBlockId"] = loopBlock_id
+                endReached = True
+                isLoop = True
+            current_block_id = next_block_id
+
+        if isLoop:
+            for i in block_idList:
+                self.b_obj.blocks[i]["B_type"]["inLoop"] = True
+
+
+        print("test")
+
 
     def checkSelectedTool(self):
         match self.selectedTool:
@@ -792,6 +881,8 @@ class BlockEditorView:
         block = self.b_obj.blocks[index]
         canvasBlock_id = self.canvas.find_withtag(self.b_obj.blocks[index]["B_type"]["id"])
         if canvasBlock_id:
+            print(f"canvasBlock_id: {canvasBlock_id}")
+            print(f"selected: {self.selectedBlockCanvasId}")
             if self.selectedBlockCanvasId:
                 #print("Appearens: " + self.selectedBlockCanvasId.__str__() + canvasBlock_id.__str__())
                 if self.selectedBlockCanvasId == canvasBlock_id[0]:

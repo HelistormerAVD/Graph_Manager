@@ -25,6 +25,8 @@ class Block:
         self.editorObjects = {} # nicht benötigt.
         self.exec_obj = [] # TEMP muss noch auf 0 gesetzt werden beim Laden
         self.funcList = [] # TEMP muss noch auf 0 gesetzt werden beim Laden
+        self.loopList = [] # TEMP muss noch auf 0 gesetzt werden beim Laden
+        self.tempEntry = None
         #self.blocks[0] = {"B_type" : {"id" : 0, "block_id" : 0, "color": "green2", "connected" : False, "block_inputTypes" : {"input_id" : 0, "input_t" : dataTypes, "inputBlockId" : None}, "block_outputTypes" : {"output_id" : 0, "output_t" : dataTypes, "outputBlockId" : None}, "func" : {"func_name" : "NameOfFunction"}},
         #                  "B_components" : {"id" : 0, "component" : None},
         #                  "B_position" : {"x1": 50, "y1": 50, "x2": 150, "y2": 150}}
@@ -414,20 +416,22 @@ class Block:
         stopAlg = 0
         for i in range(self.blocks.__len__()):
             if self.deletedPos:
-                for j in range(self.deletedPos.__len__()):
-                    if self.deletedPos.__getitem__(j) == canvasId:
+                for j in self.deletedPos:
+                    if j == i:
                         print("was Deletes")
                         stopAlg = 1
                     else:
+                        print(f"J = {j}, canvasId = {canvasId}")
+                        print(f"block: {self.blocks[i]} Deleted Pos: {self.deletedPos}")
                         stopAlg = 0
                         if self.blocks[i]["B_type"]["id"] == canvasId:
                             return i
                     if stopAlg == 1:
-                        return -1
+                        print("skipped")
             else:
                 if self.blocks[i]["B_type"]["id"] == canvasId:
                     return i
-        return -1
+        return None
 
     def setBlockPosition(self, block_id, x1, y1, x2, y2):
         self.blocks[block_id]["B_position"] = {"x1": x1, "y1": y1, "x2": x2, "y2": y2}
@@ -1105,30 +1109,24 @@ class Block:
         }
         return index
 
-    def initBlock_If_Else(self):
+    def initBlock_WhileLoop_end(self):
         index = h_getNextEmptyDictionary(self.blocks)
         for i in range(len(self.deletedPos)):
             if index == self.deletedPos[i]:
                 self.deletedPos.pop(i)
         b_textView = block_components.TextView()
-        b_textView.setData(0, 10, 20, "if else", "black", 23)
+        b_textView.setData(0, 10, 20, "Loop End", "black", 23)
         b_editText = block_components.EditText()
-        b_editText.setData(1, 100, 10, "0", 10)
-        b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, " ", "black", 10)
-        b_editText2 = block_components.EditText()
-        b_editText2.setData(1, 200, 10, "0", 10)
+        b_editText.setData(1, 100, 10, "l_test", 10)
         components = []
-        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
-        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
-        components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
-        components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
-        args = [1,3]
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
+        components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
+        args = [1]
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
                 "block_id" : 20,
-                "block_tag": "if_else",
+                "block_tag": "whileLoopEnd",
                 "color": "dark cyan",
                 "connected" : False,
                 "inLoop": False,
@@ -1141,7 +1139,7 @@ class Block:
                     "output_t" : dataTypes.BDInteger(0),
                     "outputBlockId" : None},
                 "func" : {
-                    "func_name" : "f_if_else",
+                    "func_name" : "f_nop",
                     "func_args_list": args,
                     "isPassThrough": True,
                     "func_args" : None}
@@ -1155,30 +1153,30 @@ class Block:
         }
         return index
 
-    def initBlock_ForLoop(self):
+    def initBlock_WhileLoop(self):
         index = h_getNextEmptyDictionary(self.blocks)
         for i in range(len(self.deletedPos)):
             if index == self.deletedPos[i]:
                 self.deletedPos.pop(i)
         b_textView = block_components.TextView()
-        b_textView.setData(0, 10, 20, "For-Loop", "black", 23)
+        b_textView.setData(0, 10, 20, "While-Loop", "black", 23)
         b_editText = block_components.EditText()
-        b_editText.setData(1, 100, 10, "0", 10)
+        b_editText.setData(1, 100, 10, "l_test", 10)
         b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, " ", "black", 10)
+        b_textView2.setData(0, 175, 20, "1 ==", "black", 10)
         b_editText2 = block_components.EditText()
         b_editText2.setData(1, 200, 10, "0", 10)
         components = []
         components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
-        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
-        components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
-        components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
-        args = [1,3]
+        components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        args = [1, 3]
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
                 "block_id" : 21,
-                "block_tag": "for-loop",
+                "block_tag": "whileLoop",
                 "color": "aquamarine",
                 "connected" : False,
                 "inLoop": False,
@@ -1191,7 +1189,7 @@ class Block:
                     "output_t" : dataTypes.BDInteger(0),
                     "outputBlockId" : None},
                 "func" : {
-                    "func_name" : "f_for_loop",
+                    "func_name" : "f_nop",
                     "func_args_list": args,
                     "isPassThrough": True,
                     "func_args" : None}
