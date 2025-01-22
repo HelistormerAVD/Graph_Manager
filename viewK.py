@@ -830,6 +830,7 @@ class BlockEditorView:
         print("test")
 
 
+
     def checkSelectedTool(self):
         match self.selectedTool:
             case 0:
