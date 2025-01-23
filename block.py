@@ -1068,16 +1068,10 @@ class Block:
         b_textView.setData(0, 10, 20, "if", "black", 23)
         b_editText = block_components.EditText()
         b_editText.setData(1, 100, 10, "0", 10)
-        b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, " ", "black", 10)
-        b_editText2 = block_components.EditText()
-        b_editText2.setData(1, 200, 10, "0", 10)
         components = []
-        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
         components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
-        components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
-        components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
-        args = [1,3]
+        args = [1]
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
@@ -1095,7 +1089,7 @@ class Block:
                     "output_t" : dataTypes.BDInteger(0),
                     "outputBlockId" : None},
                 "func" : {
-                    "func_name" : "f_if",
+                    "func_name" : "f_nop",
                     "func_args_list": args,
                     "isPassThrough": True,
                     "func_args" : None}
@@ -1553,6 +1547,58 @@ class Block:
                 "y2": 90}
         }
         return index
+
+    def initBlock_loadFileInList(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "Load File", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "<path>", 10)
+        b_textView2 = block_components.TextView()
+        b_textView2.setData(0, 175, 20, "in List", "black", 10)
+        b_editText2 = block_components.EditText()
+        b_editText2.setData(1, 200, 10, "<ListVar>", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+        components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
+        components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
+        components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+
+        args = [1, 3]
+        self.blocks[index] = {
+            "B_type": {
+                "id": None,
+                "block_id": 27,
+                "block_tag": " modi_graph",
+                "color": "goldenrod",
+                "connected": False,
+                "inLoop": False,
+                "block_inputTypes": {
+                    "input_id": 4,
+                    "input_t": dataTypes.BDGraph,
+                    "inputBlockId": None},
+                "block_outputTypes": {
+                    "output_id": 4,  # ???
+                    "output_t": dataTypes.BDGraph,
+                    "outputBlockId": None},
+                "func": {
+                    "func_name": "f_modi_graph",
+                    "func_args_list": args,
+                    "isPassThrough": False,
+                    "func_args": None}
+            },
+            "B_components": components,
+            "B_position": {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
     #
     #--------------------------------------------------------------------------------------------------------------------------------
 

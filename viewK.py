@@ -98,6 +98,7 @@ class BlockEditorView:
         self.menu.add_cascade(label="Graph", menu=self.blockMenuGraph)
         self.blockMenuControl = Menu(self.menu)
         self.blockMenuControl.configure(background="#6164e0")
+        self.blockMenuControl.add_command(label="If-Block", command=lambda: self.add_block("initBlock_If"))
         self.blockMenuControl.add_command(label="Function", command=lambda: self.add_block("initBlock_Function"))
         self.blockMenuControl.add_command(label="Goto Function", command=lambda: self.add_block("initBlock_Goto"))
         self.blockMenuControl.add_command(label="return to Goto call", command=lambda: self.add_block("initBlock_FunctionReturn"))
@@ -106,7 +107,7 @@ class BlockEditorView:
         self.menu.add_cascade(label="Flow Control", menu=self.blockMenuControl)
         self.blockMenuMisc = Menu(self.menu)
         self.blockMenuMisc.configure(background="#6164e0")
-        self.blockMenuMisc.add_command(label="Function", command=lambda: self.add_block("initBlock_setVariable"))
+        self.blockMenuMisc.add_command(label="Variable", command=lambda: self.add_block("initBlock_setVariable"))
         self.menu.add_cascade(label="Misc", menu=self.blockMenuMisc)
 
         self.b_obj = block.Block()
@@ -417,6 +418,7 @@ class BlockEditorView:
                 self.b_obj.moveBlock(selected_block_id, x1, y1)
                 self.updateBlockPosition(selected_block_id)
                 if selected_block_dict["block_id"] == 20:
+                    print(selected_block_id)
                     self.createLoop(selected_block_id)
                 self.updateAllBlocksAppearance()
                 print("link created")
@@ -529,7 +531,7 @@ class BlockEditorView:
         self.exec_evaluateFunction(block_id)
 
         while self.END_OF_SCRIPT == 0:
-            if self.exec_hasReachedEndOfScript(block_id):
+            if self.exec_hasReachedEndOfScript(block_id, notExecuted):
                 print("[Execute]: end of Script reached!")
                 break
             else:
@@ -546,6 +548,7 @@ class BlockEditorView:
                         dataTypeObj = self.exec_evaluateFunction(block_id)
                         block_id, currentBlock, notExecuted = self.exec_checkStructureBlocks(block_id, currentBlock, notExecuted)
                         #dataTypeObj = self.exec_evaluateFunction(block_id)
+                        print(f"onExecuteScript| block bevor: {block_id}")
                         if type(self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"]) == type(dataTypeObj):
                             self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"] = dataTypeObj
                     else:
@@ -640,19 +643,23 @@ class BlockEditorView:
                                             return block_id, currentBlock, dontSkip
                                             # return_block_id muss in Blocks gefunden werden und dahin gesprungen werden
                                             # dabei muss ein Block gefunden werden, der connected == True ah und als inputBlockId == return_block_id hat.
-                elif block["block_id"] == 20:
+                elif block["block_id"] == 20: # ist loop end
                     if compInputText.startswith("l_", 0, 2):
-                        block_id = block["block_outputTypes"]["outputBlockId"]
-                        dontSkip = False
-                        return block_id, currentBlock, dontSkip
-                elif block["block_id"] == 21:
-                    if compInputText.startswith("l_", 0, 2):
+                        for j in range(self.b_obj.loopList.__len__()):  # für Anzahl der Blöcke in schleife
+                            if self.b_obj.loopList.__getitem__(j)["loopName"] == self.b_obj.tempEntry:
+                                return_block_id = self.b_obj.loopList.__getitem__(j)["block_id"]
+                                print(f"Test: {return_block_id}")
+                                block_id = return_block_id
+                                dontSkip = False
+                                return block_id, currentBlock, dontSkip
+                elif block["block_id"] == 21: # ist Loop.
+                    if compInputText.startswith("l_", 0, 2): # falls erster Eintrag -> in tempEntry Speichern
                         self.b_obj.tempEntry = compInputText
                     else:
                         converted = h_convertToDataTypesFromString(compInputText)
-                        if converted != 1:
+                        if converted != 1: # wenn falsch ist (nicht 1)
                             allBlocks = self.canvas.find_withtag("Block")
-                            for j in range(self.b_obj.loopList.__len__()):
+                            for j in range(self.b_obj.loopList.__len__()): # für Anzahl der Blöcke in schleife
                                 if self.b_obj.loopList.__getitem__(j)["loopName"] == self.b_obj.tempEntry:
                                     return_block_id = self.b_obj.loopList.__getitem__(j)["return_block_id"]
                                     for k in allBlocks:
@@ -660,11 +667,73 @@ class BlockEditorView:
                                         if activeBlock["block_inputTypes"]["inputBlockId"] == return_block_id:
                                             block_id = self.b_obj.findBlockIdFromCanvas(k)
                                             currentBlock = self.b_obj.blocks[block_id]
+                                            print(f"exec_checkStructureBlocks| block_id: {block_id}")
+                                            print(f"exec_checkStructureBlocks| currentBlock: {currentBlock}")
+                                            print(f"exec_checkStructureBlocks| block_id: {return_block_id}")
                                             dontSkip = True
                                             return block_id, currentBlock, dontSkip
-                        else:
+                            currentBlock = self.b_obj.blocks[block_id]
                             dontSkip = True
                             return block_id, currentBlock, dontSkip
+                        else:
+                            allBlocks = self.canvas.find_withtag("Block")
+                            for j in range(self.b_obj.loopList.__len__()):  # für Anzahl der Blöcke in schleife
+                                if self.b_obj.loopList.__getitem__(j)["loopName"] == self.b_obj.tempEntry:
+                                    return_block_id = self.b_obj.loopList.__getitem__(j)["return_block_id"]
+                                    for k in allBlocks:
+                                        activeBlock = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(k)]["B_type"]
+                                        if activeBlock["block_inputTypes"]["inputBlockId"] == block_id:
+                                            print(f"loop_exec_checkStructureBlocks| block_id: {block_id}")
+                                            print(f"loop_exec_checkStructureBlocks| currentBlock: {currentBlock}")
+                                            print(f"loop_exec_checkStructureBlocks| return_block_id: {return_block_id}")
+                                            print(f"loop_exec_checkStructureBlocks| activeBlock_id:" +  activeBlock["block_id"].__str__())
+                                            print(f"loop_exec_checkStructureBlocks| findBlockIdFromCanvas: {self.b_obj.findBlockIdFromCanvas(k)}")
+                                            block_id = self.b_obj.findBlockIdFromCanvas(k)
+                                            currentBlock = self.b_obj.blocks[block_id]
+                                            dontSkip = True
+                                            return block_id, currentBlock, dontSkip
+                elif block["block_id"] == 19: # ist If-Bedingung
+                    #if type(compInputText) == int:
+                    if compInputText == 1:
+                        dontSkip = True
+                        print("Test 1")
+                        return block_id, currentBlock, dontSkip
+                    else:
+                        if not block["block_outputTypes"]["outputBlockId"] == None:
+                            print("Test 2")
+                            block_obj = self.b_obj.blocks[block["block_outputTypes"]["outputBlockId"]]
+                            block_obj_id = self.b_obj.findBlockIdFromCanvas(block_obj["B_type"]["id"])
+                            allBlocks = self.canvas.find_withtag("Block")
+                            for k in allBlocks:
+                                b_id = self.b_obj.findBlockIdFromCanvas(k)
+                                if self.b_obj.blocks[block_obj_id]["B_type"]["block_outputTypes"]["outputBlockId"] == self.b_obj.findBlockIdFromCanvas(block["id"]):
+                                    newBlockId = self.b_obj.blocks[b_id]["B_type"]["block_outputTypes"]["outputBlockId"]
+                                    print(f"if_test| newBlockId: {newBlockId}")
+                                    print(f"if_test| block_id: {block_id}")
+                                    print(f"if_test| b_id: {b_id}")
+                                    print(f"if_test| block_obj_id: {block_obj_id}")
+                                    block_id = newBlockId
+                                    print("Test 3")
+                                    currentBlock = self.b_obj.blocks[block_id]
+                                    dontSkip = True
+                                    return block_id, currentBlock, dontSkip
+                        else:
+                            print("Test 4")
+                            currentBlock = self.b_obj.blocks[block_id]
+                            dontSkip = True
+                            return block_id, currentBlock, dontSkip
+                        #loop_start_id = block["block_outputTypes"]["outputBlockId"]
+                        #if loop_start_id:
+                            #print(f"loop_exec_checkStructureBlocks| loop_start_id: {loop_start_id}")
+                            #print(f"loop_exec_checkStructureBlocks| block_id: {block_id}")
+                            #print(f"loop_exec_checkStructureBlocks| currentBlock: {currentBlock}")
+                            #block_id = loop_start_id
+                            #currentBlock = self.b_obj.blocks[block_id]
+                            #dontSkip = True
+                            #return block_id, currentBlock, dontSkip
+                        #else:
+                            #dontSkip = True
+                            #return block_id, currentBlock, dontSkip
 
         print("-------END--------")
         return block_id, currentBlock, dontSkip
@@ -792,7 +861,9 @@ class BlockEditorView:
         print("self.b_obj." + funcName + out)
         return "self.b_obj." + funcName + out
 
-    def exec_hasReachedEndOfScript(self, block_id):
+    def exec_hasReachedEndOfScript(self, block_id, notExecuted):
+        if notExecuted:
+            return False
         if self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["outputBlockId"]:
             return False
         else:
@@ -808,26 +879,33 @@ class BlockEditorView:
         block_idList = []
         next_block_id = None
         while not endReached:
+            print(f"createLoop| block bevor: {block}")
             block = self.b_obj.blocks[current_block_id]["B_type"]
+            print(f"createLoop| block now: {block}")
             if block["block_inputTypes"]["inputBlockId"]:
-                next_block_id = self.b_obj.findBlockIdFromCanvas(block["block_inputTypes"]["inputBlockId"])
-                next_block = self.b_obj.blocks[next_block_id]
+                next_block_id = block["block_inputTypes"]["inputBlockId"]
+                print(f"next_block_id: {next_block_id}")
+                if not next_block_id:
+                    next_block = block_id
+                else:
+                    next_block = self.b_obj.blocks[next_block_id]
                 block_idList.append(current_block_id)
             else:
                 endReached = True
 
-            if block["block_id"] == 21:
+            if block["block_id"] == 21: # wenn loop return
                 block["block_outputTypes"]["outputBlockId"] = loopBlock_id
+                block["block_outputTypes"]["output_id"] = loopBlock_id
                 endReached = True
                 isLoop = True
+                break
             current_block_id = next_block_id
-
+        print(f"createLoop| block_idList: {block_idList}")
         if isLoop:
             for i in block_idList:
                 self.b_obj.blocks[i]["B_type"]["inLoop"] = True
 
 
-        print("test")
 
 
 
