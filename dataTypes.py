@@ -311,6 +311,7 @@ class BDImage:
         return self.data
 
 
+
 class BDGraph:
     """ Klasse BDGraph """
     points_x = []
@@ -338,14 +339,21 @@ class BDGraph:
         get_graph = self.graph.gca()
         return get_graph
 
-    def modify_graph(self, x, y, x_label, y_label, title, grid, label):
+    def modify_graph(self, **kwargs):
+        x = kwargs.get('x', self.points_x)
+        y = kwargs.get('y', self.points_y)
+        x_label = kwargs.get('x_label', 'x')
+        y_label = kwargs.get('y_label', 'y')
+        title = kwargs.get('title', 'Your Graph')
+        grid = kwargs.get('grid', True)
+        label = kwargs.get('label', 'your Graph')
+
         self.points_x = x
         self.points_y = y
-        self.graph.xlabel(x_label if x_label else "x")
-        self.graph.ylabel(y_label if y_label else "y")
-        self.graph.title(title if title else "Your Graph")
-        if grid is not None:
-            self.graph.grid(grid)
+        self.graph.xlabel(x_label)
+        self.graph.ylabel(y_label)
+        self.graph.title(title)
+        self.graph.grid(grid)
         self.graph.plot(self.points_x, self.points_y, label=label)
         self.graph.legend()
         self.graph.show()
