@@ -37,15 +37,15 @@ def block4():
     print('block4')
 
 
-def NewFile():
+def new_file():
     print("New File!")
 
 
-def OpenFile():
+def open_file():
     print("open file")
 
 
-def Blockeditor():
+def blockeditor():
     button4.forget()
     button1.pack(side=LEFT)
     button2.pack(side=LEFT)
@@ -54,7 +54,7 @@ def Blockeditor():
     print("Block Editor")
 
 
-def Dateneditor():
+def dateneditor():
     button1.forget()
     button2.forget()
     button3.forget()
@@ -86,15 +86,15 @@ remenu.add_command(label="clear", command=clear)
 filemenu = Menu(menu)
 filemenu.configure(background="#6164e0")
 menu.add_cascade(label="File", menu=filemenu)
-filemenu.add_command(label="New", command=NewFile)
-filemenu.add_command(label="Open...", command=OpenFile)
+filemenu.add_command(label="New", command=new_file)
+filemenu.add_command(label="Open...", command=open_file)
 
 # Editormenu
 editormenu = Menu(menu)
 editormenu.configure(background="#6164e0")
 menu.add_cascade(label="Editor", menu=editormenu)
-editormenu.add_command(label="Block editior", command=Blockeditor)
-editormenu.add_command(label="Daten editior", command=Dateneditor)
+editormenu.add_command(label="Block editior", command=blockeditor)
+editormenu.add_command(label="Daten editior", command=dateneditor)
 
 # Buttons
 button1 = Button(fenster, text="Block1", command=block1, background="#ee53ac")

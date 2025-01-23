@@ -10,7 +10,7 @@ from tkinter import filedialog, messagebox
 import block_components
 import dataTypes
 from script_variables import Var
-from util import h_getNextEmptyDictionary, h_getVectorBetweenPoints, h_convertToDataTypesFromString
+from util import h_get_next_empty_dictionary, h_get_vector_between_points, h_convert_to_data_types_from_string
 from functools import partial
 
 
@@ -153,9 +153,9 @@ class BlockEditorView:
 
     def onStartUp(self):
         startBlock = self.add_block("initBlock_start")
-        self.b_obj.moveBlock(startBlock, 400, 100)
+        self.b_obj.move_block(startBlock, 400, 100)
         endBlock = self.add_block("initBlock_end")
-        self.b_obj.moveBlock(endBlock, 400, 600)
+        self.b_obj.move_block(endBlock, 400, 600)
         self.updateBlockPosition(startBlock)
         self.updateBlockPosition(endBlock)
 
@@ -176,7 +176,7 @@ class BlockEditorView:
             componentId = newBlock["B_components"].__getitem__(i)["component_id"]
             match componentId:
                 case 0:
-                    textViewSettings = newBlock["B_components"].__getitem__(i)["component"].getData()
+                    textViewSettings = newBlock["B_components"].__getitem__(i)["component"].get_data()
                     textViewComp = self.canvas.create_text(textViewSettings["x1"] + newBlock["B_position"]["x1"],
                                                            textViewSettings["y1"] + newBlock["B_position"]["y1"],
                                                            text=textViewSettings["text"],
@@ -185,7 +185,7 @@ class BlockEditorView:
                     newBlock["B_components"].__getitem__(i)["id"] = textViewComp
                     # self.b_obj.editorObjects[indexOfCanvasObject]["components"].append({"Id" : textViewComp, "type" : "TextView"})
                 case 1:
-                    editTextSettings = newBlock["B_components"].__getitem__(i)["component"].getData()
+                    editTextSettings = newBlock["B_components"].__getitem__(i)["component"].get_data()
                     componentType = tk.Entry(self.root, width=editTextSettings["width"])
                     componentType.insert(0, editTextSettings["text"])
                     editTextComp = self.canvas.create_window(editTextSettings["x1"] + newBlock["B_position"]["x1"],
@@ -225,7 +225,7 @@ class BlockEditorView:
                 self.lastSelectedBlockId = self.selectedBlockId
                 self.selectedBlockItem = item
                 self.selectedBlockCanvasId = item[0]
-                self.selectedBlockId = self.b_obj.findBlockIdFromCanvas(item[0])
+                self.selectedBlockId = self.b_obj.find_block_id_from_canvas(item[0])
                 return 1
             else:
                 if self.selectedBlockItem != self.lastSelectedBlockItem:
@@ -234,7 +234,7 @@ class BlockEditorView:
                     self.lastSelectedBlockId = self.selectedBlockId
                     self.selectedBlockItem = item
                     self.selectedBlockCanvasId = item[0]
-                    self.selectedBlockId = self.b_obj.findBlockIdFromCanvas(item[0])
+                    self.selectedBlockId = self.b_obj.find_block_id_from_canvas(item[0])
                     return 1
                 else:
                     self.lastSelectedBlockItem = self.selectedBlockItem
@@ -242,7 +242,7 @@ class BlockEditorView:
                     self.lastSelectedBlockId = self.selectedBlockId
                     self.selectedBlockItem = item
                     self.selectedBlockCanvasId = item[0]
-                    self.selectedBlockId = self.b_obj.findBlockIdFromCanvas(item[0])
+                    self.selectedBlockId = self.b_obj.find_block_id_from_canvas(item[0])
                     return 1
         else:
             print("err")
@@ -373,7 +373,7 @@ class BlockEditorView:
                 if self.selectedBlockItem:
                     block_id = self.selectedBlockId
                     if not self.b_obj.blocks[block_id]["B_type"]["connected"]:
-                        self.b_obj.moveBlock(block_id, event.x, event.y)
+                        self.b_obj.move_block(block_id, event.x, event.y)
                         self.updateBlockPosition(block_id)
                         # self.updateBlockAppearance(block_id)
                     self.updateAllBlocksAppearance()
@@ -406,12 +406,12 @@ class BlockEditorView:
                 block_dict["connected"] = True
 
                 block_height = self.b_obj.blockHeight
-                pos = self.b_obj.getBlockPosition(block_id)
+                pos = self.b_obj.get_block_position(block_id)
 
                 x1 = pos["x1"]  # 10 da jede umrandung die hälfte nach innen und außen ist
                 y1 = pos["y1"] + block_height
 
-                self.b_obj.moveBlock(selected_block_id, x1, y1)
+                self.b_obj.move_block(selected_block_id, x1, y1)
                 self.updateBlockPosition(selected_block_id)
                 self.updateAllBlocksAppearance()
                 print("link created")
@@ -527,7 +527,7 @@ class BlockEditorView:
         funcBlocks = self.canvas.find_withtag("funcBlock")
         print(funcBlocks)
         for i in funcBlocks:
-            block = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(i)]
+            block = self.b_obj.blocks[self.b_obj.find_block_id_from_canvas(i)]
             print("Block: " + block.__str__())
             blockComponentList = block["B_components"]
             print("i = " + i.__str__())
@@ -537,7 +537,7 @@ class BlockEditorView:
                 if comp["entry"]:
                     compInputText = comp["entry"].get()
                     self.b_obj.funcList.append({"funcName": compInputText, "block_canvas_id": i,
-                                                "block_id": self.b_obj.findBlockIdFromCanvas(i),
+                                                "block_id": self.b_obj.find_block_id_from_canvas(i),
                                                 "return_block_id": None})
         print("####FULL!!!!")
         print(self.b_obj.funcList)
@@ -545,8 +545,8 @@ class BlockEditorView:
     def onExecuteScript(self):
         self.exec_compileExecution()
         startBlockCanvasId = self.canvas.find_withtag("start")[0]
-        currentBlock = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)]
-        block_id = self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)
+        currentBlock = self.b_obj.blocks[self.b_obj.find_block_id_from_canvas(startBlockCanvasId)]
+        block_id = self.b_obj.find_block_id_from_canvas(startBlockCanvasId)
         notExecuted = False
         if not currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
             print("[Compiler]: nothing connected to Start block!")
@@ -659,15 +659,15 @@ class BlockEditorView:
                                 allBlocks = self.canvas.find_withtag("Block")
                                 print("Blocks: " + allBlocks.__str__())
                                 for k in allBlocks:
-                                    iteratedBlock = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(k)]
+                                    iteratedBlock = self.b_obj.blocks[self.b_obj.find_block_id_from_canvas(k)]
                                     print("iteratedBlock: " + iteratedBlock.__str__())
                                     if iteratedBlock["B_type"]["connected"]:
-                                        print("return_block_id: " + self.b_obj.findBlockIdFromCanvas(
+                                        print("return_block_id: " + self.b_obj.find_block_id_from_canvas(
                                             return_block_id).__str__())
                                         print("return_block_id2: " + return_block_id.__str__())
                                         if iteratedBlock["B_type"]["block_inputTypes"][
                                             "inputBlockId"] == return_block_id:
-                                            block_id = self.b_obj.findBlockIdFromCanvas(k)
+                                            block_id = self.b_obj.find_block_id_from_canvas(k)
                                             currentBlock = self.b_obj.blocks[block_id]
                                             print("Das könnte Klappen!!!")
                                             dontSkip = True
@@ -707,7 +707,7 @@ class BlockEditorView:
                             converted = self.g_var.get_value(compInputText)
                             self.b_obj.exec_obj.append(converted)
                     else:
-                        converted = h_convertToDataTypesFromString(compInputText)
+                        converted = h_convert_to_data_types_from_string(compInputText)
                         if type(converted) == int:
                             self.b_obj.exec_obj.append(dataTypes.BDInteger(converted))
                         elif type(converted) == float:
@@ -721,7 +721,7 @@ class BlockEditorView:
                 comp = blockComponentList[i]
                 if comp["entry"]:
                     compInputText = comp["entry"].get()  # Überprüfung ob es eine Variable ist.
-                    converted = h_convertToDataTypesFromString(compInputText)
+                    converted = h_convert_to_data_types_from_string(compInputText)
                     if compInputText.__getitem__(0) == "$":  # compInputText.__getitem__(0) == "$"
                         converted = self.g_var.get_value(compInputText)
                         self.b_obj.exec_obj.append(converted)
@@ -829,24 +829,24 @@ class BlockEditorView:
 
         for i in range(block["B_components"].__len__()):
             canvasComponent_id = block["B_components"][i]["id"]
-            block_comp_dict = block["B_components"][i]["component"].getData()
+            block_comp_dict = block["B_components"][i]["component"].get_data()
             canvasEditTexts = self.canvas.find_withtag("EditText")
             for j in canvasEditTexts:
                 if j == canvasComponent_id:
                     entryItem = block["B_components"].__getitem__(i)["entry"]
                     out = entryItem.get()
-                    block["B_components"].__getitem__(i)["component"].setText(out)
+                    block["B_components"].__getitem__(i)["component"].set_text(out)
                     # print(block["B_components"].__getitem__(i)["component"].getData())
 
     def debugClick(self, event):
         item = self.canvas.find_closest(event.x, event.y)
         if item and "Block" in self.canvas.gettags(item)[0]:
-            block_id = self.b_obj.findBlockIdFromCanvas(item[0])
+            block_id = self.b_obj.find_block_id_from_canvas(item[0])
             self.updateTextFromComponent(block_id)
 
     def updateAllBlocksAppearance(self):
         for i in self.canvas.find_withtag("Block"):
-            block_id = self.b_obj.findBlockIdFromCanvas(i)
+            block_id = self.b_obj.find_block_id_from_canvas(i)
             self.updateBlockAppearance(block_id)
 
     def updateBlockAppearance(self, block_id):
@@ -882,7 +882,7 @@ class BlockEditorView:
     def updateBlockPosition(self, block_id):
         index = block_id
         block = self.b_obj.blocks[index]
-        b_pos = self.b_obj.getBlockPosition(index)
+        b_pos = self.b_obj.get_block_position(index)
         b_comp_length = block["B_components"].__len__()
         canvasBlock_id = self.canvas.find_withtag(self.b_obj.blocks[index]["B_type"]["id"])
         # self.canvas.itemconfigure(canvasBlock_id, x1=block["B_position"]["x1"], y1=block["B_position"]["y1"], x2=block["B_position"]["x2"], y2=block["B_position"]["y2"])
@@ -893,7 +893,7 @@ class BlockEditorView:
             componentType = None
             componentId = block["B_components"].__getitem__(i)["id"]
             canvas_id = self.canvas.find_withtag(componentId)
-            compPosX1, compPosY1 = block["B_components"].__getitem__(i)["component"].getPosition()
+            compPosX1, compPosY1 = block["B_components"].__getitem__(i)["component"].get_position()
             actualCompPosX, actualCompPosY = self.canvas.coords(canvas_id)
             # dx, dy = h_getVectorBetweenPoints(b_pos["x1"], b_pos["y1"], compPosX1, compPosY1)
             # if (compPosX1 + actualCompPosX) != (b_pos["x1"] + dx) or (compPosY1 + actualCompPosY) != (b_pos["y1"] + dy):
@@ -915,9 +915,9 @@ class BlockEditorView:
             if isinstance(obj, dataTypes.BDString):
                 return {"type": "BDString"}
             if isinstance(obj, block_components.TextView):
-                return obj.getData()
+                return obj.get_data()
             if isinstance(obj, block_components.EditText):
-                return obj.getData()
+                return obj.get_data()
 
             raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
 
@@ -939,9 +939,9 @@ class BlockEditorView:
             if isinstance(obj, dataTypes.BDString):
                 return {"type": "BDString"}
             if isinstance(obj, block_components.TextView):
-                return obj.getData()
+                return obj.get_data()
             if isinstance(obj, block_components.EditText):
-                return obj.getData()
+                return obj.get_data()
 
             raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
 

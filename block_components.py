@@ -6,6 +6,8 @@ import json
 # Just a normal Text to be displayed
 class TextView:
 
+    """ """
+
     def __init__(self):
         self.component_Id = 0
         self.canvas_Id = None
@@ -15,7 +17,7 @@ class TextView:
         self.fontColor = "black"
         self.width = 20
 
-    def getData(self):
+    def get_data(self):
         return {"id": self.component_Id,
                 "canvas_id": self.canvas_Id,
                 "x1": self.x1,
@@ -24,25 +26,25 @@ class TextView:
                 "fontColor": self.fontColor,
                 "width": self.width}
 
-    def setData(self, component_id: int, x1: int, y1: int, text: str, fontColor: str, width: int):
+    def set_data(self, component_id: int, x1: int, y1: int, text: str, font_color: str, width: int):
         self.component_Id = component_id
         self.x1 = x1
         self.y1 = y1
         self.text = text
-        self.fontColor = fontColor
+        self.fontColor = font_color
         self.width = width
 
-    def getText(self):
+    def get_text(self):
         return self.text
 
-    def setText(self, txt):
+    def set_text(self, txt):
         self.text = txt
 
-    def setPosition(self, posX, posY):
-        self.x1 = posX
-        self.y1 = posY
+    def set_position(self, pos_x, pos_y):
+        self.x1 = pos_x
+        self.y1 = pos_y
 
-    def getPosition(self):
+    def get_position(self):
         return self.x1, self.y1
 
 
@@ -58,7 +60,7 @@ class EditText:
         self.text = "EditText"
         self.width = 20
 
-    def setData(self, component_id: int, x1: int, y1: int, text: str, width: int):
+    def set_data(self, component_id: int, x1: int, y1: int, text: str, width: int):
         self.component_Id = component_id
         self.canvas_Id = None
         self.x1 = x1
@@ -66,7 +68,7 @@ class EditText:
         self.text = text
         self.width = width
 
-    def getData(self):
+    def get_data(self):
         return {"id": self.component_Id,
                 "canvas_id": self.canvas_Id,
                 "x1": self.x1,
@@ -74,20 +76,20 @@ class EditText:
                 "text": self.text,
                 "width": self.width}
 
-    def getText(self):
+    def get_text(self):
         return self.text
 
-    def setText(self, txt):
+    def set_text(self, txt):
         self.text = txt
 
-    def setPosition(self, posX, posY):
-        self.x1 = posX
-        self.y1 = posY
+    def set_position(self, pos_x, pos_y):
+        self.x1 = pos_x
+        self.y1 = pos_y
 
-    def getPosition(self):
+    def get_position(self):
         return self.x1, self.y1
 
-    def checkIfOnlyNumber(self):
+    def check_if_only_number(self):
         checked = str.isdigit(self.text)
         if checked:
             return 1

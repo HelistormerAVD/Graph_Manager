@@ -6,21 +6,21 @@ class Var:
     def __init__(self):
         self.data = []
 
-    def insert_value(self, varName, data):
+    def insert_value(self, var_name, data):
         for i in range(self.data.__len__()):
-            if self.data[i]["name"] == varName:
-                self.data.insert(i, {"name": varName, "data": data})
+            if self.data[i]["name"] == var_name:
+                self.data.insert(i, {"name": var_name, "data": data})
         else:
-            self.data.append({"name": varName, "data": data})
+            self.data.append({"name": var_name, "data": data})
 
-    def get_value(self, varName):
+    def get_value(self, var_name):
         for i in range(self.data.__len__()):
-            if self.data[i]["name"] == varName:
+            if self.data[i]["name"] == var_name:
                 return self.data[i]["data"]
 
-    def set_value(self, varName, value):
+    def set_value(self, var_name, value):
         for i in range(self.data.__len__()):
-            if self.data[i]["name"] == varName:
+            if self.data[i]["name"] == var_name:
                 self.data[i]["data"] = value
 
 

@@ -27,7 +27,7 @@ class FileIO:
                     data = file.read()
             messagebox.showinfo("Erfolgreich geladen", f"Datei {self.file_path} wurde geladen")
             return data
-        except FileNotFoundError as e:
+        except FileNotFoundError:
             messagebox.showerror("Fehler", f"Datei konnte nicht gefunden werden")
             return None
         except Exception as e:

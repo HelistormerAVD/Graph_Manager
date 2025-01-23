@@ -36,10 +36,10 @@ class BlockEditorView:
         self.links = {}  # Dictionary to store linked blocks
 
         self.canvas.bind("<Button-1>", self.on_canvas_click)
-        self.canvas.bind("<Button-3>", self.add_test_Block)
+        self.canvas.bind("<Button-3>", self.add_test_block)
         self.canvas.bind("<B1-Motion>", self.on_canvas_drag)
 
-    def add_test_Block(self, event):
+    def add_test_block(self, event):
         # Create a green rectangle as the main block
         add_block = self.canvas.create_rectangle(100, 100, 200, 140, fill="green", tags="testBlock")
         self.testBlocks[add_block] = {
