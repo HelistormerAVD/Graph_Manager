@@ -755,16 +755,16 @@ class BlockEditorView:
                 out = [True, True]
                 return out
             case 18:
-                out = [True, True]
+                out = [True, False]
                 return out
             case 19:
                 out = [True, True]
                 return out
             case 20:
-                out = [True, False]
+                out = [True, True]
                 return out
             case 21:
-                out = [True, True]
+                out = [True, False]
                 return out
         return out
 
@@ -816,7 +816,7 @@ class BlockEditorView:
                                             block_id = self.b_obj.findBlockIdFromCanvas(k)
                                             currentBlock = self.b_obj.blocks[block_id]
                                             print("Das könnte Klappen!!!")
-                                            dontSkip = True
+                                            dontSkip = False
                                             return block_id, currentBlock, dontSkip
                                             # return_block_id muss in Blocks gefunden werden und dahin gesprungen werden
                                             # dabei muss ein Block gefunden werden, der connected == True ah und als inputBlockId == return_block_id hat.
@@ -957,6 +957,7 @@ class BlockEditorView:
                             self.b_obj.exec_obj.append(dataTypes.BDFloat(converted))
                         else:
                             self.b_obj.exec_obj.append(dataTypes.BDString(converted))
+            print(f"FuncValues block_id: {block_id}")
             dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName))
             return dataTypeObj
         else:
@@ -975,6 +976,7 @@ class BlockEditorView:
                             self.b_obj.exec_obj.append(dataTypes.BDFloat(converted))
                         else:
                             self.b_obj.exec_obj.append(dataTypes.BDString(converted))
+            print(f"FuncValues block_id: {block_id}")
             dataTypeObj = eval(self.exec_createFunctionStringWithArgs(funcName))
             return dataTypeObj
 
@@ -1079,7 +1081,7 @@ class BlockEditorView:
                 endReached = True
 
             if block["block_id"] == 21: # wenn loop return
-                block["block_outputTypes"]["outputBlockId"] = loopBlock_id
+                #block["block_outputTypes"]["outputBlockId"] = loopBlock_id
                 block["block_outputTypes"]["output_id"] = loopBlock_id
                 endReached = True
                 isLoop = True
