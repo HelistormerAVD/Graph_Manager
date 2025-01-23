@@ -46,23 +46,36 @@ class FarbPalette:
     def colors(self, r):
         self.colorsForBlocks[0] = {"blockName" : "StartBlock", "color" : "green2", "outline" : None}
         self.colorsForBlocks[1] = {"blockName" : "EndBlock", "color" : "red", "outline" : None}
-        self.colorsForBlocks[2] = {"blockName" : "Int_add", "color" : "dodger blue", "outline" : None}
-        self.colorsForBlocks[3] = {"blockName" : "Int_sub", "color" : "dodger blue", "outline" : None}
-        self.colorsForBlocks[4] = {"blockName" : "Int_mult", "color" : "dodger blue", "outline" : None}
-        self.colorsForBlocks[5] = {"blockName" : "Int_div", "color" : "dodger blue", "outline" : None}
-        self.colorsForBlocks[6] = {"blockName": "double_add", "color": "blue", "outline": None}
-        self.colorsForBlocks[7] = {"blockName": "double_sub", "color": "blue", "outline": None}
-        self.colorsForBlocks[8] = {"blockName": "double_mult", "color": "blue", "outline": None}
-        self.colorsForBlocks[9] = {"blockName": "double_div", "color": "blue", "outline": None}
-        self.colorsForBlocks[10] = {"blockName": "str_concat", "color": "saddle brown", "outline": "black"}
-        self.colorsForBlocks[11] = {"blockName": "str_subDiv", "color": "saddle brown", "outline": "black"}
-        self.colorsForBlocks[12] = {"blockName": "str_trim", "color": "saddle brown", "outline": "black"}
-        self.colorsForBlocks[13] = {"blockName": "str_split", "color": "saddle brown", "outline": "black"}
-        self.colorsForBlocks[14] = {"blockName": "List_Insert", "color": "purple", "outline": None}
-        self.colorsForBlocks[15] = {"blockName": "List_get", "color": "purple", "outline": None}
-        self.colorsForBlocks[16] = {"blockName": "List_delete", "color": "purple", "outline": None}
-        self.colorsForBlocks[17] = {"blockName": "List_sort", "color": "purple", "outline": None}
-        self.colorsForBlocks[18] = {"blockName": "str_find", "color": "saddle brown", "outline": "dodger blue"}
+        self.colorsForBlocks[2] = {"blockName" : "SetVariable", "color" : "orange red", "outline" : None}
+        self.colorsForBlocks[3] = {"blockName" : "Int_add", "color" : "dodger blue", "outline" : None}
+        self.colorsForBlocks[4] = {"blockName" : "Int_sub", "color" : "dodger blue", "outline" : None}
+        self.colorsForBlocks[5] = {"blockName" : "Int_mult", "color" : "dodger blue", "outline" : None}
+        self.colorsForBlocks[6] = {"blockName" : "Int_div", "color" : "dodger blue", "outline" : None}
+        self.colorsForBlocks[7] = {"blockName": "float_add", "color": "royal blue", "outline": None}
+        self.colorsForBlocks[8] = {"blockName": "float_sub", "color": "royal blue", "outline": None}
+        self.colorsForBlocks[9] = {"blockName": "float_mult", "color": "royal blue", "outline": None}
+        self.colorsForBlocks[10] = {"blockName": "float_div", "color": "royal blue", "outline": None}
+        self.colorsForBlocks[11] = {"blockName": "str_concat", "color": "deep pink", "outline": "black"}
+        self.colorsForBlocks[12] = {"blockName": "str_subDiv", "color": "deep pink", "outline": "black"}
+        self.colorsForBlocks[13] = {"blockName": "str_trim", "color": "deep pink", "outline": "black"}
+        self.colorsForBlocks[14] = {"blockName": "str_split", "color": "deep pink", "outline": "black"}
+        self.colorsForBlocks[15] = {"blockName": "str_find", "color": "deep pink", "outline": "black"}
+        self.colorsForBlocks[16] = {"blockName": "List_Insert", "color": "mediumpurple", "outline": None}
+        self.colorsForBlocks[17] = {"blockName": "List_get", "color": "mediumpurple", "outline": None}
+        self.colorsForBlocks[18] = {"blockName": "List_delete", "color": "mediumpurple", "outline": None}
+        self.colorsForBlocks[19] = {"blockName": "List_sort", "color": "mediumpurple", "outline": None}
+        self.colorsForBlocks[20] = {"blockName": "Graph_Set", "color": "khaki2", "outline": None}
+        self.colorsForBlocks[21] = {"blockName": "Graph_Get", "color": "khaki2", "outline": None}
+        self.colorsForBlocks[22] = {"blockName": "Graph_Modify", "color": "khaki2", "outline": None}
+        self.colorsForBlocks[23] = {"blockName": "Function", "color": "teal", "outline": None}
+        self.colorsForBlocks[24] = {"blockName": "Goto", "color": "teal", "outline": None}
+        self.colorsForBlocks[25] = {"blockName": "Return Function", "color": "teal", "outline": None}
+        self.colorsForBlocks[26] = {"blockName": "If", "color": "orange", "outline": None}
+        self.colorsForBlocks[27] = {"blockName": "WhileLoop", "color": "orange", "outline": None}
+        self.colorsForBlocks[28] = {"blockName": "WhileLoop_end", "color": "orange", "outline": None}
+        self.colorsForBlocks[29] = {"blockName": "Nop", "color": "gray50", "outline": None}
+        self.colorsForBlocks[30] = {"blockName": "loadFileInList", "color": "salmon4", "outline": None}
+
 
 
 
@@ -91,7 +104,7 @@ class FarbPalette:
             outl = self.colorsForBlocks[count]["outline"]
             wth = 5
             if count == 11 or count == 12:
-                dashed = "."
+                dashed = "" # dashed = "."
         else :
             outl = self.colorsForBlocks[count]["outline"]
             wth = 1

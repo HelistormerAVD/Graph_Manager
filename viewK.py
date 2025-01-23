@@ -92,9 +92,16 @@ class BlockEditorView:
         self.menu.add_cascade(label="String", menu=self.blockMenuString)
         self.blockMenuList = Menu(self.menu)
         self.blockMenuList.configure(background="#6164e0")
+        self.blockMenuList.add_command(label="List Insert", command=lambda: self.add_block("initBlock_List_Insert"))
+        self.blockMenuList.add_command(label="List Get", command=lambda: self.add_block("initBlock_List_get"))
+        self.blockMenuList.add_command(label="List Delete", command=lambda: self.add_block("initBlock_List_delete"))
+        self.blockMenuList.add_command(label="List Sort", command=lambda: self.add_block("initBlock_List_sort"))
         self.menu.add_cascade(label="List", menu=self.blockMenuList)
         self.blockMenuGraph = Menu(self.menu)
         self.blockMenuGraph.configure(background="#6164e0")
+        self.blockMenuGraph.add_command(label="Graph Set", command=lambda: self.add_block("initBlock_set_Graph"))
+        self.blockMenuGraph.add_command(label="Graph modify", command=lambda: self.add_block("initBlock_modify_Graph"))
+        self.blockMenuGraph.add_command(label="Graph Get", command=lambda: self.add_block("initBlock_get_Graph"))
         self.menu.add_cascade(label="Graph", menu=self.blockMenuGraph)
         self.blockMenuControl = Menu(self.menu)
         self.blockMenuControl.configure(background="#6164e0")
@@ -107,6 +114,12 @@ class BlockEditorView:
         self.menu.add_cascade(label="Flow Control", menu=self.blockMenuControl)
         self.blockMenuMisc = Menu(self.menu)
         self.blockMenuMisc.configure(background="#6164e0")
+        self.blockMenuMisc.add_command(label="Variable", command=lambda: self.add_block("initBlock_setVariable"))
+        self.blockMenuMisc.add_command(label="Nop", command=lambda: self.add_block("initBlock_nop"))
+        self.blockMenuMisc.add_command(label="Load File", command=lambda: self.add_block("initBlock_loadFileInList"))
+        self.blockMenuMisc.add_command(label="Print", command=lambda: self.add_block("initBlock_Print"))
+        self.blockMenuMisc.add_command(label="Variable", command=lambda: self.add_block("initBlock_setVariable"))
+        self.blockMenuMisc.add_command(label="Variable", command=lambda: self.add_block("initBlock_setVariable"))
         self.blockMenuMisc.add_command(label="Variable", command=lambda: self.add_block("initBlock_setVariable"))
         self.menu.add_cascade(label="Misc", menu=self.blockMenuMisc)
 
@@ -156,31 +169,48 @@ class BlockEditorView:
         self.b_obj.moveBlock(endBlock, 400, 600)
         self.updateBlockPosition(startBlock)
         self.updateBlockPosition(endBlock)
+        print(self.b_obj.blocks)
 
-    def add_block(self, funcName : str):
-        index = eval("self.b_obj." + funcName + "()")
-        #index = self.b_obj.initBlock_Integer_add()
+    def init_block(self, index, isLoaded):
         newBlock = self.b_obj.blocks[index]
         b_comp_length = newBlock["B_components"].__len__()
-        #print(newBlock["B_components"])
+        # print(newBlock["B_components"])
         newBlock["B_type"]["id"] = self.canvas.create_rectangle(newBlock["B_position"]["x1"],
-                                     newBlock["B_position"]["y1"],
-                                     newBlock["B_position"]["x2"],
-                                     newBlock["B_position"]["y2"],
-                                     fill=newBlock["B_type"]["color"],
-                                     tags=["Block", newBlock["B_type"]["block_tag"]])
+                                                                newBlock["B_position"]["y1"],
+                                                                newBlock["B_position"]["x2"],
+                                                                newBlock["B_position"]["y2"],
+                                                                fill=newBlock["B_type"]["color"],
+                                                                tags=["Block", newBlock["B_type"]["block_tag"]])
         for i in range(b_comp_length):
             componentType = None
             componentId = newBlock["B_components"].__getitem__(i)["component_id"]
             match componentId:
                 case 0:
-                    textViewSettings = newBlock["B_components"].__getitem__(i)["component"].getData()
+                    if isLoaded:
+                        textViewSettings = newBlock["B_components"].__getitem__(i)["component"]
+                    else:
+                        textViewSettings = newBlock["B_components"].__getitem__(i)["component"].getData()
                     textViewComp = self.canvas.create_text(textViewSettings["x1"] + newBlock["B_position"]["x1"],
-                                                             textViewSettings["y1"] + newBlock["B_position"]["y1"], text=textViewSettings["text"], fill=textViewSettings["fontColor"], tags="TextView", font=('Helvetica', '12'), anchor="w")
+                                                           textViewSettings["y1"] + newBlock["B_position"]["y1"],
+                                                           text=textViewSettings["text"],
+                                                           fill=textViewSettings["fontColor"], tags="TextView",
+                                                           font=('Helvetica', '12'), anchor="w")
                     newBlock["B_components"].__getitem__(i)["id"] = textViewComp
-                    #self.b_obj.editorObjects[indexOfCanvasObject]["components"].append({"Id" : textViewComp, "type" : "TextView"})
+                    if isLoaded:
+                        b_text_view = block_components.TextView()
+                        b_text_view.setData(textViewSettings["id"],
+                                           textViewSettings["x1"],
+                                           textViewSettings["y1"],
+                                           textViewSettings["text"],
+                                            textViewSettings["fontColor"],
+                                            textViewSettings["width"])
+                        newBlock["B_components"].__getitem__(i)["component"] = b_text_view
+                    # self.b_obj.editorObjects[indexOfCanvasObject]["components"].append({"Id" : textViewComp, "type" : "TextView"})
                 case 1:
-                    editTextSettings = newBlock["B_components"].__getitem__(i)["component"].getData()
+                    if isLoaded:
+                        editTextSettings = newBlock["B_components"].__getitem__(i)["component"]
+                    else:
+                        editTextSettings = newBlock["B_components"].__getitem__(i)["component"].getData()
                     componentType = tk.Entry(self.root, width=editTextSettings["width"])
                     componentType.insert(0, editTextSettings["text"])
                     editTextComp = self.canvas.create_window(editTextSettings["x1"] + newBlock["B_position"]["x1"],
@@ -188,13 +218,27 @@ class BlockEditorView:
                                                              window=componentType,
                                                              anchor="nw",
                                                              tags="EditText")
-                    #self.b_obj.editorObjects[indexOfCanvasObject]["components"].append({"Id" : editTextComp, "type" : "EditText"})
+                    # self.b_obj.editorObjects[indexOfCanvasObject]["components"].append({"Id" : editTextComp, "type" : "EditText"})
                     newBlock["B_components"].__getitem__(i)["id"] = editTextComp
                     newBlock["B_components"].__getitem__(i)["entry"] = componentType
+                    if isLoaded:
+                        b_editText = block_components.EditText()
+                        b_editText.setData(editTextSettings["id"],
+                                           editTextSettings["x1"],
+                                           editTextSettings["y1"],
+                                           editTextSettings["text"],
+                                           editTextSettings["width"])
+                        newBlock["B_components"].__getitem__(i)["component"] = b_editText
 
-                    #newBlock["B_components"][componentId]["id"] = editTextComp
+                    # newBlock["B_components"][componentId]["id"] = editTextComp
                     print(newBlock)
         return index
+
+    def add_block(self, funcName : str):
+        index = eval("self.b_obj." + funcName + "()")
+        #index = self.b_obj.initBlock_Integer_add()
+        new_index = self.init_block(index, False)
+        return new_index
 
     def switchEditorTool(self, toolNumber):
         if toolNumber < 0 or toolNumber > 3:
@@ -463,7 +507,60 @@ class BlockEditorView:
         print("deleted")
         return 1
 
-    def onDisconnectLink(self, block_id):
+    def onDisconnectLink(self, block_id, selected_block_id):
+        """ entfernt den Link zwischen zwei verlinkten Blöcken """
+
+        # 0. prüfen, ob nicht zweimal derselbe Block ausgewählt wurde
+        if not self.checkDualSelectionIsSame():
+
+            block_dict = self.b_obj.blocks[block_id]["B_type"]
+            selected_block_dict = self.b_obj.blocks[selected_block_id]["B_type"]
+
+            # 1. prüfen, ob connected = True bei beiden Blöcken
+            if block_dict["connected"] and selected_block_dict["connected"]:
+
+                # TODO: blocks[blocks[block_id]["B-type"][block_outputTypes]["outputBlockId"]]
+                #   die "inputBlockId" = None setzen
+
+                # 2.1 prüfen, ob die Blöcke input/output-Block voneinander sind
+                if (block_dict["block_outputTypes"]["outputBlockId"] == selected_block_id
+                        and selected_block_dict["block_inputTypes"]["inputBlockId"] == block_id):
+                    block_dict["block_outputTypes"]["outputBlockId"] = None
+                    selected_block_dict["block_inputTypes"]["inputBlockId"] = None
+
+                # TODO: blocks[blocks[block_id]["B-type"][block_inputTypes]["inputBlockId"]]
+                #   die "outputBlockId" = None setzen
+
+                # 2.2 zweiter möglicher Fall
+                elif (selected_block_dict["block_outputTypes"]["outputBlockId"] == block_id
+                      and block_dict["block_inputTypes"]["inputBlockId"] == selected_block_id):
+                    selected_block_dict["block_outputTypes"]["outputBlockId"] = None
+                    block_dict["block_inputTypes"]["inputBlockId"] = None
+                else:
+                    print(
+                        f"block_id {block_id} and selected_block_id {selected_block_id} are not connected to each other")
+                    return 0
+
+                # 3. Blöcke disconnecten
+                selected_block_dict["connected"] = False
+                block_dict["connected"] = False
+
+                # TODO: Was ist wenn der eine Block inLoop und der andere außerhalb einer Loop ist?
+                #   (Ist das möglich?)
+                # 4. wenn sie inLoop sind, inLoop = False
+                if block_dict["inLoop"] or selected_block_dict["inLoop"]:
+                    block_dict["inLoop"] = False
+                    selected_block_dict["inLoop"] = False
+
+                print("Blocks disconnected")
+                return 1
+            else:
+                print("Cannot disconnect blocks because the two selected blocks are not connected")
+                return 0
+        else:
+            print(f"block_id {block_id} and selected_block_id {selected_block_id} must not be equal")
+            return 0
+
         print("diconnected Block")
         # überprüfe ob block schon verlinkt ist.
         #   connected auf false gesetzt werden.
@@ -524,11 +621,13 @@ class BlockEditorView:
         startBlockCanvasId = self.canvas.find_withtag("start")[0]
         currentBlock = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)]
         block_id = self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)
+        hasJumped = False
+        b_idBeforeJump = block_id
         notExecuted = False
         if not currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
             print("[Compiler]: nothing connected to Start block!")
             return 0
-        self.exec_evaluateFunction(block_id)
+        self.exec_evaluateFunction(block_id, hasJumped, b_idBeforeJump)
 
         while self.END_OF_SCRIPT == 0:
             if self.exec_hasReachedEndOfScript(block_id, notExecuted):
@@ -536,7 +635,7 @@ class BlockEditorView:
                 break
             else:
                 if notExecuted:
-                    dataTypeObj = self.exec_evaluateFunction(block_id)
+                    dataTypeObj = self.exec_evaluateFunction(block_id, hasJumped, b_idBeforeJump)
                     block_id, currentBlock, notExecuted = self.exec_checkStructureBlocks(block_id, currentBlock, notExecuted)
                     if type(self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"]) == type(dataTypeObj):
                         self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"] = dataTypeObj
@@ -545,8 +644,17 @@ class BlockEditorView:
                     if currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
                         block_id = currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]
                         currentBlock = self.b_obj.blocks[currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]]
-                        dataTypeObj = self.exec_evaluateFunction(block_id)
-                        block_id, currentBlock, notExecuted = self.exec_checkStructureBlocks(block_id, currentBlock, notExecuted)
+                        if not self.exec_testStructureBlocks(block_id) is None:
+                            checked = self.exec_testStructureBlocks(block_id)
+                            hasJumped = checked[0]
+                            if checked[1]:
+                                b_idBeforeJump = block_id
+                            block_id, currentBlock, notExecuted = self.exec_checkStructureBlocks(block_id, currentBlock, notExecuted)
+                            dataTypeObj = self.exec_evaluateFunction(block_id, hasJumped, b_idBeforeJump)
+                        else:
+                            b_idBeforeJump = block_id
+                            hasJumped = False
+                            dataTypeObj = self.exec_evaluateFunction(block_id, hasJumped, b_idBeforeJump)
                         #dataTypeObj = self.exec_evaluateFunction(block_id)
                         print(f"onExecuteScript| block bevor: {block_id}")
                         if type(self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"]) == type(dataTypeObj):
@@ -554,6 +662,53 @@ class BlockEditorView:
                     else:
                         print("[Compiler]: nothing connected to next block!")
                         return 1
+
+    """    def onExecuteScript(self):
+        self.exec_compileExecution()
+        startBlockCanvasId = self.canvas.find_withtag("start")[0]
+        currentBlock = self.b_obj.blocks[self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)]
+        block_id = self.b_obj.findBlockIdFromCanvas(startBlockCanvasId)
+        hasJumped = False
+        b_idBeforeJump = block_id
+        notExecuted = False
+        if not currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
+            print("[Compiler]: nothing connected to Start block!")
+            return 0
+        self.exec_evaluateFunction(block_id, hasJumped, b_idBeforeJump)
+
+        while self.END_OF_SCRIPT == 0:
+            if self.exec_hasReachedEndOfScript(block_id, notExecuted):
+                print("[Execute]: end of Script reached!")
+                break
+            else:
+                if notExecuted:
+                    dataTypeObj = self.exec_evaluateFunction(block_id, hasJumped, b_idBeforeJump)
+                    block_id, currentBlock, notExecuted = self.exec_checkStructureBlocks(block_id, currentBlock, notExecuted)
+                    if type(self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"]) == type(dataTypeObj):
+                        self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"] = dataTypeObj
+                    notExecuted = False
+                else:
+                    if currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]:
+                        block_id = currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]
+                        currentBlock = self.b_obj.blocks[currentBlock["B_type"]["block_outputTypes"]["outputBlockId"]]
+                        if not self.exec_testStructureBlocks(block_id) is None:
+                            checked = self.exec_testStructureBlocks(block_id)
+                            hasJumped = checked[0]
+                            if checked[1]:
+                                b_idBeforeJump = block_id
+                            block_id, currentBlock, notExecuted = self.exec_checkStructureBlocks(block_id, currentBlock, notExecuted)
+                            dataTypeObj = self.exec_evaluateFunction(block_id, hasJumped, b_idBeforeJump)
+                        else:
+                            b_idBeforeJump = block_id
+                            hasJumped = False
+                            dataTypeObj = self.exec_evaluateFunction(block_id, hasJumped, b_idBeforeJump)
+                        #dataTypeObj = self.exec_evaluateFunction(block_id)
+                        print(f"onExecuteScript| block bevor: {block_id}")
+                        if type(self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"]) == type(dataTypeObj):
+                            self.b_obj.blocks[block_id]["B_type"]["block_outputTypes"]["output_t"] = dataTypeObj
+                    else:
+                        print("[Compiler]: nothing connected to next block!")
+                        return 1"""
 
     """ def onExecuteScript(self):
         self.exec_compileExecution()
@@ -590,6 +745,28 @@ class BlockEditorView:
     # f_executeBreak: Flag, wenn die exeution abgebrochen werden muss, falls es z.B. einen Fehler gibt.
     # f_executesuccess: Flag, wenn execution geklappt hat.
     """-----------------------------"""
+
+    def exec_testStructureBlocks(self, block_id):
+        out = None
+        b_id = self.b_obj.blocks[block_id]["B_type"]["block_id"]
+        # out = [<ist Struktur Block>, <Soll Funktion übernommen werden?>]
+        match b_id:
+            case 17:
+                out = [True, True]
+                return out
+            case 18:
+                out = [True, True]
+                return out
+            case 19:
+                out = [True, True]
+                return out
+            case 20:
+                out = [True, False]
+                return out
+            case 21:
+                out = [True, True]
+                return out
+        return out
 
     # testet, ob der aktuelle Block ein Struktur Block ist.
     def exec_checkStructureBlocks(self, block_id, currentBlock, dontSkip):
@@ -650,7 +827,7 @@ class BlockEditorView:
                                 return_block_id = self.b_obj.loopList.__getitem__(j)["block_id"]
                                 print(f"Test: {return_block_id}")
                                 block_id = return_block_id
-                                dontSkip = False
+                                dontSkip = True
                                 return block_id, currentBlock, dontSkip
                 elif block["block_id"] == 21: # ist Loop.
                     if compInputText.startswith("l_", 0, 2): # falls erster Eintrag -> in tempEntry Speichern
@@ -670,7 +847,7 @@ class BlockEditorView:
                                             print(f"exec_checkStructureBlocks| block_id: {block_id}")
                                             print(f"exec_checkStructureBlocks| currentBlock: {currentBlock}")
                                             print(f"exec_checkStructureBlocks| block_id: {return_block_id}")
-                                            dontSkip = True
+                                            dontSkip = False
                                             return block_id, currentBlock, dontSkip
                             currentBlock = self.b_obj.blocks[block_id]
                             dontSkip = True
@@ -688,9 +865,9 @@ class BlockEditorView:
                                             print(f"loop_exec_checkStructureBlocks| return_block_id: {return_block_id}")
                                             print(f"loop_exec_checkStructureBlocks| activeBlock_id:" +  activeBlock["block_id"].__str__())
                                             print(f"loop_exec_checkStructureBlocks| findBlockIdFromCanvas: {self.b_obj.findBlockIdFromCanvas(k)}")
-                                            block_id = self.b_obj.findBlockIdFromCanvas(k)
+                                            #block_id = self.b_obj.findBlockIdFromCanvas(k)
                                             currentBlock = self.b_obj.blocks[block_id]
-                                            dontSkip = True
+                                            dontSkip = False
                                             return block_id, currentBlock, dontSkip
                 elif block["block_id"] == 19: # ist If-Bedingung
                     #if type(compInputText) == int:
@@ -739,14 +916,20 @@ class BlockEditorView:
         return block_id, currentBlock, dontSkip
 
 
-    def exec_evaluateFunction(self, block_id):
+    def exec_evaluateFunction(self, block_id, hasJumped, b_idBeforeJump):
         #print(block_id)
         block = self.b_obj.blocks[block_id]["B_type"]
         blockComponentList = self.b_obj.blocks[block_id]["B_components"]
-        funcName = block["func"]["func_name"]
-        funcArgs = block["func"]["func_args"]
-        funcArgIdList = block["func"]["func_args_list"]
-        isPassThorugh = block["func"]["isPassThrough"]
+        if hasJumped:
+            funcName = self.b_obj.blocks[b_idBeforeJump]["B_type"]["func"]["func_name"]
+            funcArgs = block["func"]["func_args"]
+            funcArgIdList = block["func"]["func_args_list"]
+            isPassThorugh = block["func"]["isPassThrough"]
+        else:
+            funcName = block["func"]["func_name"]
+            funcArgs = block["func"]["func_args"]
+            funcArgIdList = block["func"]["func_args_list"]
+            isPassThorugh = block["func"]["isPassThrough"]
         #nextBlock = self.b_obj.blocks[nextBlock_id]["B_type"]
         self.b_obj.exec_obj = []
         if isPassThorugh:
@@ -857,6 +1040,8 @@ class BlockEditorView:
             out += helper_string
             if self.b_obj.exec_obj.__len__() - (i + 1) > 0:
                 out += ","
+            var_debug = self.b_obj.exec_obj.__getitem__(i)
+            print(f"FuncValues: {var_debug}")
         out += ")"
         print("self.b_obj." + funcName + out)
         return "self.b_obj." + funcName + out
@@ -1019,17 +1204,21 @@ class BlockEditorView:
             #print("Components auf dem Canvas: " + actualCompPosX.__str__() + " " + actualCompPosY.__str__())
 
     def onSaveEditor(self):
+        for i in self.b_obj.blocks:
+            self.updateTextFromComponent(i)
         def custom_serializer(obj):
             if isinstance(obj, dataTypes.BDInteger):
-                return {"type": "BDInteger"}
+                return "dataTypes.BDInteger"
             if isinstance(obj, dataTypes.BDFloat):
-                return {"type": "BDFloat"}
+                return "dataTypes.BDFloat"
             if isinstance(obj, dataTypes.BDString):
-                return {"type": "BDString"}
+                return "dataTypes.BDString"
             if isinstance(obj, block_components.TextView):
                 return obj.getData()
             if isinstance(obj, block_components.EditText):
                 return obj.getData()
+            if isinstance(obj, tk.Entry):
+                return None
 
             raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
 
@@ -1054,10 +1243,15 @@ class BlockEditorView:
                 return obj.getData()
             if isinstance(obj, block_components.EditText):
                 return obj.getData()
+            if isinstance(obj, list):
+                return obj
+            if isinstance(obj, dict):
+                return obj
 
             raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
 
-        file_path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
+        file_path = filedialog.askopenfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
+        loaded_data = None
         if file_path:
             try:
                 with open(file_path, "r") as file:
@@ -1065,6 +1259,32 @@ class BlockEditorView:
 
             except Exception as e:
                 messagebox.showerror("Load Error", f"An error occurred while loading: {e}")
+        if loaded_data:
+            self.canvas.delete("all")
+            count = 0
+            self.b_obj.blocks = {}
+            print(loaded_data)
+            for blk in loaded_data:
+                print(blk)
+                self.b_obj.blocks[int(blk)] = loaded_data[blk]
+                converted_input = h_convertToDataTypesFromString(self.b_obj.blocks[int(blk)]["B_type"]["block_inputTypes"]["input_t"])
+                converted_output = h_convertToDataTypesFromString(self.b_obj.blocks[int(blk)]["B_type"]["block_outputTypes"]["output_t"])
+                self.b_obj.blocks[int(blk)]["B_type"]["block_inputTypes"]["input_t"] = converted_input
+                self.b_obj.blocks[int(blk)]["B_type"]["block_outputTypes"]["output_t"] = converted_output
+
+                if int(blk) >= (count - 1):
+                    count += 1
+                else:
+                    while int(blk) > (count - 1):
+                        self.b_obj.deletedPos.append(count)
+                        count += 1
+                    count += 1
+            for i in self.b_obj.blocks:
+                self.init_block(i, True)
+            self.setSelectedBlock(100, 100) # irgendwas auf dem Bildschirm auswählen
+            self.updateAllBlocksAppearance()
+
+                #self.add_block(block)
 
 
     def debug_line(self, x1, y1, x2, y2):

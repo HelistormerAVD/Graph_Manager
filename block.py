@@ -139,7 +139,7 @@ class Block:
                 "id" : None,
                 "block_id" : 2,
                 "block_tag": "set_variable",
-                "color": "dodger blue",
+                "color": "orange red",
                 "connected" : False,
                 "inLoop": False,
                 "block_inputTypes" : {
@@ -285,14 +285,14 @@ class Block:
                 "inLoop": False,
                 "block_inputTypes": {
                     "input_id": 0,
-                    "input_t": dataTypes.BDInteger,
+                    "input_t": dataTypes.BDInteger(0),
                     "inputBlockId": None},
                 "block_outputTypes": {
                     "output_id": 0,
-                    "output_t": dataTypes.BDInteger,
+                    "output_t": dataTypes.BDInteger(0),
                     "outputBlockId": None},
                 "func": {
-                    "func_name": "NameOfFunction",
+                    "func_name": "f_int_sub",
                     "func_args_list": args,
                     "isPassThrough": True,  # war vorher false?
                     "func_args": None}
@@ -335,14 +335,14 @@ class Block:
                 "inLoop": False,
                 "block_inputTypes" : {
                     "input_id" : 0,
-                    "input_t" : dataTypes.BDInteger,
+                    "input_t" : dataTypes.BDInteger(0),
                     "inputBlockId" : None},
                 "block_outputTypes" : {
                     "output_id" : 0,
-                    "output_t" : dataTypes.BDInteger,
+                    "output_t" : dataTypes.BDInteger(0),
                     "outputBlockId" : None},
                 "func" : {
-                    "func_name" : "NameOfFunction",
+                    "func_name" : "f_int_div",
                     "func_args_list": args,
                     "isPassThrough": True,
                     "func_args" : None}
@@ -385,14 +385,14 @@ class Block:
                 "inLoop": False,
                 "block_inputTypes" : {
                     "input_id" : 0,
-                    "input_t" : dataTypes.BDInteger,
+                    "input_t" : dataTypes.BDInteger(0),
                     "inputBlockId" : None},
                 "block_outputTypes" : {
                     "output_id" : 0,
-                    "output_t" : dataTypes.BDInteger,
+                    "output_t" : dataTypes.BDInteger(0),
                     "outputBlockId" : None},
                 "func" : {
-                    "func_name" : "NameOfFunction",
+                    "func_name" : "f_int_mult",
                     "func_args_list": args,
                     "isPassThrough": True,
                     "func_args" : None}
@@ -422,6 +422,11 @@ class Block:
                         stopAlg = 1
                     else:
                         print(f"J = {j}, canvasId = {canvasId}")
+                        print(self.blocks.__len__())
+                        print(i)
+                        print(self.blocks)
+                        print(self.blocks[0])
+                        print(self.deletedPos)
                         print(f"block: {self.blocks[i]} Deleted Pos: {self.deletedPos}")
                         stopAlg = 0
                         if self.blocks[i]["B_type"]["id"] == canvasId:
@@ -497,11 +502,11 @@ class Block:
                 "inLoop": False,
                 "block_inputTypes" : {
                     "input_id" : 1,
-                    "input_t" : dataTypes.BDFloat,
+                    "input_t" : dataTypes.BDFloat(0.0),
                     "inputBlockId" : None},
                 "block_outputTypes" : {
                     "output_id" : 1,
-                    "output_t" : dataTypes.BDFloat,
+                    "output_t" : dataTypes.BDFloat(0.0),
                     "outputBlockId" : None},
                 "func" : {
                     "func_name" : "f_float_add",
@@ -547,11 +552,11 @@ class Block:
                 "inLoop": False,
                 "block_inputTypes": {
                     "input_id": 1,
-                    "input_t": dataTypes.BDFloat,
+                    "input_t": dataTypes.BDFloat(0.0),
                     "inputBlockId": None},
                 "block_outputTypes": {
                     "output_id": 1,
-                    "output_t": dataTypes.BDFloat,
+                    "output_t": dataTypes.BDFloat(0.0),
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_float_sub",
@@ -597,11 +602,11 @@ class Block:
                 "inLoop": False,
                 "block_inputTypes": {
                     "input_id": 1,
-                    "input_t": dataTypes.BDFloat,
+                    "input_t": dataTypes.BDFloat(0.0),
                     "inputBlockId": None},
                 "block_outputTypes": {
                     "output_id": 1,
-                    "output_t": dataTypes.BDFloat,
+                    "output_t": dataTypes.BDFloat(0.0),
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_float_div",
@@ -647,11 +652,11 @@ class Block:
                 "inLoop": False,
                 "block_inputTypes": {
                     "input_id": 1,
-                    "input_t": dataTypes.BDFloat,
+                    "input_t": dataTypes.BDFloat(0.0),
                     "inputBlockId": None},
                 "block_outputTypes": {
                     "output_id": 1,
-                    "output_t": dataTypes.BDFloat,
+                    "output_t": dataTypes.BDFloat(0.0),
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_float_mult",
@@ -701,11 +706,11 @@ class Block:
                 "inLoop": False,
                 "block_inputTypes": {
                     "input_id": 2,
-                    "input_t": dataTypes.BDString,
+                    "input_t": dataTypes.BDString(""),
                     "inputBlockId": None},
                 "block_outputTypes": {
                     "output_id": 2,
-                    "output_t": dataTypes.BDString,
+                    "output_t": dataTypes.BDString(""),
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_str_concat",
@@ -752,11 +757,11 @@ class Block:
                 "inLoop": False,
                 "block_inputTypes": {
                     "input_id": 2,
-                    "input_t": dataTypes.BDString,
+                    "input_t": dataTypes.BDString(""),
                     "inputBlockId": None},
                 "block_outputTypes": {
                     "output_id": 2,
-                    "output_t": dataTypes.BDString,
+                    "output_t": dataTypes.BDString(""),
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_str_subDiv",
@@ -798,11 +803,11 @@ class Block:
                 "inLoop": False,
                 "block_inputTypes": {
                     "input_id": 2,
-                    "input_t": dataTypes.BDString,
+                    "input_t": dataTypes.BDString(""),
                     "inputBlockId": None},
                 "block_outputTypes": {
                     "output_id": 2,
-                    "output_t": dataTypes.BDString,
+                    "output_t": dataTypes.BDString(""),
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_str_trim",
@@ -849,11 +854,11 @@ class Block:
                 "inLoop": False,
                 "block_inputTypes": {
                     "input_id": 2,
-                    "input_t": dataTypes.BDString,
+                    "input_t": dataTypes.BDString(""),
                     "inputBlockId": None},
                 "block_outputTypes": {
                     "output_id": 2,
-                    "output_t": dataTypes.BDString,
+                    "output_t": dataTypes.BDString(""),
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_str_split",
@@ -899,11 +904,11 @@ class Block:
                 "inLoop": False,
                 "block_inputTypes": {
                     "input_id": 2,
-                    "input_t": dataTypes.BDString,
+                    "input_t": dataTypes.BDString(""),
                     "inputBlockId": None},
                 "block_outputTypes": {
                     "output_id": 2,
-                    "output_t": dataTypes.BDString,
+                    "output_t": dataTypes.BDString(""),
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_str_find",
@@ -1072,7 +1077,7 @@ class Block:
                 "id" : None,
                 "block_id" : 19,
                 "block_tag": "if",
-                "color": "aqua",
+                "color": "orange",
                 "connected" : False,
                 "inLoop": False,
                 "block_inputTypes" : {
@@ -1116,7 +1121,7 @@ class Block:
                 "id" : None,
                 "block_id" : 20,
                 "block_tag": "whileLoopEnd",
-                "color": "dark cyan",
+                "color": "orange",
                 "connected" : False,
                 "inLoop": False,
                 "block_inputTypes" : {
@@ -1166,7 +1171,7 @@ class Block:
                 "id" : None,
                 "block_id" : 21,
                 "block_tag": "whileLoop",
-                "color": "aquamarine",
+                "color": "orange",
                 "connected" : False,
                 "inLoop": False,
                 "block_inputTypes" : {
@@ -1413,16 +1418,16 @@ class Block:
                 "id" : None,
                 "block_id" : 26,
                 "block_tag": "set_graph",
-                "color": "gold",
+                "color": "khaki2",
                 "connected" : False,
                 "inLoop": False,
                 "block_inputTypes" : {
                     "input_id" : 0,
-                    "input_t" : dataTypes.BDInteger,
+                    "input_t" : dataTypes.BDInteger(0),
                     "inputBlockId" : None},
                 "block_outputTypes" : {
                     "output_id" : 4,
-                    "output_t" : dataTypes.BDGraph,
+                    "output_t" : dataTypes.BDGraph(),
                     "outputBlockId" : None},
                 "func" : {
                     "func_name" : "f_set_graph",
@@ -1517,16 +1522,16 @@ class Block:
                 "id": None,
                 "block_id": 27,
                 "block_tag": " modi_graph",
-                "color": "goldenrod",
+                "color": "khaki2",
                 "connected": False,
                 "inLoop": False,
                 "block_inputTypes": {
-                    "input_id": 4,              #????
-                    "input_t": dataTypes.BDGraph,
+                    "input_id": 0,
+                    "input_t": dataTypes.BDGraph(),
                     "inputBlockId": None},
                 "block_outputTypes": {
-                    "output_id": 4,
-                    "output_t": dataTypes.BDGraph,
+                    "output_id": 0,
+                    "output_t": dataTypes.BDGraph(),
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_modi_graph",
@@ -1562,7 +1567,7 @@ class Block:
                 "id" : None,
                 "block_id" : 28,
                 "block_tag": "get_graph",
-                "color": "gold",
+                "color": "khaki2",
                 "connected" : False,
                 "inLoop": False,
                 "block_inputTypes" : {
@@ -1584,6 +1589,47 @@ class Block:
                 "x1": 50,
                 "y1": 50,
                 "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+    def initBlock_nop(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_text = block_components.TextView()
+        b_text.setData(0, 10, 20, "NOP", "black", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_text})
+        args = []
+        self.blocks[index] = {
+            "B_type": {
+                "id": None,
+                "block_id": 29,
+                "block_tag": "nop",
+                "color": "gray50",
+                "connected": False,
+                "inLoop": False,
+                "block_inputTypes": {
+                    "input_id": 0,
+                    "input_t": dataTypes.BDInteger(0),
+                    "inputBlockId": None},
+                "block_outputTypes": {
+                    "output_id": 0,
+                    "output_t": dataTypes.BDInteger(0),
+                    "outputBlockId": None},
+                "func": {
+                    "func_name": "f_nop",
+                    "func_args_list": args,
+                    "isPassThrough": False,
+                    "func_args": None}
+            },
+            "B_components": components,
+            "B_position": {
+                "x1": 50,
+                "y1": 50,
+                "x2": 150,
                 "y2": 90}
         }
         return index
@@ -1611,27 +1657,71 @@ class Block:
         self.blocks[index] = {
             "B_type": {
                 "id": None,
-                "block_id": 27,
-                "block_tag": " modi_graph",
-                "color": "goldenrod",
+                "block_id": 30,
+                "block_tag": "loadFileInList",
+                "color": "salmon4",
                 "connected": False,
                 "inLoop": False,
                 "block_inputTypes": {
-                    "input_id": 4,
-                    "input_t": dataTypes.BDGraph,
+                    "input_id": 0,
+                    "input_t": dataTypes.BDInteger(0),
                     "inputBlockId": None},
                 "block_outputTypes": {
-                    "output_id": 4,  # ???
+                    "output_id": 0,
                     "output_t": dataTypes.BDGraph,
                     "outputBlockId": None},
                 "func": {
-                    "func_name": "f_modi_graph",
+                    "func_name": "f_nop",
                     "func_args_list": args,
                     "isPassThrough": False,
                     "func_args": None}
             },
             "B_components": components,
             "B_position": {
+                "x1": 50,
+                "y1": 50,
+                "x2": 350,
+                "y2": 90}
+        }
+        return index
+
+    def initBlock_Print(self):
+        index = h_getNextEmptyDictionary(self.blocks)
+        for i in range(len(self.deletedPos)):
+            if index == self.deletedPos[i]:
+                self.deletedPos.pop(i)
+        b_textView = block_components.TextView()
+        b_textView.setData(0, 10, 20, "if", "black", 23)
+        b_editText = block_components.EditText()
+        b_editText.setData(1, 100, 10, "0", 10)
+        components = []
+        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
+        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+        args = [1]
+        self.blocks[index] = {
+            "B_type" : {
+                "id" : None,
+                "block_id" : 31,
+                "block_tag": "print",
+                "color": "gray50",
+                "connected" : False,
+                "inLoop": False,
+                "block_inputTypes" : {
+                    "input_id" : 0,
+                    "input_t" : dataTypes.BDInteger(0),  #01 true false
+                    "inputBlockId" : None},
+                "block_outputTypes" : {
+                    "output_id" : 0,
+                    "output_t" : dataTypes.BDInteger(0),
+                    "outputBlockId" : None},
+                "func" : {
+                    "func_name" : "f_nop",
+                    "func_args_list": args,
+                    "isPassThrough": True,
+                    "func_args" : None}
+            },
+            "B_components" : components,
+            "B_position" : {
                 "x1": 50,
                 "y1": 50,
                 "x2": 350,
@@ -1667,15 +1757,15 @@ class Block:
 
     def f_int_sub(self, a, b):
         if self.is_type_bd_int(a, b):
-            a.BDInteger.subtract(b.__getstate__())
+            a.subtract(b.__getstate__())
             print(a.__getstate__())
             return a
         else:
             print("Falscher Datentyp!")
 
-    def f_int_mul(self, a, b):
+    def f_int_mult(self, a, b):
         if self.is_type_bd_int(a, b):
-            a.BDInteger.multiply(b.__getstate__())
+            a.multiply(b.__getstate__())
             print(a.__getstate__())
             return a
         else:
@@ -1684,9 +1774,10 @@ class Block:
     # BDFloat divide Funktion???
     def f_int_div(self, a, b):
         if self.is_type_bd_int(a, b):
-            a.BDFloat.divide(b.__getstate__())
+            a.divide(b.__getstate__())
             print(a.__getstate__())
-            return a
+            c = dataTypes.BDFloat(a)
+            return c
         else:
             print("Falscher Datentyp!")
 
@@ -1708,7 +1799,7 @@ class Block:
 
     def f_int_div_to_int(self, a, b):
         if self.is_type_bd_int(a, b):
-            a.BDInteger.divide(b.__getstate__())
+            a.divide(b.__getstate__())
             print(a.__getstate__())
             return a
         else:

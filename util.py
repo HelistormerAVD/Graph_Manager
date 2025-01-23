@@ -1,4 +1,6 @@
 # nützliche Hilfs-Funktionen.
+import dataTypes
+
 
 def h_getNextEmptyDictionary(dictionary):
     a = dictionary.items().__len__()
@@ -26,6 +28,21 @@ def h_convertToDataTypesFromString(inputString : str):
             return int(inputString)
     else:
         return inputString
+    # noch checken ob "[" enthalten -> dann Liste
+
+def h_convert_str_to_datatypes(input_string : str):
+    if input_string == "dataTypes.BDInteger":
+        return dataTypes.BDInteger(0)
+    elif input_string == "dataTypes.BDFloat":
+        return dataTypes.BDFloat()
+    elif input_string == "dataTypes.BDString":
+        return dataTypes.BDString()
+    elif input_string == "dataTypes.BDList":
+        return dataTypes.BDList()
+    elif input_string == "dataTypes.BDGraph":
+        return dataTypes.BDGraph()
+    else:
+        return None
 
 
 
