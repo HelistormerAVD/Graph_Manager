@@ -758,7 +758,7 @@ class BlockEditorView:
                 out = [True, False]
                 return out
             case 19:
-                out = [True, True]
+                out = [False, False]
                 return out
             case 20:
                 out = [True, True]
@@ -871,8 +871,9 @@ class BlockEditorView:
                                             return block_id, currentBlock, dontSkip
                 elif block["block_id"] == 19: # ist If-Bedingung
                     #if type(compInputText) == int:
-                    if compInputText == 1:
-                        dontSkip = True
+                    print(compInputText)
+                    if int(compInputText) == 1:
+                        dontSkip = False
                         print("Test 1")
                         return block_id, currentBlock, dontSkip
                     else:
@@ -883,8 +884,8 @@ class BlockEditorView:
                             allBlocks = self.canvas.find_withtag("Block")
                             for k in allBlocks:
                                 b_id = self.b_obj.findBlockIdFromCanvas(k)
-                                if self.b_obj.blocks[block_obj_id]["B_type"]["block_outputTypes"]["outputBlockId"] == self.b_obj.findBlockIdFromCanvas(block["id"]):
-                                    newBlockId = self.b_obj.blocks[b_id]["B_type"]["block_outputTypes"]["outputBlockId"]
+                                if self.b_obj.blocks[block_obj_id]["B_type"]["block_inputTypes"]["inputBlockId"] == self.b_obj.findBlockIdFromCanvas(block["id"]):
+                                    newBlockId = self.b_obj.blocks[block_obj_id]["B_type"]["block_outputTypes"]["outputBlockId"]
                                     print(f"if_test| newBlockId: {newBlockId}")
                                     print(f"if_test| block_id: {block_id}")
                                     print(f"if_test| b_id: {b_id}")
@@ -892,12 +893,12 @@ class BlockEditorView:
                                     block_id = newBlockId
                                     print("Test 3")
                                     currentBlock = self.b_obj.blocks[block_id]
-                                    dontSkip = True
+                                    dontSkip = False
                                     return block_id, currentBlock, dontSkip
                         else:
                             print("Test 4")
                             currentBlock = self.b_obj.blocks[block_id]
-                            dontSkip = True
+                            dontSkip = False
                             return block_id, currentBlock, dontSkip
                         #loop_start_id = block["block_outputTypes"]["outputBlockId"]
                         #if loop_start_id:
