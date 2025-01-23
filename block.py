@@ -1341,6 +1341,7 @@ class Block:
         }
         return index
 
+
     def initBlock_List_sort(self):
         index = h_getNextEmptyDictionary(self.blocks)
         for i in range(len(self.deletedPos)):
