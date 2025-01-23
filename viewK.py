@@ -65,6 +65,9 @@ class BlockEditorView:
         self.Load_button = tk.Button(self.sidebarLeft, text="Toggle Fold", command=self.onLoadEditor)
         self.Load_button.pack(side=tk.TOP, padx=5, pady=5)
 
+        self.Load_button = tk.Button(self.sidebarLeft, text="Delete Link", command=self.onDisconnectLink)
+        self.Load_button.pack(side=tk.TOP, padx=5, pady=5)
+
         self.menu = Menu(self.root)
         self.root.config(menu=self.menu, background="#729ecf")
 
@@ -445,27 +448,30 @@ class BlockEditorView:
 
                 block_dict = self.b_obj.blocks[block_id]["B_type"]
                 selected_block_dict = self.b_obj.blocks[selected_block_id]["B_type"]
+                if block_dict["connected"] and selected_block_dict["connected"]:
+                    print("Selected Blocks are already connected!")
+                else:
 
-                #selected_block_dict["block_inputTypes"]["input_t"] = block_dict["block_outputTypes"]["output_t"]
-                selected_block_dict["block_inputTypes"]["inputBlockId"] = block_id
-                selected_block_dict["connected"] = True
+                    #selected_block_dict["block_inputTypes"]["input_t"] = block_dict["block_outputTypes"]["output_t"]
+                    selected_block_dict["block_inputTypes"]["inputBlockId"] = block_id
+                    selected_block_dict["connected"] = True
 
-                block_dict["block_outputTypes"]["outputBlockId"] = selected_block_id
-                block_dict["connected"] = True
+                    block_dict["block_outputTypes"]["outputBlockId"] = selected_block_id
+                    block_dict["connected"] = True
 
-                block_height = self.b_obj.blockHeight
-                pos = self.b_obj.getBlockPosition(block_id)
+                    block_height = self.b_obj.blockHeight
+                    pos = self.b_obj.getBlockPosition(block_id)
 
-                x1 = pos["x1"] # 10 da jede umrandung die hälfte nach innen und außen ist
-                y1 = pos["y1"] + block_height
+                    x1 = pos["x1"] # 10 da jede umrandung die hälfte nach innen und außen ist
+                    y1 = pos["y1"] + block_height
 
-                self.b_obj.moveBlock(selected_block_id, x1, y1)
-                self.updateBlockPosition(selected_block_id)
-                if selected_block_dict["block_id"] == 20:
-                    print(selected_block_id)
-                    self.createLoop(selected_block_id)
-                self.updateAllBlocksAppearance()
-                print("link created")
+                    self.b_obj.moveBlock(selected_block_id, x1, y1)
+                    self.updateBlockPosition(selected_block_id)
+                    if selected_block_dict["block_id"] == 20:
+                        print(selected_block_id)
+                        self.createLoop(selected_block_id)
+                    self.updateAllBlocksAppearance()
+                    print("link created")
         else:
             print(f"block_id {block_id} and selected_block_id {selected_block_id} must not be equal")
         # überprüfe, ob block_id == selected_block_id (darf nicht die selbe sein)
@@ -507,8 +513,10 @@ class BlockEditorView:
         print("deleted")
         return 1
 
-    def onDisconnectLink(self, block_id, selected_block_id):
+    def onDisconnectLink(self):
         """ entfernt den Link zwischen zwei verlinkten Blöcken """
+        block_id = self.lastSelectedBlockId
+        selected_block_id = self.selectedBlockId
 
         # 0. prüfen, ob nicht zweimal derselbe Block ausgewählt wurde
         if not self.checkDualSelectionIsSame():
@@ -519,17 +527,11 @@ class BlockEditorView:
             # 1. prüfen, ob connected = True bei beiden Blöcken
             if block_dict["connected"] and selected_block_dict["connected"]:
 
-                # TODO: blocks[blocks[block_id]["B-type"][block_outputTypes]["outputBlockId"]]
-                #   die "inputBlockId" = None setzen
-
                 # 2.1 prüfen, ob die Blöcke input/output-Block voneinander sind
                 if (block_dict["block_outputTypes"]["outputBlockId"] == selected_block_id
                         and selected_block_dict["block_inputTypes"]["inputBlockId"] == block_id):
                     block_dict["block_outputTypes"]["outputBlockId"] = None
                     selected_block_dict["block_inputTypes"]["inputBlockId"] = None
-
-                # TODO: blocks[blocks[block_id]["B-type"][block_inputTypes]["inputBlockId"]]
-                #   die "outputBlockId" = None setzen
 
                 # 2.2 zweiter möglicher Fall
                 elif (selected_block_dict["block_outputTypes"]["outputBlockId"] == block_id
@@ -545,8 +547,6 @@ class BlockEditorView:
                 selected_block_dict["connected"] = False
                 block_dict["connected"] = False
 
-                # TODO: Was ist wenn der eine Block inLoop und der andere außerhalb einer Loop ist?
-                #   (Ist das möglich?)
                 # 4. wenn sie inLoop sind, inLoop = False
                 if block_dict["inLoop"] or selected_block_dict["inLoop"]:
                     block_dict["inLoop"] = False
@@ -557,6 +557,27 @@ class BlockEditorView:
             else:
                 print("Cannot disconnect blocks because the two selected blocks are not connected")
                 return 0
+        elif self.checkDualSelectionIsSame():
+            selected_block_dict = self.b_obj.blocks[selected_block_id]["B_type"]
+            if selected_block_dict["connected"]:
+                if not selected_block_dict["block_inputTypes"]["inputBlockId"] is None:
+                    block_before = selected_block_dict["block_inputTypes"]["inputBlockId"]
+                    self.b_obj.blocks[block_before]["B_type"]["block_outputTypes"]["outputBlockId"] = None
+                    if not selected_block_dict["block_outputTypes"]["outputBlockId"] is None:
+                        selected_block_dict["block_inputTypes"]["inputBlockId"] = None
+                    selected_block_dict["connected"] = False
+                    selected_block_dict["inLoop"] = False
+                if not selected_block_dict["block_outputTypes"]["outputBlockId"] is None:
+                    after_block = selected_block_dict["block_outputTypes"]["outputBlockId"]
+                    self.b_obj.blocks[after_block]["B_type"]["block_inputTypes"]["inputBlockId"] = None
+                    if not selected_block_dict["block_inputTypes"]["inputBlockId"] is None:
+                        selected_block_dict["block_outputTypes"]["outputBlockId"] = None
+                    selected_block_dict["connected"] = False
+                    selected_block_dict["inLoop"] = False
+
+
+
+
         else:
             print(f"block_id {block_id} and selected_block_id {selected_block_id} must not be equal")
             return 0
