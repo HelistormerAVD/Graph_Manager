@@ -1574,11 +1574,11 @@ class Block:
                 "inLoop": False,
                 "block_inputTypes" : {
                     "input_id" : 4,
-                    "input_t" : dataTypes.BDGraph,
+                    "input_t" : dataTypes.BDGraph(),
                     "inputBlockId" : None},
                 "block_outputTypes" : {
                     "output_id" : 4,
-                    "output_t" : dataTypes.BDGraph,
+                    "output_t" : dataTypes.BDGraph(),
                     "outputBlockId" : None},
                 "func" : {
                     "func_name" : "f_get_graph",
@@ -1670,7 +1670,7 @@ class Block:
                     "inputBlockId": None},
                 "block_outputTypes": {
                     "output_id": 0,
-                    "output_t": dataTypes.BDGraph,
+                    "output_t": dataTypes.BDGraph(),
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_nop",
