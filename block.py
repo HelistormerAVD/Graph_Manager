@@ -628,7 +628,7 @@ class Block:
         b_editText = block_components.EditText()
         b_editText.setData(1, 100, 10, "0", 10)
         b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, "+", "black", 10)
+        b_textView2.setData(0, 175, 20, "*", "black", 10)
         b_editText2 = block_components.EditText()
         b_editText2.setData(1, 200, 10, "0", 10)
         components = []
@@ -679,11 +679,11 @@ class Block:
         b_textView = block_components.TextView()
         b_textView.setData(0, 10, 20, "Str_Concat", "black", 23)
         b_editText = block_components.EditText()
-        b_editText.setData(1, 100, 10, "0", 10)
+        b_editText.setData(1, 100, 10, "first", 10)
         b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, " ", "black", 10)
+        b_textView2.setData(0, 175, 20, "with", "black", 23)
         b_editText2 = block_components.EditText()
-        b_editText2.setData(1, 200, 10, "0", 10)
+        b_editText2.setData(1, 225, 10, "secund", 10)
         components = []
         components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
         components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
@@ -721,7 +721,7 @@ class Block:
                 "y2": 90}
         }
         return index
-
+##????
     def initBlock_Str_subDiv(self):
         index = h_getNextEmptyDictionary(self.blocks)
         for i in range(len(self.deletedPos)):
@@ -781,17 +781,12 @@ class Block:
         b_textView = block_components.TextView()
         b_textView.setData(0, 10, 20, "Str_trim", "black", 23)
         b_editText = block_components.EditText()
-        b_editText.setData(1, 100, 10, "0", 10)
-        b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, " ", "black", 10)
-        b_editText2 = block_components.EditText()
-        b_editText2.setData(1, 200, 10, "0", 10)
+        b_editText.setData(1, 100, 10, "text", 10)
         components = []
-        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
-        components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
-        components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
-        components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
-        args = []
+        components.insert(0, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
+        components.insert(1, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
+
+        args = [0]
         self.blocks[index] = {
             "B_type": {
                 "id": None,
@@ -832,17 +827,17 @@ class Block:
         b_textView = block_components.TextView()
         b_textView.setData(0, 10, 20, "Str_split", "black", 23)
         b_editText = block_components.EditText()
-        b_editText.setData(1, 100, 10, "0", 10)
+        b_editText.setData(1, 100, 10, "zeichen", 10)
         b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, " ", "black", 10)
+        b_textView2.setData(0, 175, 20, "in", "black", 10)
         b_editText2 = block_components.EditText()
-        b_editText2.setData(1, 200, 10, "0", 10)
+        b_editText2.setData(1, 200, 10, "text", 10)
         components = []
         components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
         components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
         components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
-        args = []
+        args = [1,3]
         self.blocks[index] = {
             "B_type": {
                 "id": None,
@@ -880,19 +875,19 @@ class Block:
             if index == self.deletedPos[i]:
                 self.deletedPos.pop(i)
         b_textView = block_components.TextView()
-        b_textView.setData(0, 10, 20, "Str_find", "black", 23)
+        b_textView.setData(0, 10, 20, "find Str", "black", 23)
         b_editText = block_components.EditText()
-        b_editText.setData(1, 100, 10, "0", 10)
+        b_editText.setData(1, 100, 10, "String", 10)
         b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, " ", "black", 10)
+        b_textView2.setData(0, 175, 20, "in", "black", 10)
         b_editText2 = block_components.EditText()
-        b_editText2.setData(1, 200, 10, "0", 10)
+        b_editText2.setData(1, 200, 10, "text", 10)
         components = []
         components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
         components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
         components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
-        args = []
+        args = [1,3]
         self.blocks[index] = {
             "B_type": {
                 "id": None,
@@ -1204,13 +1199,13 @@ class Block:
             if index == self.deletedPos[i]:
                 self.deletedPos.pop(i)
         b_textView = block_components.TextView()
-        b_textView.setData(0, 10, 20, "List Insert", "black", 23)
+        b_textView.setData(0, 10, 20, "Insert in list", "black", 23)
         b_editText = block_components.EditText()
-        b_editText.setData(1, 100, 10, "0", 10)
+        b_editText.setData(1, 100, 10, "Wert", 10)
         b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, "insert in", "black", 10)
+        b_textView2.setData(0, 175, 20, "in", "black", 10)
         b_editText2 = block_components.EditText()
-        b_editText2.setData(1, 200, 10, "0", 10)
+        b_editText2.setData(1, 200, 10, "Liste", 10)
         components = []
         components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
         components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
@@ -1257,17 +1252,12 @@ class Block:
         b_textView = block_components.TextView()
         b_textView.setData(0, 10, 20, "get List", "black", 23)
         b_editText = block_components.EditText()
-        b_editText.setData(1, 100, 10, "0", 10)
-        b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, "get", "black", 10)
-        b_editText2 = block_components.EditText()
-        b_editText2.setData(1, 200, 10, "0", 10)
+        b_editText.setData(1, 100, 10, "liste", 10)
         components = []
-        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
-        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
-        components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
-        components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
-        args = [1,3]
+        components.insert(0, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+        components.insert(1, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
+
+        args = [0]
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
@@ -1307,17 +1297,14 @@ class Block:
         b_textView = block_components.TextView()
         b_textView.setData(0, 10, 20, "delete List", "black", 23)
         b_editText = block_components.EditText()
-        b_editText.setData(1, 100, 10, "0", 10)
-        b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, "delete ", "black", 10)
-        b_editText2 = block_components.EditText()
-        b_editText2.setData(1, 200, 10, "0", 10)
+        b_editText.setData(1, 100, 10, "liste", 10)
+
         components = []
-        components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
-        components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
-        components.insert(2, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
-        components.insert(3, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText2})
-        args = [1,3]
+
+        components.insert(0, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+        components.insert(1, {"id": None, "component_id": 0, "entry" : None, "component": b_textView})
+
+        args = [0]
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
@@ -1337,7 +1324,7 @@ class Block:
                 "func" : {
                     "func_name" : "f_list_delete",
                     "func_args_list": args,
-                    "isPassThrough": True,
+                    "isPassThrough": False,
                     "func_args" : None}
             },
             "B_components" : components,
@@ -1357,11 +1344,11 @@ class Block:
         b_textView = block_components.TextView()
         b_textView.setData(0, 10, 20, "sort List", "black", 23)
         b_editText = block_components.EditText()
-        b_editText.setData(1, 100, 10, "0", 10)
+        b_editText.setData(1, 100, 10, "Liste", 10)
         b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, "sort", "black", 10)
+        b_textView2.setData(0, 175, 20, "mit", "black", 10)
         b_editText2 = block_components.EditText()
-        b_editText2.setData(1, 200, 10, "0", 10)
+        b_editText2.setData(1, 200, 10, "sort_art", 10)
         components = []
         components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
         components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
@@ -1408,7 +1395,7 @@ class Block:
             if index == self.deletedPos[i]:
                 self.deletedPos.pop(i)
         b_textView = block_components.TextView()
-        b_textView.setData(0, 10, 20, "Set Graph", "black", 23)
+        b_textView.setData(0, 10, 20, "Set Graph  x:", "black", 23)
         b_editText = block_components.EditText()
         b_editText.setData(1, 100, 10, "x-werte", 10)
         b_textView2 = block_components.TextView()
@@ -1440,7 +1427,7 @@ class Block:
                 "func" : {
                     "func_name" : "f_set_graph",
                     "func_args_list": args,
-                    "isPassThrough": False,
+                    "isPassThrough": True,
                     "func_args" : None}
             },
             "B_components" : components,
@@ -1452,26 +1439,79 @@ class Block:
         }
         return index
 
+# def modify_graph(self, x, y, x_label, y_label, title, grid, label):
+
     def initBlock_modify_Graph(self):
         index = h_getNextEmptyDictionary(self.blocks)
         for i in range(len(self.deletedPos)):
             if index == self.deletedPos[i]:
                 self.deletedPos.pop(i)
         b_textView = block_components.TextView()
-        b_textView.setData(0, 10, 20, "modify", "black", 23)
+        b_textView.setData(0, 10, 20, "modify Graph", "black", 23)
         b_editText = block_components.EditText()
-        b_editText.setData(1, 100, 10, "graph", 10)
+        b_editText.setData(1, 120, 10, "graph", 10)
+
         b_textView2 = block_components.TextView()
-        b_textView2.setData(0, 175, 20, "", "black", 10)
+        b_textView2.setData(0, 200, 20, "x:", "black", 10)
         b_editText2 = block_components.EditText()
-        b_editText2.setData(1, 200, 10, "Data", 10)
+        b_editText2.setData(1, 250, 10, "wert", 10)
+
+        b_textView3 = block_components.TextView()
+        b_textView3.setData(0, 325, 20, "y:", "black", 10)
+        b_editText3 = block_components.EditText()
+        b_editText3.setData(1, 375, 10, "wert", 10)
+
+
+        b_textView4 = block_components.TextView()
+        b_textView4.setData(0, 200, 40, "x-label", "black", 10)
+        b_editText4 = block_components.EditText()
+        b_editText4.setData(1, 250, 30, "label", 10)
+
+        b_textView5 = block_components.TextView()
+        b_textView5.setData(0, 325, 40, "y-label", "black", 10)
+        b_editText5 = block_components.EditText()
+        b_editText5.setData(1, 375, 30, "label", 10)
+
+
+        b_textView6 = block_components.TextView()
+        b_textView6.setData(0, 200, 60, "title", "black", 10)
+        b_editText6 = block_components.EditText()
+        b_editText6.setData(1, 250, 50, "titel", 10)
+
+
+        b_textView7 = block_components.TextView()
+        b_textView7.setData(0, 325, 60, "grid", "black", 10)
+        b_editText7 = block_components.EditText()
+        b_editText7.setData(1, 375, 50, "grid", 10)
+
+        b_textView8 = block_components.TextView()
+        b_textView8.setData(0, 450, 60, "label", "black", 10)
+        b_editText8 = block_components.EditText()
+        b_editText8.setData(1, 500, 50, "label", 10)
+
+
         components = []
         components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
         components.insert(1, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
         components.insert(2, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
         components.insert(3, {"id": None, "component_id": 1, "entry": None, "component": b_editText2})
+        components.insert(4, {"id": None, "component_id": 0, "entry": None, "component": b_textView3})
+        components.insert(5, {"id": None, "component_id": 1, "entry": None, "component": b_editText3})
+        components.insert(6, {"id": None, "component_id": 0, "entry": None, "component": b_textView4})
+        components.insert(7, {"id": None, "component_id": 1, "entry": None, "component": b_editText4})
+        components.insert(8, {"id": None, "component_id": 0, "entry": None, "component": b_textView5})
+        components.insert(9, {"id": None, "component_id": 1, "entry": None, "component": b_editText5})
+        components.insert(10, {"id": None, "component_id": 0, "entry": None, "component": b_textView6})
+        components.insert(11, {"id": None, "component_id": 1, "entry": None, "component": b_editText6})
+        components.insert(12, {"id": None, "component_id": 0, "entry": None, "component": b_textView7})
+        components.insert(13, {"id": None, "component_id": 1, "entry": None, "component": b_editText7})
+        components.insert(14, {"id": None, "component_id": 0, "entry": None, "component": b_textView8})
+        components.insert(15, {"id": None, "component_id": 1, "entry": None, "component": b_editText8})
 
-        args = [1,3]
+
+
+
+        args = [1,3,5,7,9,11,13,15]
         self.blocks[index] = {
             "B_type": {
                 "id": None,
@@ -1481,25 +1521,25 @@ class Block:
                 "connected": False,
                 "inLoop": False,
                 "block_inputTypes": {
-                    "input_id": 4,
+                    "input_id": 4,              #????
                     "input_t": dataTypes.BDGraph,
                     "inputBlockId": None},
                 "block_outputTypes": {
-                    "output_id": 4,                 #???
+                    "output_id": 4,
                     "output_t": dataTypes.BDGraph,
                     "outputBlockId": None},
                 "func": {
                     "func_name": "f_modi_graph",
                     "func_args_list": args,
-                    "isPassThrough": False,
+                    "isPassThrough": True,
                     "func_args": None}
             },
             "B_components": components,
             "B_position": {
-                "x1": 50,
+                "x1": 10,
                 "y1": 50,
-                "x2": 350,
-                "y2": 90}
+                "x2": 600,
+                "y2": 150}
         }
         return index
 
@@ -1516,7 +1556,7 @@ class Block:
         components = []
         components.insert(0, {"id": None, "component_id": 1, "entry": None, "component": b_editText})
         components.insert(1, {"id": None, "component_id": 0, "entry": None, "component": b_textView})
-        args = [1]
+        args = [0]
         self.blocks[index] = {
             "B_type" : {
                 "id" : None,
@@ -1536,7 +1576,7 @@ class Block:
                 "func" : {
                     "func_name" : "f_get_graph",
                     "func_args_list": args,
-                    "isPassThrough": True,
+                    "isPassThrough": False,
                     "func_args" : None}
             },
             "B_components" : components,

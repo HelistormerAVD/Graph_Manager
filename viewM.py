@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import *
 import json
 
-from unicurses import deleteln
+
 
 import block
 from tkinter import filedialog, messagebox
@@ -41,7 +41,7 @@ class BlockEditorView:
         self.add_block_button = tk.Button(self.toolbar, text="Select", command=lambda: self.switchEditorTool(0))
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
-        self.add_block_button = tk.Button(self.toolbar, text="Add Block", command=lambda: self.add_block("initBlock_Integer_add"))
+        self.add_block_button = tk.Button(self.toolbar, text="Add Block", command=lambda: self.add_block("initBlock_modify_Graph"))
         self.add_block_button.pack(side=tk.LEFT, padx=5, pady=5)
 
         self.add_block_button = tk.Button(self.toolbar, text="Move", command=lambda: self.switchEditorTool(1))
@@ -95,6 +95,13 @@ class BlockEditorView:
         self.menu.add_cascade(label="List", menu=self.blockMenuList)
         self.blockMenuGraph = Menu(self.menu)
         self.blockMenuGraph.configure(background="#6164e0")
+
+
+        self.blockMenuGraph.configure(background="#6164e0")
+        self.blockMenuGraph.add_command(label="Set Graph", command=lambda: self.add_block("initBlock_set_Graph"))
+        self.blockMenuGraph.add_command(label="modify Graph", command=lambda: self.add_block("initBlock_modify_Graph"))
+        self.blockMenuGraph.add_command(label="Get Graph", command=lambda: self.add_block("initBlock_get_Graph"))
+
         self.menu.add_cascade(label="Graph", menu=self.blockMenuGraph)
         self.blockMenuControl = Menu(self.menu)
         self.blockMenuControl.configure(background="#6164e0")
