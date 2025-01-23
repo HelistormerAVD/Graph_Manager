@@ -10,6 +10,9 @@ from util import h_getNextEmptyDictionary, h_getVectorBetweenPoints
 
 
 class Block:
+    """Erstellung der Integer, Flaot,Graph, String und Listen Blöcke"""
+
+
     # FIXED VARIABLES
 
     # Block Höhe = 40 px
@@ -1446,6 +1449,7 @@ class Block:
         for i in range(len(self.deletedPos)):
             if index == self.deletedPos[i]:
                 self.deletedPos.pop(i)
+
         b_textView = block_components.TextView()
         b_textView.setData(0, 10, 20, "modify Graph", "black", 23)
         b_editText = block_components.EditText()
@@ -1454,40 +1458,37 @@ class Block:
         b_textView2 = block_components.TextView()
         b_textView2.setData(0, 200, 20, "x:", "black", 10)
         b_editText2 = block_components.EditText()
-        b_editText2.setData(1, 250, 10, "wert", 10)
+        b_editText2.setData(1, 225, 10, "wert", 10)
 
         b_textView3 = block_components.TextView()
-        b_textView3.setData(0, 325, 20, "y:", "black", 10)
+        b_textView3.setData(0, 300, 20, "y:", "black", 10)
         b_editText3 = block_components.EditText()
-        b_editText3.setData(1, 375, 10, "wert", 10)
-
+        b_editText3.setData(1, 325, 10, "wert", 10)
 
         b_textView4 = block_components.TextView()
-        b_textView4.setData(0, 200, 40, "x-label", "black", 10)
+        b_textView4.setData(0, 400, 20, "x-label", "black", 10)
         b_editText4 = block_components.EditText()
-        b_editText4.setData(1, 250, 30, "label", 10)
+        b_editText4.setData(1, 450, 10, "label", 10)
 
         b_textView5 = block_components.TextView()
-        b_textView5.setData(0, 325, 40, "y-label", "black", 10)
+        b_textView5.setData(0, 530, 20, "y-label", "black", 10)
         b_editText5 = block_components.EditText()
-        b_editText5.setData(1, 375, 30, "label", 10)
-
+        b_editText5.setData(1, 580, 10, "label", 10)
 
         b_textView6 = block_components.TextView()
-        b_textView6.setData(0, 200, 60, "title", "black", 10)
+        b_textView6.setData(0, 680, 20, "title", "black", 10)
         b_editText6 = block_components.EditText()
-        b_editText6.setData(1, 250, 50, "titel", 10)
-
+        b_editText6.setData(1, 730, 10, "titel", 10)
 
         b_textView7 = block_components.TextView()
-        b_textView7.setData(0, 325, 60, "grid", "black", 10)
+        b_textView7.setData(0, 810, 20, "grid", "black", 10)
         b_editText7 = block_components.EditText()
-        b_editText7.setData(1, 375, 50, "grid", 10)
+        b_editText7.setData(1, 860, 10, "grid", 10)
 
         b_textView8 = block_components.TextView()
-        b_textView8.setData(0, 450, 60, "label", "black", 10)
+        b_textView8.setData(0, 940, 20, "label", "black", 10)
         b_editText8 = block_components.EditText()
-        b_editText8.setData(1, 500, 50, "label", 10)
+        b_editText8.setData(1, 990, 10, "label", 10)
 
 
         components = []
@@ -1538,8 +1539,8 @@ class Block:
             "B_position": {
                 "x1": 10,
                 "y1": 50,
-                "x2": 600,
-                "y2": 150}
+                "x2": 1100,
+                "y2": 90}
         }
         return index
 
