@@ -9,9 +9,9 @@ class Var:
     def insert_value(self, varName, data):
         for i in range(self.data.__len__()):
             if self.data[i]["name"] == varName:
-                self.data.insert(i, {"name" : varName, "data" : data})
+                self.data.insert(i, {"name": varName, "data": data})
         else:
-            self.data.append({"name" : varName, "data" : data})
+            self.data.append({"name": varName, "data": data})
 
     def get_value(self, varName):
         for i in range(self.data.__len__()):

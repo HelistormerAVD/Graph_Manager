@@ -15,17 +15,16 @@ class TextView:
         self.fontColor = "black"
         self.width = 20
 
-
     def getData(self):
-        return {"id" : self.component_Id,
+        return {"id": self.component_Id,
                 "canvas_id": self.canvas_Id,
-                "x1" : self.x1,
-                "y1" : self.y1,
-                "text" : self.text,
-                "fontColor" : self.fontColor,
-                "width" : self.width}
+                "x1": self.x1,
+                "y1": self.y1,
+                "text": self.text,
+                "fontColor": self.fontColor,
+                "width": self.width}
 
-    def setData(self, component_id : int, x1 : int, y1 : int, text : str, fontColor : str, width : int):
+    def setData(self, component_id: int, x1: int, y1: int, text: str, fontColor: str, width: int):
         self.component_Id = component_id
         self.x1 = x1
         self.y1 = y1
@@ -59,7 +58,7 @@ class EditText:
         self.text = "EditText"
         self.width = 20
 
-    def setData(self, component_id : int, x1 : int, y1 : int, text : str, width : int):
+    def setData(self, component_id: int, x1: int, y1: int, text: str, width: int):
         self.component_Id = component_id
         self.canvas_Id = None
         self.x1 = x1
@@ -94,7 +93,6 @@ class EditText:
             return 1
         else:
             return 0
-
 
 
 if __name__ == "__main__":

@@ -1,0 +1,44 @@
+
+    #--------------------------Wichtig für Blockerstellung!-------------------------
+    #   Beispiel:
+    #   b_textView = block_components.TextView()
+    #   b_textView.setData(0, 10, 20, "Add Integer", "black", 23)
+    #   -------------------
+    #   setData(<component_id> 0, 10, ...) Die component_id muss dem Klassentyp der Komponente Entsprechen:
+    #   Hierbei ist 0 = TextView und 1 = EditText
+    #   Zudem ist bei component_id = 0 der Wert y1 = 20 und bei component_id = 1 der Wert y1 = 10
+    #
+    #   setData(..., "black", <width> 23) Die 23 sind die Anzahl der Character die im <text> angegeben sind.
+    #   sollte am besten gleich lang sein, damit es keine überlappungen gibt.
+    #   -----
+    #
+    #   components = []
+    #   components.insert(0, {"id": None, "component_id": 0, "entry": None, "component": b_textView2})
+    #   components.insert(1, {"id": None, "component_id" : 1, "entry" : None, "component": b_editText})
+    #   ------------------
+    #   Der Index bei "components.insert(<index> 0,...)" darf nicht zweimal vorkommen.
+    #   Am besten in der richtigen Reihenfolge einfügen, wie die Komponenten von link nach rechts angeornet sind.
+    #   -----
+    #
+    #   in self.blocks[index] = {...} müssen folgende Einträge beachtet werden:
+    #
+    #   ."block_id" : "<eindeutige Id des Blocks>"
+    #   ."color" : "<farbe des Blocks passend aus usedColors.py zu entnehmen>"
+    #   ."block_tag": "<datentyp kleingeschrieben>_<funktion des Blocks>" (Beispiel: "integer_add", "integer_sub", "float_add")
+    #   ."func_name" : "f_<datentyp kleingeschrieben kurzform>_<funktion des Blocks>" (Beispiel: "f_int_add", "f_int_sub", "f_float_add")
+    #   "input_t" : dataTypes.<datenTyp> (Beispiel: "input_t" : dataTypes.BDInteger)
+    #   "input_id": <id passend zum <datenTyp> in "input_t"> (Beispiel: "input_id" : 0) -> Tabelle mit Ids in dataTypes.py
+    #   "output_t" : dataTypes.<datenTyp> (Beispiel: "output_t" : dataTypes.BDInteger)
+    #   "output_id": <id passend zum <datenTyp> in "output_t"> (Beispiel: "output_id" : 0) -> Tabelle mit Ids in dataTypes.py
+    #   -----
+    #
+
+
+
+    #   Der Rest ist entweder None oder False
+        #   Neu: args = []
+    #   ist eine Liste, die die component_ids von "components = []" besitzt.
+    #   Neu: "func_args_list": args -> beinhaltet args Liste
+    #   Neu: "isPassThrough": True -> Flag, welches standardgemäß True ist, sofern eine Funktion den wert Weitergeben soll.
+
+

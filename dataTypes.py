@@ -3,15 +3,14 @@ from PIL import Image as PILImage, ImageEnhance, ImageFilter
 import matplotlib.pyplot as plt
 
 
-
-#---------IDs for DataTypes------------
+# ---------IDs for DataTypes------------
 #   0 = BDInteger
 #   1 = BDFloat
 #   2 = BDString
 #   3 = BDList (falls wir list machen wollen)
 #   4 = BDGraph
 #   5 = BDImage
-#--------------------------------------
+# --------------------------------------
 
 class BDString:
     """ Klasse BDString """
@@ -125,21 +124,21 @@ class BDFloat:  # umbenannt, da es double in (Standard-)Python nicht gibt
 class BDInteger:
     """ Klasse BDInteger """
 
-    def __init__(self, data : int):
+    def __init__(self, data: int):
         """ Konstruktor der Klasse BDInteger """
         self.data = int(data)
 
-    def add(self, summand : int):
+    def add(self, summand: int):
         self.data += summand
         return self.data
 
     def subtract(self, subtrahend=0):
         self.data -= int(subtrahend)
-        return self.data    # int(BDFloat.subtract(self, subtrahend))
+        return self.data  # int(BDFloat.subtract(self, subtrahend))
 
     def multiply(self, factor=1):
         self.data *= int(factor)
-        return self.data    # int(BDFloat.multiply(self, factor))
+        return self.data  # int(BDFloat.multiply(self, factor))
 
     def divide(self, divisor=1):
         try:
@@ -151,7 +150,7 @@ class BDInteger:
 
     def pow(self, exponent=1):
         self.data **= exponent
-        return self.data    # int(BDFloat.pow(self, exponent))
+        return self.data  # int(BDFloat.pow(self, exponent))
 
     def modulo(self, num=0):
         self.data %= int(num)
@@ -168,7 +167,6 @@ class BDInteger:
 
 
 class BDList:
-
     """ Klasse BDList """
     data = list()
 
@@ -338,20 +336,27 @@ class BDGraph:
         get_graph = self.graph.gca()
         return get_graph
 
-    def modify_graph(self, x, y, x_label, y_label, title, grid, label):
+    def modify_graph(self, x, y, **kwargs):
         self.points_x = x
         self.points_y = y
-        self.graph.xlabel(x_label if x_label else "x")
-        self.graph.ylabel(y_label if y_label else "y")
-        self.graph.title(title if title else "Your Graph")
-        if grid is not None:
-            self.graph.grid(grid)
+
+        x_label = kwargs.get('x_label', 'x')
+        y_label = kwargs.get('y_label', 'y')
+        title = kwargs.get('title', 'Your Graph')
+        grid = kwargs.get('grid', True)
+        label = kwargs.get('label', 'data')
+
+        self.graph.xlabel(x_label)
+        self.graph.ylabel(y_label)
+        self.graph.title(title)
+        self.graph.grid(grid)
         self.graph.plot(self.points_x, self.points_y, label=label)
         self.graph.legend()
         self.graph.show()
 
+
     def __getstate__(self):
-        return self.graph
+        return self.__dict__.copy()
 
 
 if __name__ == '__main__':
